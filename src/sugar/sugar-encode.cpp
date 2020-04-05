@@ -296,53 +296,53 @@ distinct_mol_pairs( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2 ) {
 }
 
 
-// In a tree v1----------->v2
-// check if there is a repeating subtree rooted at v2
+// // In a tree v1----------->v2
+// // check if there is a repeating subtree rooted at v2
 
-z3::expr sugar_encoding::
-eq_rules( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2) {
-  auto m1_rule_bits = m1->get_cons()->get_rule_bits();
-  auto m2_rule_bits = m2->get_cons()->get_rule_bits();
-  VecExpr eqs;
-  for( unsigned i=0 ; i < mp_rule_bits.size(); i++ ) {
-    eqs.push_back( m1_rule_bits[i] == m2_rule_bits[i] );
-  }
-  return mk_and( ctx, equal);
-}
+// z3::expr sugar_encoding::
+// eq_rules( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2) {
+//   auto m1_rule_bits = m1->get_cons()->get_rule_bits();
+//   auto m2_rule_bits = m2->get_cons()->get_rule_bits();
+//   VecExpr eqs;
+//   for( unsigned i=0 ; i < mp_rule_bits.size(); i++ ) {
+//     eqs.push_back( m1_rule_bits[i] == m2_rule_bits[i] );
+//   }
+//   return mk_and( ctx, equal);
+// }
 
 
-unsigned repeat_search_depth = 3
+// unsigned repeat_search_depth = 3
 
-z3::expr sugar_encoding::
-is_repeat_subtree_in_branch_with_tail( const sugar_mol_ptr& m,
-                                       const sugar_mol_ptr& tail_to_match ) {
-  // No impact return
-  return mk_true( ctx );
-  auto m_rule_bits = m->get_cons()->get_rule_bits();
-  VecExpr no_equal;
-  VecExpr match_sub_tree;
-  const std::vector<sugar_mol*> parent_trail,
-  parent_trail.push_back( m );
-  sugar_mol* mp_head = m->get_parent();
-  unsigned depth = 1;
+// z3::expr sugar_encoding::
+// is_repeat_subtree_in_branch_with_tail( const sugar_mol_ptr& m,
+//                                        const sugar_mol_ptr& tail_to_match ) {
+//   // No impact return
+//   return mk_true( ctx );
+//   auto m_rule_bits = m->get_cons()->get_rule_bits();
+//   VecExpr no_equal;
+//   VecExpr match_sub_tree;
+//   const std::vector<sugar_mol*> parent_trail,
+//   parent_trail.push_back( m );
+//   sugar_mol* mp_head = m->get_parent();
+//   unsigned depth = 1;
   
-  while( mp_head ) {
-    if( repeat_search_depth < depth ) break;
-    depth = depth + 1;
-    parent_trail.push_back( mp_head );
-    for( unsigned i = 1; i < depth-1; i++ ) {
-      auto& m_head = parent_trail[i];
-      // m_head and m_head subtrees
-      // rule_eq = eq_rules( m_head, mp_head );
-      tree_match_rules = match_sub_tree( m_head, mp_head );
-      match_sub_tree.push_back( tree_match_rules );
-    }
+//   while( mp_head ) {
+//     if( repeat_search_depth < depth ) break;
+//     depth = depth + 1;
+//     parent_trail.push_back( mp_head );
+//     for( unsigned i = 1; i < depth-1; i++ ) {
+//       auto& m_head = parent_trail[i];
+//       // m_head and m_head subtrees
+//       // rule_eq = eq_rules( m_head, mp_head );
+//       tree_match_rules = match_sub_tree( m_head, mp_head );
+//       match_sub_tree.push_back( tree_match_rules );
+//     }
     
-    //same rules
-    mp_head = mp_head->get_parent();
-  }
-  return mk_and( ctx, no_equal );
-}
+//     //same rules
+//     mp_head = mp_head->get_parent();
+//   }
+//   return mk_and( ctx, no_equal );
+// }
 
 
 // add no repeat options
