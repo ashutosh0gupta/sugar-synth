@@ -1,0 +1,48 @@
+\begin{algorithm}[t]
+  \caption{ \textsc{SugarSynth}( $\mu$ : set of molecules, $d$ : maximum rule depths, $n$ : maximum number of rules )}
+  \label{alg:sugar-synth}
+  \begin{algorithmic}[1]
+  \State Let $S$ be the set of monomers appear in $\mu$
+  \State Let $w$ be the maximum arity of a monomer in $S$.
+  \State $T$ := \textsc{MakeTemplatesRule}( $S$, $d$, $w$, $n$)
+  \label{line:createRtemp}
+  \State tCons := \textsc{RuleTemplateCorrectness}(T)
+  \label{line:ruleCorr}
+  \State Let $h$ is maximum of the heights of molecules in $\mu$
+  \State $\hat{m}$ := \textsc{MakeTemplateMol}( $S$, $h$, $w$ )
+  \label{line:createMtemp}
+  \State $mCons := \textsc{MolTemplateCorrectness}(\mu)$
+  \label{line:molCorr}
+  \State $pCons$ := $\Land_{m \in \mu}$ \textsc{EncodeProduce}(m,T)
+    \label{line:molenc}
+  \State $nCons := \ltrue$
+  %\State $negMol$ be set of molecules := $\emptyset$
+  \While{$\ltrue$}
+    \If{ $a$ = getModel( $tCons \land pCons \land nCons$ )}
+    \label{line:posModel}
+    \State $R$ := \textsc{readRules}($a$)
+    \label{line:getR}
+    \Else
+       \State \Return "Failed to synthesize the rules!"
+    \EndIf
+    \State $rCons$ := \textsc{EncodeProduce}($\hat{m}$,Rs)
+    \label{line:consNewR}
+    \If{ $a$ = getModel( $mCons \land rCons$ )}
+        \label{line:negModel}
+        \State $m' :=$ \textsc{getNegMol}( $\hat{m}$, a)
+        \State $nCons \landplus \forall \tau,cuts. \lnot \textsc{EncodeProduce}(m',T)$
+        \label{line:negCons}
+    \Else
+       \State \Return synthesized rules $R$
+    \EndIf
+
+  \EndWhile
+  \end{algorithmic}
+\end{algorithm}
+
+%--------------------- DO NOT ERASE BELOW THIS LINE --------------------------
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

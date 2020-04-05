@@ -1,0 +1,8 @@
+# input file format
+(number-of-rules-to-learn 3)
+(max-rule-depth 3)
+(max-compartments 2)
+(sugar A 2)
+(sugar D 0)
+(seed-mol A)
+(mol (A (A _ A) _) )

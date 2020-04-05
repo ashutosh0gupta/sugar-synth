@@ -1,0 +1,191 @@
+
+In this section, we present the formal model for the synthesis problem.
+We model glycan molecules as labeled trees and production rules are also modeled using small pieces of trees. The glycan molecules are assembled by applying the production rules repeatedly.
+Our synthesis problem reduces into finding the pieces of trees that represent the production rules.
+
+Let $S$ be the set of sugar monomers that builds glycans,
+the oligomer molecules. Each $s \in S$ is associated with arity $m$ 
+(written $arity(s) = m$), {\em i.e.}, the maximum number of children for $s$. The children of the monomers are indexed, which means we can refer to the $k$th child of $s$ for some $k \leq arity(s)$.
+In the monomers, they correspond to bonds at specific positions from where children are connected.
+Now we define the glycan molecules as labeled trees. Now onward we refer to the glycans simply as molecules.
+
+\begin{df}
+A {\em molecule} $m = (V,M,C,v_0)$ is a labeled tree, where 
+$V$ is a set of nodes in the tree,
+$M : V \maps S$ maps nodes to their label, 
+$C : V \times \naturals \pmaps V$ maps the indexed children of nodes, and
+$v_0 \in V$ is the root of the tree.
+Furthermore, a molecule must satisfy the conditions of the arity of monomers.
+Formally, let $M(v) = s$, if $C(v,n) = v'$ then $n \leq arity(s)$.
+\end{df}
+
+Let $m = (V,M,C,v_0)$ and $m' = (V',M',C',v_0')$ be molecules.
+With some abuse of notation, we write $v \in m$ to denote $v \in V$.
+For each $v \in m$, if $(v,n)$ is not in the domain of $C$, we write $C(v,n) = \bot$.
+We assume that $C(v,0) = \bot$ and if $n > n' > 0$ and $C(v,n) \neq \bot$, then $C(v,n') \neq \bot$.
+Let $NumberOfChildren(v)$ be equal to the number of $n$s such that $C(v,n) \neq \bot$. 
+A node $v \in V$ is a {\em leaf} of $m$ if $C(v,n) = \bot$ for each $n$.
+Let $depth(v)$ be the length of the path from $v_0$ to $v$.
+A {\em branch} of $m$ is a path from $v_0$ to some leaf of $m$.
+Let $height(m)$ be the length of the longest branch in $m$.
+We define ancestor relation recursively as follows. Let $ancestor(m,v,0) = v$.
+For for $d > 0$, let $ancestor(m,v,d) = ancestor(m,v', d-1)$ if $C(v',i) = v$ for some $i$.
+Let recursively-defined predicate $Match(m,v,m',v')$ state that 
+$v \in m$, $v' \in m'$, $s = M(v) = M(v')$, and $Match( m, C(v,n), m', C(v',n) )$ for each $n \leq arity(s)$ such that $C(v,n) \neq \bot$.
+In other words, the subtree in $m$ rooted at $v$ is embedded in $m'$ at node $v'$.
+Let $subtree(m)$ be the set of molecules such that
+$m' = (\_,\_,\_,v_0') \in subtree(m) \lequiv Match(m,v_0,m',v_0')$.
+Let us also define a utility to copy a subtree of a molecule into another molecule.
+Let $Copy(m,v)$ return a molecule $m'' = (V'',M'',C'',v_0'')$ such that 
+$V''$ is a set of fresh nodes, $Match(m,v,m'',v_0'')$, and $Match(m'',v_0'',m,v)$.
+Both the $Match$ conditions say that the trees rooted at
+$v$ and $v_0''$ are identical.
+
+Now let us define the model of the production process of the molecules.
+A production rule expands a molecule $m$ by attaching a new piece of tree at a node that has a vacant spot among its children if the surroundings of the
+node satisfy some condition.
+The rule is modeled as a tree that has two parts.
+One part should already be there in $m$ and the other part will be appended to $m$.
+
+\begin{df}
+  A {\em production rule} $r = (V, M, C, v_0, v_e)$ is a labeled tree, where
+  $V$ is a set of nodes in the tree,
+  $M : V \maps S$ maps nodes to their label, 
+  $C : V \times \naturals \pmaps V$ maps the indexed children of nodes,
+  $v_0 \in V$ is the root of the tree, and
+  $v_e \in V$ is the root of expanding part of the rule.
+\end{df}
+
+If we {\em apply}, a rule $r$ on a molecule $m$, then it is extended at some node
+$v \in m$. A copy of the descendants of $v_e$ will be be attached to
+$v$ in $m$, and the rest of the nodes in the rule have to match $v$ and above.
+We will refer to the descendants of $v_e$ as {\em expanding nodes}
+and all the other nodes as {\em matching nodes}.
+
+
+\begin{example}
+  In Figure~\ref{fig:exrule}(a), we present a rule. That has
+  two kinds of nodes.
+  The rule adds the square node.
+  Therefore, $v_e$ is the square node.
+  The circular nodes $A$ and its right child $B$ are part of a pattern.
+  The pattern must be present in the molecule to apply the rule.
+  In Figure~\ref{fig:exrule}(b), we present an application of the rule.
+  The solid tree with three nodes is the initial molecule.
+  The middle node $A$ and its right child $B$ forms a pattern, where the rule is applicable.
+  Upon applying the rule, the rule adds a left child with label $A$ to the middle node.
+  The rule is not applicable at the root $A$, since it has a right child $A$
+  and the combination does not match the pattern.
+\end{example}
+
+\begin{figure}[t]
+  \begin{minipage}{0.48\linewidth}
+    \center
+  \begin{tikzpicture}[shorten >=1pt,thick,node distance=2cm,on grid]
+    \node[loc] (v0) {$A$};
+    \node[loc, below right of=v0] (v1) {$B$};
+    \node[sqloc, below left of=v0] (v2) {$A$};
+    \path[->] (v0) edge (v1);
+    \path[->] (v0) edge (v2);
+  \end{tikzpicture}\par
+  (a)
+  \end{minipage}
+  \begin{minipage}{0.48\linewidth}
+        \center
+  \begin{tikzpicture}[shorten >=1pt,thick,node distance=2cm,on grid]
+    \node[loc] (v0) {$A$};
+    \node[loc, below right of=v0] (v1) {$A$};
+    \node[loc, below right of=v1] (v3) {$B$};
+    \node[loc, below left of=v1] (v2) {$A$};
+    \path[->] (v0) edge (v1);
+    \path[->,dashed] (v1) edge (v2);
+    \path[->] (v1) edge (v3);
+  \end{tikzpicture}
+  \par
+  (b)
+  \end{minipage}
+
+  \caption{(a) An example of a rule. (b) An application of the rule.}
+  \label{fig:exrule}
+\end{figure}
+
+We naturally extend the definitions related to molecules, including $Match$ and $Copy$,
+to the production rules.
+Let us formally define the molecule productions using the rules.
+Let $m = (V,M,C,v_0)$ be a molecule and $r = (V_r, M_r, C_r, v_{0r}, v_e)$ be a production rule.
+Let $d$ be such that $v_{0r} = ancestor(r,v_e,d)$, i.e., $v_e$ is at the depth $d$ in $r$.
+Let $i$ be such that $C_r(v',i) = v_{0r}$ for some $v' \in r$.
+We apply $r$ on $m$ at node $v \in m$ such that $C(v,i) = \bot$.
+We obtain an expanded molecule as follows.
+Let $(V',M',C',v_0') = Copy(r,v_e)$.
+The expanded molecule is
+$$
+m' = (V \uplus V', M \uplus M', C \uplus C' \uplus \{(v,i) \mapsto v_0'\}, v_0)
+$$ if
+$Match( r, v_{0r}, m', ancestor(m', v_0', d) )$.
+The match condition states that after attaching the new nodes $V'$
+the rule tree must be embedded in $m'$ at the $d$th ancestor of $v'_0$. 
+We write $m' = Apply(m, v, r)$ to indicate the application of $r$
+on molecule $m$ at node $v$ that results in $m'$.
+If $r$ is not applicable at $v$, we write $Apply(m, v, r) = \bot$.
+We write $m' = Apply(m, r)$ if there is a $v \in m$ such that
+$m' = Apply(m,v,r)$.
+
+Let $R$ be a set of rules.
+A molecule $m$ is {\em producible} by $R$ from a set of molecules $Q$
+if there is sequence of molecules $m_0,...,m_k$
+such that $m_0 \in Q$, $m_k=m$, and
+for each $0<i\leq k$, $m_{i} = Apply(m_{i-1},r)$ for some $r \in R$.
+Let $P(Q,R)$ denote the set of molecules that are producible from
+rules $R$ from a set of molecules $Q$.
+We have discussed in section~\ref{sec:bio} that all the production rules
+are not applied at the same time.
+The rules may live in compartments and
+the rule sets of the compartments are applied one after another.
+To model compartments for the rules,
+let us suppose we have a sequence $R_1,...,R_k$ of set of rules.
+Let $P(Q, R_1,..,R_k) = P(..P(P(Q,R_1),R_2),..,R_k)$ denoting the
+trees obtained after applying the rule sets one after another.
+
+
+\subsection{Synthesis problem}
+As discussed in section~\ref{sec:bio},
+we observe a set of glycan molecules present in a cell.
+%
+However, we do not know the production rules to produce the molecules.
+%
+We will be developing a method to find the production rules.
+%
+Let us suppose we are given a set of molecules $\mu$ produced by some
+unknown set of production rules.
+%
+The {\em synthesis problem} is to find a set $R$ of production rules
+such that $\mu = P(S,R)$,
+where $S$ is the set of monomers.
+
+%
+We can define a more general form of the synthesis problem.
+Let us suppose we are also given $k$ compartments with unknown rules.
+The goal of synthesis is to find  $R_1,...,R_k$ such that
+$\mu = P(S, R_1,..,R_k)$.
+We may relax the requirement of exactly producing $\mu$.
+We may say that molecules in $\mu$ have to be produced, but we are ok
+if subtrees of the molecules of $\mu$ are also produced.
+Formally, we may weaken the requirement to $\mu \subseteq P(Q, R_1,..,R_k) \subseteq subtree(\mu)$.
+
+The above are a few simplified versions of the biological problem.
+We may generalize the problem further where
+%rules are partitioned and the partitions are applied in phases one after another,
+rules are not applied exhaustively due to time constraints,
+the given $\mu$ is finite and may not be exhaustive,
+and we only know the weights of the parts of molecules in $\mu$.
+We will first present a method for solving a simplified version of the problem.
+However, our tool handles some of the above variations.
+We will discuss the variations in section~\ref{sec:variations}.
+
+%--------------------- DO NOT ERASE BELOW THIS LINE --------------------------
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

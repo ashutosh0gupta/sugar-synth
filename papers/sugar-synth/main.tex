@@ -1,0 +1,83 @@
+%% For double-blind review submission, w/o CCS and ACM Reference (max submission space)
+\documentclass[acmsmall,review,anonymous]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
+%% For double-blind review submission, w/ CCS and ACM Reference
+%\documentclass[acmsmall,review,anonymous]{acmart}\settopmatter{printfolios=true}
+%% For single-blind review submission, w/o CCS and ACM Reference (max submission space)
+%\documentclass[acmsmall,review]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
+%% For single-blind review submission, w/ CCS and ACM Reference
+%\documentclass[acmsmall,review]{acmart}\settopmatter{printfolios=true}
+%% For final camera-ready submission, w/ required CCS and ACM Reference
+%\documentclass[acmsmall]{acmart}\settopmatter{}
+
+
+% \documentclass[conference,10pt]{IEEEtran}
+
+\bibliographystyle{ACM-Reference-Format}
+%% Citation style
+%% Note: author/year citations are required for papers published as an
+%% issue of PACMPL.
+\citestyle{acmauthoryear}   %% For author/year citations
+
+\input{macro.tex}
+
+\title{Automated inference of production rules for glycans}
+\author{Ashutosh Gupta and Mukund Thattai and Ansuman Biswas}
+%\institute{IITB and NCBS}
+
+\date{May 2019}
+
+\begin{document}
+
+\begin{abstract}
+  Glycans are tree-like polymers made up of sugar monomer building blocks. They are found on the surface of all living cells, and distinct glycan trees act as identity markers for distinct cell types. Proteins called GTase enzymes assemble glycans via the successive addition of monomer building blocks. The rules by which these enzymes operate are not fully understood. In this paper, we present a novel SMT-solver-based iterative method that infers the assembly process of the glycans by analyzing the set of glycans found in a cell. We have build a tool based on this method and have used it to infer rules based on published glycan data sets.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+\input{intro}
+
+\section{Production of Glycans}
+\label{sec:bio}
+\input{bio.tex}
+
+% \clearpage
+
+\section{Motivating example}
+\label{sec:motivation}
+\input{motivation.tex}
+
+\section{Modelling of the synthesis problem}
+\label{sec:model}
+\input{model.tex}
+
+% \clearpage
+
+\section{Method for the synthesis problem}
+\label{sec:algo}
+\input{algo.tex}
+
+\section{Variations of the synthesis problem}
+\label{sec:variations}
+\input{variations.tex}
+
+\section{Experiments}
+\label{sec:experiments}
+\input{experiments.tex}
+
+\section{Related work}
+\label{sec:related}
+\input{related.tex}
+
+\section{Conclusion}
+% ##limitations in the model because of limited information,
+% a)the boundary between two compartments is fuzzy, 
+% b) the growths of two branches are correlated/ not correlated..and some more points like these, for which wealth of data is not available, hence the model was unable to incorporate the specifics
+\label{sec:conclusion}
+\input{conclusion.tex}
+
+% % \bibliographystyle{unsrt}
+\bibliography{biblio}
+
+\end{document}

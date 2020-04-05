@@ -1,0 +1,35 @@
+\begin{table}[t]
+  \centering
+  \begin{tabular}[t]{|c|c|c|c|c|c|c|}\hline
+    Data & \#molecules & \#Rules & Rule  & \#Compartments & success? & Run time \\
+         &             &         & depth &               &          & (in seconds) \\\hline
+         &   & 7  & 4 & 2 & Yes & 1.8  \\\cline{3-7}
+         &   & 7  & 4 & 1 & Yes & {\bf 1.2}  \\\cline{3-7}
+    D1   & 6 & 7  & 3 & 2 & No  & 4.6  \\\cline{3-7}
+         &   & 6  & 4 & 3 & No  & 1.8  \\\hline
+    
+         &   & 7  & 3 & 3 & Yes & 0.7  \\\cline{3-7}
+         &   & 6  & 3 & 2 & Yes & 0.4  \\\cline{3-7}
+    D2   & 3 & 6  & 3 & 1 & Yes & {\bf 0.4}  \\\cline{3-7}
+         &   & 5  & 3 & 1 & No  & 0.19 \\\hline
+
+         &   & 20 & 4 & 2 & Yes & 147.4 \\\cline{3-7}
+         &   & 4  & 4 & 2 & Yes & {\bf 1.93}  \\\cline{3-7}
+    D3   & 3 & 4  & 3 & 2 & No  & 0.90  \\\cline{3-7}
+         &   & 7  & 3 & 2 & No  & 94.4  \\\hline
+
+         &   & 7 & 5 & 1 & Yes & 105.7 \\\cline{3-7}
+         &   & 7 & 4 & 3 & Yes & 271.4 \\\cline{3-7}
+    D4   & 5 & 7 & 4 & 2 & Yes & {\bf 190.3} \\\cline{3-7}
+         &   & 6 & 4 & 2 & No  & 312.7 \\\cline{3-7}
+         &   & 7 & 3 & 2 & No  & 102.3 \\\cline{3-7}
+         &   & 7 & 4 & 1 & No  & 260.8 \\\hline
+
+  \end{tabular}
+  \caption{Results of applying \ourtool on data sets. Bold faced numbers are the most optimal timings.}
+  \label{tab:results}
+\end{table}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

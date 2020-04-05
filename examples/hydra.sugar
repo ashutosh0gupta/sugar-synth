@@ -1,0 +1,31 @@
+# all _ were given in the original input
+
+(number-of-rules-to-learn 7)
+(max-rule-depth 3)
+(max-compartments 2)
+
+(sugar GlcNAc1 1)
+(sugar GlcNAc  2)
+(sugar Man 2)
+# (sugar Fuc 0)
+# (sugar Gal 0)
+# (sugar Glc 0)
+
+(mol (GlcNAc _   (GlcNAc1 (Man Man  _                                            ) )) ) # 967.50
+(mol (GlcNAc _   (GlcNAc1 (Man Man  Man                                          ) )) ) # 1171.60
+(mol (GlcNAc _   (GlcNAc1 (Man Man                    (Man Man _ )               ) )) ) # 1357.70
+(mol (GlcNAc _   (GlcNAc1 (Man (Man GlcNAc _)          Man                       ) )) ) # 1416.73 
+(mol (GlcNAc _   (GlcNAc1 (Man (Man Man (Man Man _ ) ) _                         ) )) ) # 1579.79
+# (mol (GlcNAc _   (GlcNAc1 (Man (Man Man    _)         (Man Man Man )             ) )) ) # 1783.88
+# (mol (GlcNAc _   (GlcNAc1 (Man (Man GlcNAc _)         (Man Man Man )             ) )) ) # 1824.91
+
+# (mol (GlcNAc _   (GlcNAc1 (Man (Man GlcNAc _)         (Man GlcNAc _)             ) )) ) # [Gal?] # 1865.93
+# (mol (GlcNAc _   (GlcNAc1 (Man (Man (Man    _   _) _) (Man (Man _ _) (Man _ _) ) ) )) ) # [Man?] # 1987.98
+# (mol (GlcNAc _   (GlcNAc1 (Man (Man (GlcNAc Gal _) _) (Man (Man _ _) (Man _ _) ) ) )) ) # 2029.00
+# (mol (GlcNAc Fuc (GlcNAc1 (Man (Man (GlcNAc _   _) _) (Man (GlcNAc _   _)   _  ) ) )) ) # [Gal?] # 2040.0
+# (mol (GlcNAc _   (GlcNAc1 (Man (Man (GlcNAc Gal _) _) (Man (GlcNAc Gal _)   _  ) ) )) ) # 2070.01
+# (mol (GlcNAc _   (GlcNAc1 (Man (Man (Man    _   _) _) (Man (Man _ _) (Man _ _) ) ) )) ) # [2 Man?] # 2218.0
+# (mol (GlcNAc Fuc (GlcNAc1 (Man (Man GlcNAc         _) (Man GlcNAc    _         ) ) )) ) # [Gal?] # 2240
+# (mol (GlcNAc _   (GlcNAc1 (Man (Man (Man Man _) _) (Man (Man Man _) (Man Man _)) ) )) ) # 2396.0
+# (mol (GlcNAc _   (GlcNAc1 (Man (Man (GlcNAc Gal _) _) (Man (GlcNAc Gal _)   _  ) ) )) ) # [2 Gal?] # 2478.22 
+# (mol (GlcNAc _   (GlcNAc1 (Man (Man (Man (Man GlcNAc _) _) _) (Man (Man Man _) (Man Man _)) ) )) ) # 2600.0

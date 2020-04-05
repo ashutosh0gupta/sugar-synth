@@ -1,0 +1,106 @@
+In this section, we  present our implementation of the proposed method for the synthesis
+and discuss the interesting optimizations in the implementation.
+%
+We also apply our tool on several data sets and illustrate the usability of our method.
+
+\subsection{Implementation} 
+We have implemented method \textsc{SugarSynth} in a prototype tool {\ourtool} for
+analyzing the performance of the technique in practice.
+%
+The tool, written in {\tt C++}, uses {\zthree}\cite{z3} as the SMT solver
+to discharge the generated satisfiability queries.
+%
+We have developed a specialized file format for giving input to~\ourtool.
+%
+The format allows one to declare monomers, list molecules over the monomers
+in the SMTLIB like format,
+and pass the input parameters of the method.
+
+
+\subsection{Optimizations}
+We have incorporated several optimizations to gain efficiency or reduce
+the number of iterations in the method. Let us discuss some of the remarkable
+optimizations.
+
+\paragraph{Ordered templates}
+Our method constructs a list of templates.
+Since the templates are symmetric, there is a potential of unnecessary
+iterations.
+Let us suppose the method rejects a set of learned rules.
+In the subsequent queries include the constraints that reject the set of rules,
+the solvers may choose the same set of rules again by permuting the mapping
+from the templates to the learned rule.
+To avoid these iterations, we define an arbitrary total order over the rules.
+We add ordering constraints stating that any assignments to the list of templates should produce
+ordered rules with respect to the total order.
+
+\paragraph{Quantifier instantiations}
+The constraints for rejecting the counterexample molecule is universally quantified at line~\ref{line:negCons} in algorithm~\ref{alg:sugar-synth}.
+For any assignment, the solver needs to try sufficiently many instantiations of the quantifiers
+to ensure that the query is not unsatisfiable.
+The instantiations sufficiently slow down the solving process.
+We assist the solver by also adding an instantiation of the quantifiers that is equal
+to the values of the corresponding variables in the assignment $a$ at line~\ref{line:negModel}.
+We observe that for some inputs only adding the instantiations and not the universally quantified
+formula is more effective.
+
+\paragraph{Constraints for counterexample molecules}
+In the presentation of \textsc{SugarSynth}, we construct constraints of counterexample molecules
+at line~\ref{line:consNewR} in each iteration.
+The repeated work is impractical because the formula management system of Z3 will be overwhelmed by
+the construction of many terms repeatedly. In our implementation, we construct the constraints
+once outside the while loop.
+We pass the templates as the second parameter instead of concrete rules to~\textsc{EncodeProduce}.
+Later at the solving time in line~\ref{line:negModel}, constraints are added to assign values
+of the template variables that were returned by the solver at line~\ref{line:posModel}.
+Due to the assignments, the templates become concrete rules in the context of solving.
+
+
+\subsection{Benchmark}
+
+We have applied our tool on four sets of molecules form
+respiratory mucins of a cystic fibrosis patient (D1),
+human chorionic gonadotropin from a cancer cell line (D2), horse chorionic gonadotropin (D3), and
+hydra (D4)~\cite{Jaiman2018,hydra}.
+The availability of clean data, where we are clear about the source and the collection
+methodology used, limits our choices for the data.
+
+\subsection{Results}
+\input{tbl-results}
+
+We have applied \ourtool~on the data set. For each data set, we choose several
+parameter combinations to illustrate the relative performance of the tool.
+If we did not give large enough parameters, then the tool fails to synthesize the rules.
+
+For D1, we synthesize the rules in 1.2 seconds. If we reduced any of the first
+two parameters, we failed.
+Giving an extra compartment in the first row did not impact the performance.
+We synthesize the rules for D2, which is also our motivating example, in 0.4 seconds.
+The performance of the tool is also robust against variations of the parameters.
+We synthesize the rules for D3 in 0.9 seconds if we use optimal values for the parameter.
+However, if we use too many resources or too little, the tool runs for a long time,
+which is typical. The search in combinatorial space is highly sensitive to the parameters.
+
+The synthesis for D4 takes a long time. We also observe the trade-off between the number of compartments
+and the depth of the rules at the first and second row of D4.
+For D3, we also learned large rules, i.e., they are adding many nodes at a single time.
+Currently, the tool does not have any objective function to optimize the synthesized rules.
+We are hoping to see more data sets such that we can develop a clearer picture
+for a reasonable objective function.
+
+% Our synthesized production rules for the first three data sets
+% match with the reported rules in the literature.
+% For the fourth, there is no hypothesis available to us.
+
+The results suggest that the tool is potentially applicable to larger data sets with
+the variants discussed earlier. However, we have not fully modeled all the information
+and biological intuition --- for example, the objective function for the rules.
+
+% As we have discussed earlier, we have implemented variants that encode 
+
+%--------------------- DO NOT ERASE BELOW THIS LINE --------------------------
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

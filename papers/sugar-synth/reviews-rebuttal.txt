@@ -1,0 +1,230 @@
+We thank the reviewers for their insightful comments. We will carefully
+address the concerns in the final version related to the writing quality,
+limited perspective of a domain expert, discussion on the guarantees of the
+algorithm, and a mis-citation.
+
+Biological systems are typically DIFFICULT to model because many components
+and interactions are unknown. We have identified glycosylation as a problem
+that is exceptionally suited to mathematical analysis, as its biochemistry
+is well-characterized. As reviewerC has noted "The paper demonstrates
+application of synthesis techniques to a new and potentially impactful
+problem domain". We consider the identification of problem, as being
+amenable to formal analysis, one of the key contributions of our work.
+
+Here are the responses for reviewer's questions/concerns.
+
+ReviewerB:"if the authors have consulted with a biologist"
+
+One of the authors (Mukund Thattai) is a computational biologist, a domain
+expert. MT has done pioneering work on Golgi biogenesis
+(Mani&Thattai,eLife2016). He has developed the mathematical framework for
+glycosylation that the present paper is based on
+(Jaiman&Thattai,bioRxiv2018). That work has been presented at the Golgi2018
+meeting and is already cited. MT’s work on glycosylation has been developed
+in close interaction with Ajit Varki (acknowledged in bioRxiv preprint),
+editor of the influential textbook `Essentials of Glycobiology’.
+
+ReviewerA:"Is the mathematical model in Section 4 novel, and what is
+its biological justification?"
+
+The model is from Jaiman&Thattai[biorXiv,2018], which was cited. We will
+expand our section 2 for clearer justification.
+
+ReviewerA:"how the proposed synthesis algorithm helps"
+
+There is as yet no good tool to predict protein glycan profiles. As a
+crucial step to solving that major problem, we use glycan profiles to infer
+synthesis rules. Our work is the very first, to our knowledge, to attempt
+this general problem. Previous work (Jaiman&Thattai,bioRxiv2018) solves a
+restricted version: the synthesis of a single glycan, while most protein
+glycan profiles relevant to biology consist of multiple structures as
+considered here. Further, our introduction of important enzymatic
+constraints, in the form of the “specificity rules”, makes this work more
+relevant to practical situations.
+
+ReviewerA: "Can you comment on the correctness of results ...?"
+
+In this work we make predictions about glycosylation enzyme biochemistry
+and localization. These predictions are, in principle, testable. Two of the
+authors(MT&AB) are presently undertaking experiments to test such
+predictions. However, such experimental verification is beyond the scope of
+the current paper. Our learned rules in some examples matches with the
+rules that has been hypothesized in Jaiman&Thattai[biorXiv,2018]. We will
+mention this in the paper.
+
+ReviewerB:"why .... the set of production rules cannot generate
+any glycan outside of the input set?"
+
+Protein glycan profiles regulate cell-cell interactions in eukaryotes.
+Synthesis of incorrect glycans leads to disorders, including cancers. This
+is why we have adopted a very important constraint: we impose the condition
+that glycans outside the input set are NOT synthesized.
+
+ReviewerB:"highlight some of the challenges in coming up with their
+algorithm/encoding"
+
+The algorithm is not a trivial modification of known CEGIS tools. Our
+encoding has constraints that enforce ordering of applications of rules,
+support various stay model, and the other variations. The 'quantifier
+instantiation' optimization helped us in making the tool work.
+
+ReviewerA:"approach relies on clean data, whereas real-world.. is... noisy."
+
+We discussed in section6.5 noisy data and how to adapt our method for it.
+And our tool supports it by allowing generation of additional similar
+glycans. We have applied the tool to real-world observations. A future
+extension of this work is to use such data to develop a good noise model.
+
+
+
+POPL 2020 Paper #214 Reviews and Comments
+===========================================================================
+Paper #214 Automated inference of production rules for glycans
+
+
+Review #214A
+===========================================================================
+
+Overall merit
+-------------
+C. Weak Reject
+
+Reviewer expertise
+------------------
+Y. Knowledgeable
+
+Paper summary
+-------------
+The paper proposes an algorithm for synthesizing production rules for “glycans”, which are biological objects constructed from primitive components according to a fixed set of rules. The paper proposes a synthesis algorithm in the CEGIS framework, and empirically evaluates the scalability of their approach.
+
+Strengths
+---------
++ Interesting application domain
++ Paper is well written
+
+Weaknesses
+----------
+- Technical approach is not particularly novel
+- Approach does not handle noisy data
+- Experiments are very weak
+
+Comments for author
+-------------------
+The technical novelty in this paper does not appear to be very strong. Their algorithm works within the standard CEGIS framework, where they iteratively synthesize a candidate set of production rules (i.e., a “program”), and then synthesize a counterexample to the correctness of those rules, continuing until either either no counterexample can be found (success) or no valid program can be found (failure). The main contribution, then, is taking a mathematical model for how glycans are produced and convert it into constraints for both the program synthesis and counterexample detection steps.
+
+For such a paper, I would expect the application to be justified in more detail. In particular, I would expect the paper to justify how the proposed synthesis algorithm helps improve some aspect of the biological application. However, their experiment is only in terms of synthesis time. There is essentially no discussion of whether the results are scientifically meaningful, or even correct -- i.e., can we be sure that the mathematical model of glycan construction corresponds to reality?
+
+Another question I have is whether the mathematical model in Section 4 is novel, or if it is based on prior work. If it is novel, the authors should emphasize it as a contribution, but need to justify its biological plausibility. If it is not novel, then the authors should give a citation to the relevant work.
+
+Finally, as the authors point out, their approach relies on clean data, whereas real-world data is often very noisy. I think their approach would be more interesting if they are able to handle noisy data, which generally speaking is a relatively understudied problem in the program synthesis literature.
+
+Minor
+
+- The CEGIS citation should probably point to the original work, i.e., Armando Solar-Lezama’s Ph.D. thesis “Program Synthesis by Sketching”
+
+- Typo on line 305: “tread-off” should be “trade-off”
+
+- On line 425, what is the definition of “subtree”?
+
+Questions for authors’ response
+---------------------------------
+Can you comment on the correctness of results you obtain in your experiments?
+
+Is the mathematical model in Section 4 novel, and what is its biological justification (i.e., is there any justification why it is a good model)?
+
+
+
+Review #214B
+===========================================================================
+
+Overall merit
+-------------
+C. Weak Reject
+
+Reviewer expertise
+------------------
+Y. Knowledgeable
+
+Paper summary
+-------------
+This work presents an algorithm for synthesis of production rules for glycans (i.e. polymers) from sugar monomers.  In each iteration, the algorithm seeks to synthesize production rules that can generate the input glycans. If unsuccessful, the algorithm terminates indicating failure. Otherwise, the method checks for the existence of a "counterexample glycan" which is not included in the input glycans but can be generated by the synthesized rules. The algorithm terminates with the synthesized rules if there is no such counterexample and proceeds with the next iteration otherwise (with additional constraints that disallow generation of the counterexample glycan). Both the synthesis and counterexample searches are encoded as SMT problems. The tool is evaluated on some existing glycan datasets and is shown to have a reasonable run time.
+
+Strengths
+---------
+The paper explores a new domain for synthesis, in particular, a domain that often presents a significant barrier to understanding the underlying computational problems.
+
+Weaknesses
+----------
+The paper does not present the perspective of domain experts about the utility of this approach. The approach by itself is technically straight-forward, once the computational space is identified. Finally, the writing in the paper needs significant improvement.
+
+Comments for author
+-------------------
+- The paper does not make enough of a case that the modeling of the problem is adequate and that the results of the tool are helpful for a biologist. Is the modeling of production rules accurate and complete? How do we know that the synthesized rules are meaningful? There is no domain knowledge encoded into the problem in the form of an objective function or additional constraints. There can clearly be many different production rules that satisfy the synthesis constraints, not all of which will be acceptable to a domain expert.
+
+- Please clearly state the guarantees that Algorithm 1 provides, e.g., soundness, completeness, termination?
+
+- From a biological standpoint, why is it important that the set of production rules cannot generate any glycan outside of the input set?
+
+- The paper cites [Jha et al 2010] for CEGIS. This is incorrect and should be replaced with the following paper or Armando Solar-Lezama's PhD thesis:
+
+   A. Solar-Lezama, L. Tancau, R. Bod ́ık, S. A. Seshia, and V. Saraswat, “Combinatorial sketching
+   forfinite programs,” ASPLOS, 2006
+
+- The paper's writing needs careful revising/rewriting --- the current version is distracting because of the typos and errors. The presentation of the algorithm dives right into the constraints, without first giving a high-level overview of the algorithm. Some of the description about how the constraints are actually used (e.g. in Lines 622--634) should precede the presentation of the constraints. Without this, for instance, reading the constraint on Line 603 was confusing, as this is listed amongst "conditions for valid assignments" (Line 580). Here is a small, non-exhaustive list of suggestions to improve the writing:
+
+   . Line 9: "build" --> "built"
+
+   . Line 67: Fix "observed glycan molecules a cell"
+
+   . Line 76: Fix "the depth of surrounding that are". Ideally replace the word surrounding with a more suitable word through the paper.
+
+   . Line 485 (and elsewhere): $SVars$ cannot be a "set of uncountable variables"! Perhaps you mean set with an unbounded number of variables..
+
+   . Line 479: Clarify where the maximuma arity of a monomer is obtained from right here.
+
+   . Line 505: "decadents" --> "descendents"
+
+   . Line 508: "decedents" --> "descendents"
+
+Questions for authors’ response
+---------------------------------
+1. I am curious to know if the authors have consulted with a biologist and can share some feedback/insights they may have obtained about the accuracy of the model and the quality of the synthesized production rules.
+
+2. Can the authors highlight some of the challenges in coming up with their algorithm/encoding in case I missed something?
+
+
+
+Review #214C
+===========================================================================
+
+Overall merit
+-------------
+A. Strong Accept
+
+Reviewer expertise
+------------------
+X. Expert
+
+Paper summary
+-------------
+The paper describes a new application of synthesis to infer production rules for glycans (a type of sugar tree). The basic idea is that glycans are grown by a set of enzymes that can be modeled as production rules that grow a tree (the glycan). A production rule matches a branch in a tree and grows that branch by adding extra sugar building blocks to it.
+
+The goal is to find a set of rules that can produce all the molecules in a given set $\mu$, but only those molecules. That second requirement, of only being able to produce the given molecules, introduces universal quantification, because it has to be the case that forall molecules not in the set, the given rules cannot produce them. This constraint is enforced through CEGIS; the system produces a hypothesis set of rules, and then a checker looks for counterexample molecules that can be produced by the rules but are not in $\mu$.
+
+One thing that makes this trickier than the standard CEGIS problem is that the counterexample molecules itself introduces a quantified constraint, since one must now ensure that the new set of rules generated cannot produce the counterexample molecule for any possible application of the rules. This turns out not to be a big problem, as the system simply passes the quantified constraint to Z3.
+
+There are several additional complications to the problem, such as the fact that reactions can sometimes take place in compartments, which restrict which rules can apply at which times, or the fact that we may have incomplete visibility to the true set $\mu$, which from what I understand from 6.3, could even be infinite. However, the technique is general enough to handle all of these variations.
+
+Strengths
+---------
+Very exciting application area.
+
+Formalization of the problem is interesting and non-trivial.
+
+Comments for author
+-------------------
+Overall, I was very excited to read the paper. The paper demonstrates the application of synthesis techniques to a new and potentially impactful problem domain. I think that in itself is a strong contribution.
+
+In terms of the technical contribution, the encoding of the problem into constraints is non-trivial, and I am not familiar with other synthesis work that has looked at the generation of this kind of rewrite system. Even though at a high-level, the approach is a very standard application of CEGIS, the particular execution model of rewrite systems means this is not just a trivial synthesis problem that you could feed to an existing SyGuS solver or to a synthesis tool like Sketch.
+
+One minor but important note, the paper cites Jha 2010 as the origin of CEGIS. The CEGIS technique was first described in the paper "Sketching Concurrent Data Structures" from PLDI 2008, as a generalization of an algorithm from "Combinatorial sketching for finite programs" from ASPLOS 2006. 

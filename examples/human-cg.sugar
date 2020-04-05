@@ -1,0 +1,31 @@
+#
+# Example From Algorithmic biosynthesis of eukaryotic glycans
+# https://www.biorxiv.org/content/early/2018/10/13/440792.full.pdf
+# Fig 5
+
+# tool parameters
+(number-of-rules-to-learn 7)
+(max-rule-depth 2)
+(max-compartments 2)
+
+# (number-of-rules-to-learn 6)
+# (max-rule-depth 3)
+# (max-compartments 1)
+
+#
+# declare sugar monomers and their arity
+#
+(sugar b-y 2)     #Box Yellow
+(sugar c 1)       #Circle yellow
+(sugar b-b 1)     #Box Blue
+(sugar d 0)       #Diamond red
+
+# delcare seed molecules
+(seed-mol b-y)
+
+#
+# declare observed Glycans
+#
+(mol (b-y (c d) d) )
+(mol (b-y (c d) (b-b (c d)) ) )
+(mol (b-y (c (b-b (c d)) ) (b-b (c d)) ) )

@@ -1,0 +1,131 @@
+The ability to control the assembly of small building blocks into large structures is of fundamental importance in biology and engineering. Familiar examples of this process from biology include the synthesis of linear DNA from nucleotide building blocks and the synthesis of linear proteins from amino-acid building blocks. In both these examples the synthesis is templated: the new DNA or protein molecule is essentially copied from an existing molecule. However, most biological assembly proceeds without a template. For example, when an adult animal is grown from a fertilized egg, the genome within the egg contains a dynamical recipe encoding the animal rather than a template. The genome restricts and controls the set of events that can take place subsequent to fertilization.
+
+While the process of animal development is too complex to study comprehensively, the same themes arise in the synthesis of complex tree-like sugar polymers known as glycans \cite{Varki2017} that are covalently attached to proteins. Unlike linear proteins and DNA, glycans are tree-like structures: their nodes are sugar monomers, and their edges are covalent carbon-carbon bonds. The tree-like structure of a glycan is a direct consequence of the fact that a sugar monomer can directly bond to at least three neighboring sugar monomers (in contrast to nucleotides or amino acids, which can only bind to two neighbors and are constrained to make a chain).
+
+A given cell produces a specific set of glycan molecules that are present in the cell. Since different cells produce different sets of the molecules,
+the assembly process must be programmable: the assembly process includes a set of production rules. The reactions that underlie glycan production are carried out by enzymes known as GTases \cite{Varki2017}. There are hundreds of enzymes present in a given cell: each enzyme is a protein encoded by a distinct gene, which carries out a distinct biochemical reaction. The enzymes thus execute the production rules. A glycan tree is assembled piece by piece in successive steps. At each step, a production rule adds a small piece of a tree %(a monomer)
+at the leaves or internal nodes of the current tree.
+Not all the rules are applicable at all the leaves. The monomer at a leaf and current surroundings of the leaf controls
+the applicability of a rule on the leaf.
+Identifying the exact mechanism of the production by extensive
+biochemical experiments are costly and often needs an initial
+hypothesis for the rules to test. Biologists must identify the production rules and their control
+conditions by manually analyzing the set of observed glycans in a cell
+and using prior knowledge of biochemistry.
+This is an error-prone process since the production rules must generate
+exactly the set of molecules in the cells and nothing else; and moreover, the data sets about which glycans are present in which cells are often incomplete. Manually comprehending all possible tree generation rules is difficult and ad-hoc. It would be useful to automate the process of learning which rules are operating in a given cell, based on incomplete data. 
+
+In this paper, we are presenting a {\em novel} automated synthesis
+method for the production rules.
+Our method takes the observed glycan molecules a cell and synthesizes
+the possible production rules that may explain the observation.
+Our work is the {\em first} to consider the computational problem.
+Our method of the synthesis is similar to counterexample guided
+inductive synthesis(CEGIS)~\cite{cegis}.
+Several methods for solving problems of searching in a complex combinatorial
+space use templates to define and limit their search space,
+such as learning invariants of programs~\cite{InvGenTACAS09},
+and synthesizing missing components in programs~\cite{sygus,Solar-Lezama2005}.
+We also use templates to model the space of the production rules.
+The templates usually have parameters that limit the search space.
+In our case, the size and number of templates are the parameters that
+limit sizes of pieces of trees that are added in one step,
+number of the production rules, and
+the depth of surrounding that are checked to control the rules.
+
+\begin{figure}[t]
+  \begin{tikzpicture}[thick,shorten >=1pt,node distance=2cm,on grid]
+    \node[sqloc]   (q0)                {Synthesis query};
+    \node   (qi) [xshift=-1cm, left=of q0]                {Input glycans};
+    \node[sqloc]           (q1) [xshift=2cm, right=of q0] {Counterexample query};
+    \node   (qo) [ below=of q1]                {Synthesized rules};
+    \node   (qf) [ below=of q0]                {Synthesis failed};
+    \path[->] (q0) edge [bend left=45] node [above] {Synthesized rules} node [below,xshift=-1.2cm,yshift=-3mm] {sat} (q1);
+    \path[->] (q1) edge [bend left=45] node [below] {Counterexample} node [above,xshift=1.2cm,yshift=3.5mm] {sat} (q0);
+    \path[->] (qi) edge  (q0);
+    \path[->] (q1) edge node [right,yshift=6mm] {unsat} (qo);
+    \path[->] (q0) edge node [left,yshift=6mm] {unsat} (qf);  
+  \end{tikzpicture}
+  \caption{The architecture of our synthesis method}
+  \label{fig:illus-method}
+\end{figure}
+
+Our method is iterative, as illustrated in Figure~\ref{fig:illus-method}.
+Our tool first constructs quantifier-free constraints encoding that a set of unknown rules
+defined by templates can assemble the input set of molecules.
+The generated constraints involve Boolean variable, finite range variables, and integer ordering
+constraints.
+We solve the constraints using off-the-shelf SMT solver.
+We call the query to the solver {\em synthesis query}.
+If the constraints are unsatisfiable, there are no production rules with the search space
+defined by the templates.
+Otherwise, a solution of the constraints gives a set of rules.
+
+However, there is also an additional requirement that a molecule
+that is not in the input set must not be producible by the synthesized rules.
+Therefore, the method looks for the producible molecules that are not in the input set.
+Again the search of the molecule is assisted by a template, which bounds the height
+of searched molecules.
+We generate another set of constraints using the templates for the unknown molecule encoding that
+are there other molecules that can be generated using the synthesized rules.
+We again solve the constraints using an SMT solver.
+We call the query to the solver {\em counterexample query}.
+If there is no such molecule, our method terminates and reports
+the synthesized rules.
+Otherwise, we have found a producible molecule that is not in the input set.
+
+We append our synthesis constraints with additional constraints stating that
+no matter how we apply the synthesized rules, they will not produce the extra molecule.
+Since there is a requirement that {\em all} possible applications of rules must satisfy
+a condition, we have quantifiers in the constraints.
+Now onward we use a solver that handles quantifiers over finite range variable in
+the synthesis query.
+We go to the next iteration of the method.
+The method always terminates because the search space of rules is finite.
+
+Our encoding to constraints depends on the model of execution of the rules.
+The current biological information is not sufficient to make a precise
+and definite model, and do the synthesis.
+We have also explored the variations of the models. For example, all rules
+may apply simultaneously. They apply in batches because they
+stay in different compartments.
+The molecule under-assembly may flow through the compartments.
+The distribution of stay of the molecules in a compartment also affects
+the execution model.
+Furthermore, we may have variations in the type and quality of data available to us.
+We have added the support for the variations in our method.
+
+We have implemented the method in our tool~\ourtool. The tool takes input data in its own format.
+We have applied the tool on data sets from published sources (these are available in the database UniCarbKB \cite{Campbell2013}).
+We have obtained the rules for the data sets.
+The outputs are within the expectations of biological
+intuition.
+
+The key contributions of this paper are the following.
+\begin{itemize}
+\item We identified {\em a new area} of application for formal methods in biology.
+\item We have developed a {\em novel} synthesis method for discovering the production rules of glycan molecules from the output of the rules.
+\item We have implemented the method in a tool and applied it to data sets.
+\end{itemize}
+
+
+We organize the paper as follows.
+In section~\ref{sec:bio}, we introduce the biological background of the synthesis problem and present the basis of the formal model.
+If the reader wants to avoid getting into the biological details, she may skip the section.
+In section~\ref{sec:motivation}, we present a motivating example to illustrate our method.
+In section~\ref{sec:model}, we present the formal model of the glycans, their production
+rules, and the templates.
+In section~\ref{sec:algo}, we present our method of solving the synthesis problem.
+In section~\ref{sec:variations}, we present the variations of the problem and the modifications
+in our methods to support the variations.
+In section~\ref{sec:experiments}, we present our implementation of the method and experiments on
+some glycan data.
+In section~\ref{sec:related} and section~\ref{sec:conclusion},
+we present the related work, future directions, and conclude the paper.
+
+%--------------------- DO NOT ERASE BELOW THIS LINE --------------------------
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

@@ -1,0 +1,366 @@
+\begin{figure}[h!]
+% (sugar a 2)     #Box Yellow
+% (sugar c 1)     #Circle yellow
+% (sugar b 1)     #Box Blue
+% (sugar d 0)     #Diamond red
+
+  \begin{minipage}{0.5\linewidth}
+    \mbox{}
+    \centering
+  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    % (mol (a (c d) d) )
+    \node[loc] (v0) {$A$};
+    \node[loc, below left of=v0] (v1) {$C$};
+    \node[loc, below of=v1] (v2) {$D$};
+    \node[loc, below right of=v0] (v3) {$D$};
+
+    \path[->] (v0) edge (v1);
+    \path[->] (v1) edge (v2);
+    \path[->] (v0) edge (v3);
+  \end{tikzpicture}
+  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    % (mol (a (c d) (b (c d)) ) )
+    \node[loc] (v0) {$A$};
+    \node[loc, below left of=v0] (v1) {$C$};
+    \node[loc, below of=v1] (v2) {$D$};
+    \node[loc, below right of=v0] (v3) {$B$};
+    \node[loc, below of=v3] (v4) {$C$};
+    \node[loc, below of=v4] (v5) {$D$};
+
+    \path[->] (v0) edge (v1);
+    \path[->] (v1) edge (v2);
+    \path[->] (v0) edge (v3);
+    \path[->] (v3) edge (v4);
+    \path[->] (v4) edge (v5);
+  \end{tikzpicture}
+  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    % (mol (a (c (b (c d)) ) (b (c d)) ) )
+    \node[loc] (v0) {$A$};
+    \node[loc, below left of=v0] (v1) {$C$};
+    \node[loc, below of=v1] (v2) {$B$};
+    \node[loc, below of=v2] (v6) {$C$};
+    \node[loc, below of=v6] (v7) {$D$};
+    \node[loc, below right of=v0] (v3) {$B$};
+    \node[loc, below of=v3] (v4) {$C$};
+    \node[loc, below of=v4] (v5) {$D$};
+
+    \path[->] (v0) edge (v1);
+    \path[->] (v1) edge (v2);
+    \path[->] (v3) edge (v4);
+    \path[->] (v4) edge (v5);
+    \path[->] (v0) edge (v3);
+    \path[->] (v2) edge (v6);
+    \path[->] (v6) edge (v7);
+  \end{tikzpicture}\\
+  (a)
+\end{minipage}
+\vrule
+  \begin{minipage}{0.48\linewidth}
+    \centering
+    \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+      % 0:(a [(c d)] _)
+      \node[loc] (v0) {$A$};
+      \node[sqloc, below left of=v0] (v1) {$C$};
+      \node[sqloc, below of=v1] (v2) {$D$};
+      \path[->] (v0) edge (v1);
+      \path[->] (v1) edge (v2);
+    \end{tikzpicture}\qquad
+    \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+      % 0:(a _ [(b-b c)])
+      \node[loc] (v0) {$A$};
+      \node[sqloc, below right of=v0] (v1) {$B$};
+      \node[sqloc, below of=v1] (v2) {$C$};
+      \path[->] (v0) edge (v1);
+      \path[->] (v1) edge (v2);
+    \end{tikzpicture}\qquad\hspace{2ex}
+    \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+      % 0:(b-b (c [d]))
+      \node[loc] (v0) {$B$};
+      \node[loc, below of=v0] (v2) {$C$};
+      \node[sqloc, below of=v2] (v3) {$D$};
+      \path[->] (v0) edge (v2);
+      \path[->] (v2) edge (v3);
+    \end{tikzpicture}\\\vspace{2ex}
+    \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+      % 0:(a _ [(d)])
+      \node[loc] (v0) {$A$};
+      \node[sqloc, below right of=v0] (v1) {$D$};
+      \path[->] (v0) edge (v1);
+    \end{tikzpicture}
+    \quad
+    \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+      % 0:(a [(c b-b)] (b-b _))
+      \node[loc] (v0) {$A$};
+      \node[loc, below right of=v0] (v1) {$B$};
+      \node[sqloc, below left of=v0] (v2) {$C$};
+      \node[sqloc, below of=v2] (v3) {$B$};
+      \path[->] (v0) edge (v1);
+      \path[->] (v0) edge (v2);
+      \path[->] (v2) edge (v3);
+    \end{tikzpicture}\qquad
+    \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+      % 0:(c (b-b [c]))
+      \node[loc] (v0) {$C$};
+      \node[loc, below  of=v0] (v2) {$B$};
+      \node[sqloc, below  of=v2] (v3) {$C$};
+      \path[->] (v0) edge (v2);
+      \path[->] (v2) edge (v3);
+    \end{tikzpicture}
+    \\
+% % 0:(a _ [b-b])
+% % 0:(a _ [d])
+% % 0:(a [c] b-b)
+% % 0:(c [b-b])
+% % 1:(a [c] _)
+% % 1:(c [d])
+% % 1:(b-b [c])
+%     Rules in compartment 1\\
+%     \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+%       % 0:(a _ [b])
+%       \node[loc] (v0) {$A$};
+%       \node[sqloc, below right of=v0] (v3) {$B$};
+%       \path[->] (v0) edge (v3);
+%     \end{tikzpicture}\quad
+%     \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+%       % 0:(a [c] b)
+%       \node[loc] (v0) {$A$};
+%       \node[sqloc, below left of=v0] (v1) {$C$};
+%       \node[loc, below right of=v0] (v3) {$B$};
+%       \path[->] (v0) edge (v1);
+%       \path[->] (v0) edge (v3);
+%     \end{tikzpicture}\quad
+%     \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+%       % 0:(a _ [d])
+%       \node[loc] (v0) {$A$};
+%       \node[sqloc, below right of=v0] (v1) {$D$};
+%       \path[->] (v0) edge (v1);
+%     \end{tikzpicture}\quad
+%     \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+%       % 0:(c [b])
+%       \node[loc] (v0) {$C$};
+%       \node[sqloc, below of=v0] (v1) {$B$};
+%       \path[->] (v0) edge (v1);
+%     \end{tikzpicture}\\\vspace{2ex}
+%     Rules in compartment 2\\
+%     \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+%       % 1:(a [c] _)
+%       \node[loc] (v0) {$A$};
+%       \node[sqloc, below left of=v0] (v1) {$C$};
+%       \path[->] (v0) edge (v1);
+%     \end{tikzpicture}\qquad
+%     \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+%       % 1:(c [d])
+%       \node[loc] (v0) {$C$};
+%       \node[sqloc, below of=v0] (v1) {$D$};
+%       \path[->] (v0) edge (v1);
+%     \end{tikzpicture}\qquad
+%     \begin{tikzpicture}[align at top,shorten >=1pt,thick,node distance=1cm,on grid]
+%       % 1:(b [c])
+%       \node[loc] (v0) {$B$};
+%       \node[sqloc, below of=v0] (v1) {$C$};
+%       \path[->] (v0) edge (v1);
+%     \end{tikzpicture}\\\vspace{2ex}
+    (b)
+  \end{minipage}
+  \vspace{3ex}\hrule\vspace{3ex}
+  \begin{minipage}{1.0\linewidth}
+    \centering
+  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    % (mol (a (c d) (b (c d)) ) )
+    \node[loc] (v0) {$A$};
+    % \node[loc, below right of=v0] (v3) {$B$};
+    % \path[->] (v0) edge (v3);
+
+    % \node[right of= v3, xshift=-0.2cm] (z1) {$\Rightarrow$};
+
+    % \node[loc, right of= v0, xshift=2.1cm] (v0) {$A$};
+    % \node[loc, below left of=v0] (v1) {$C$};
+    % \node[loc, below right of=v0] (v3) {$B$};
+    % \path[->] (v0) edge (v1);
+    % \path[->] (v0) edge (v3);
+
+    \node[right of= v0, yshift=-0.7cm, xshift=-0.2cm] (z2) {$\Rightarrow$};
+
+    \node[loc, right of= v0, xshift=2.1cm] (v0) {$A$};
+    \node[loc, below left of=v0] (v1) {$C$};
+    \node[loc, below of=v1] (v2) {$D$};
+    % \node[loc, below right of=v0] (v3) {$B$};
+    \path[->] (v0) edge (v1);
+    \path[->] (v1) edge (v2);
+    % \path[->] (v0) edge (v3);
+
+    \node[right of= v0, yshift=-0.7cm, xshift=-0.2cm] (z3) {$\Rightarrow$};
+
+    \node[loc, right of= v0, xshift=2.1cm] (v0) {$A$};
+    \node[loc, below left of=v0] (v1) {$C$};
+    \node[loc, below of=v1] (v2) {$D$};
+    \node[loc, below right of=v0] (v3) {$B$};
+    \node[loc, below of=v3] (v4) {$C$};
+    \path[->] (v0) edge (v1);
+    \path[->] (v1) edge (v2);
+    \path[->] (v0) edge (v3);
+    \path[->] (v3) edge (v4);
+
+    \node[right of= v3, xshift=-0.2cm] (z4) {$\Rightarrow$};
+
+    \node[loc, right of= v0, xshift=2.1cm] (v0) {$A$};
+    \node[loc, below left of=v0] (v1) {$C$};
+    \node[loc, below of=v1] (v2) {$D$};
+    \node[loc, below right of=v0] (v3) {$B$};
+    \node[loc, below of=v3] (v4) {$C$};
+    \node[loc, below of=v4] (v5) {$D$};
+    \path[->] (v0) edge (v1);
+    \path[->] (v1) edge (v2);
+    \path[->] (v0) edge (v3);
+    \path[->] (v3) edge (v4);
+    \path[->] (v4) edge (v5);
+
+    % % \node[ below of = z2, yshift=-1cm] (b1) {};
+    % \draw [decorate,decoration={brace,amplitude=7pt}]
+    % (-0.5,0.5) -- ++(4.5cm,0) node [midway,above,yshift=3pt] {Compartment 1};
+    % \draw [decorate,decoration={brace,amplitude=7pt}]
+    % (5,0.5) -- ++(8.5cm,0) node [midway,above,yshift=3pt] {Compartment 2};
+  \end{tikzpicture}\\
+  (c)
+\end{minipage}
+\vspace{3ex}\hrule\vspace{3ex}
+\begin{minipage}{0.2\linewidth}
+  \centering
+  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    \node[loc] (v0) {$A$};
+    \node[loc, below left of=v0] (v1) {$C$};
+    \node[loc, below of=v1] (v2) {$B$};
+    \node[loc, below right of=v0] (v3) {$D$};
+    \path[->] (v0) edge (v1);
+    \path[->] (v1) edge (v2);
+    \path[->] (v0) edge (v3);
+  \end{tikzpicture}\\
+  \vspace{12ex}
+  (d)
+\end{minipage}
+\vrule
+\begin{minipage}{0.3\linewidth}
+  \centering
+  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    \node[loc] (v0) {$A$};
+    \node[loc, below left of=v0] (v1) {$C$};
+    \node[loc, below of=v1] (v2) {$B$};
+    \node[loc, below of=v2] (v6) {$C$};
+    \node[loc, below of=v6] (v7) {$B$};
+    % \node[loc, below right of=v0] (v3) {$B$};
+
+    \path[->] (v0) edge (v1);
+    \path[->] (v1) edge (v2);
+    % \path[->] (v3) edge (v4);
+    % \path[->] (v4) edge (v5);
+    % \path[->] (v0) edge (v3);
+    \path[->] (v2) edge (v6);
+    \path[->] (v6) edge (v7);
+    \draw [decorate,decoration={brace,amplitude=7pt}]
+    (-0.3cm,-2cm) -- ++(0cm,-2cm) node [midway,right,xshift=2mm]
+    {Repeated pattern};
+  \end{tikzpicture}\\
+  (e)
+\end{minipage}
+\vrule
+\begin{minipage}{0.45\linewidth}
+  \centering
+  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    % 0:(a [(c _)] _)    
+    \node[loc] (v0) {$A$};
+    \node[sqloc, below left of=v0] (v1) {$C$};
+    \path[->] (v0) edge (v1);
+  \end{tikzpicture}\qquad
+  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    % 0:(a _ [(b-b c)])
+    \node[loc] (v0) {$A$};
+    \node[sqloc, below right of=v0] (v1) {$B$};
+    \node[sqloc, below of=v1] (v2) {$C$};
+    \path[->] (v0) edge (v1);
+    \path[->] (v1) edge (v2);
+  \end{tikzpicture}\qquad
+  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    % 0:(a _ [(d)])
+    \node[loc] (v0) {$A$};
+    \node[sqloc, below right of=v0] (v1) {$D$};
+    \path[->] (v0) edge (v1);
+  \end{tikzpicture}\\\vspace{2ex}
+  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    % 0:(c [(b-b c)])
+    \node[loc] (v0) {$C$};
+    \node[sqloc, below of=v0] (v1) {$B$};
+    \node[sqloc, below of=v1] (v2) {$C$};
+    \path[->] (v0) edge (v1);
+    \path[->] (v1) edge (v2);
+  \end{tikzpicture}\qquad
+  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    % 0:(c [(d)])
+    \node[loc] (v0) {$C$};
+    \node[sqloc, below of=v0] (v1) {$D$};
+    \path[->] (v0) edge (v1);
+  \end{tikzpicture}\qquad
+    \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    % 0:[(a (b-b _) _)]
+    \node[loc] (v0) {$A$};
+    \node[sqloc, below left of=v0] (v1) {$B$};
+    \path[->] (v0) edge (v1);
+  \end{tikzpicture}
+  \\
+
+  % % 0:(a _ [b])
+  % % 0:(a _ [d])
+  % % 1:(a [c] _)
+  % % 1:(c [b])
+  % % 1:(c [d])
+  % % 1:(b [c])
+  %   \centering
+  %   Rules in compartment 1\\
+  %   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+  %     % 0:(a _ [b])
+  %     \node[loc] (v0) {$A$};
+  %     \node[sqloc, below right of=v0] (v3) {$B$};
+  %     \path[->] (v0) edge (v3);
+  %   \end{tikzpicture}\quad
+  %   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+  %     % 0:(a _ [d])
+  %     \node[loc] (v0) {$A$};
+  %     \node[sqloc, below right of=v0] (v1) {$D$};
+  %     \path[->] (v0) edge (v1);
+  %   \end{tikzpicture}\\\vspace{2ex}
+  %   Rules in compartment 2\\
+  %   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+  %     % 0:(c [b])
+  %     \node[loc] (v0) {$C$};
+  %     \node[sqloc, below of=v0] (v1) {$B$};
+  %     \path[->] (v0) edge (v1);
+  %   \end{tikzpicture}\qquad
+  %   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+  %     % 1:(a [c] _)
+  %     \node[loc] (v0) {$A$};
+  %     \node[sqloc, below left of=v0] (v1) {$C$};
+  %     \path[->] (v0) edge (v1);
+  %   \end{tikzpicture}\qquad
+  %   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+  %     % 1:(c [d])
+  %     \node[loc] (v0) {$C$};
+  %     \node[sqloc, below of=v0] (v1) {$D$};
+  %     \path[->] (v0) edge (v1);
+  %   \end{tikzpicture}\qquad
+  %   \begin{tikzpicture}[align at top,shorten >=1pt,thick,node distance=1cm,on grid]
+  %     % 1:(b [c])
+  %     \node[loc] (v0) {$B$};
+  %     \node[sqloc, below of=v0] (v1) {$C$};
+  %     \path[->] (v0) edge (v1);
+  %   \end{tikzpicture}\\\vspace{2ex}
+    (f)
+  \end{minipage}
+
+  \caption{(a) A schematic example of a data set that includes three glycan oligomers. Note that we have used a convention of keeping the root on top, which is opposite to the biological convention of keeping the root at the bottom. (b) A set of production rules for the glycan molecules (c) The steps of producing the middle glycan molecule in (d) An undesired molecule. The conditions on siblings help us avoid producing it. (e) Another undesired molecule.
+    The conditions on ancestors help us avoid producing it.  (f) the synthesized rules at the first iteration.}
+  \label{fig:ex-gly}
+\end{figure}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

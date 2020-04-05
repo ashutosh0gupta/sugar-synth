@@ -1,0 +1,79 @@
+% contributions
+% 
+In this paper, we have presented a novel method for synthesizing production rules for glycans.
+\textsc{SugarSynth} is a CEGIS like iterative method.
+We have applied our method on a few data sets to illustrate that our method
+can find the rules in real-world scenarios.
+Our method is the {\em first} to apply formal methods for the synthesis problem.
+We have opened a new direction for the application of formal methods in biology.
+
+% Future extensions
+
+However, there are limitations to our current method.
+Apart from the case of repeating treelets,
+our method currently only operates on finite sets and objects.
+For example, we do not look for counterexample molecules for arbitrary heights.
+The design of the method has a flavor of bounded model-checking.
+A couple of parameters of the method impose the limit. 
+We are working to develop a method that is independent of the limitation.
+
+% Input data
+We do not support a full end to end interpretation of the data from the wet experiments.
+We assumed that we know the precise set of molecules as input.
+However, the wet biological experiments that identify glycans in a cell do not directly
+produce the set of molecules.
+The information about the glycans is limited.
+The experiments provide only the molecular weights of the glycans.
+Furthermore, they may selectively break bonds of glycans and read the weights of the
+parts.
+Using the information and computational methods, biologists estimate the likely
+set of observed glycans.
+The methods are not deterministic and may not report all possible combinations
+of molecules that may satisfy the given data.
+% The usual experimental errors may also cause failure to detect molecules.
+Much of human intuition guides the data interpretation.
+In our work, we have ignored the aspect of
+the interpretation step.
+In the future, we will try to bring this part of data analysis
+into our toolchain. 
+
+We are also considering to support a few more variants of the synthesis problem.
+For example, the boundary between the compartments may not be strict.
+On the transition from a compartment to next,
+the production rules of the first may not be immediately disabled and
+are phased out slowly, while the rules of the next compartment are already applicable.
+This momentary interleaving of the rules may explain the production of certain molecules.
+
+We may also consider the other stay models where a molecule may stay
+a limited amount of time and the number of operations on the molecules is
+bounded.
+In the model of stay, we may need to work out if we should bound the number
+of operations per branch or for the whole molecule.
+These kinds of modeling will require incorporation of time and probability in the method.
+
+We are also working to validate our synthesized production rules using wet experiments.
+We will be aiming for a cell that produces a large number of glycans and
+does not immediately lend itself to a human guess for the production rules.
+We will be developing experiments that will allow us to test the production rules
+that are output of our tool.
+
+On the theoretical side, the synthesis problem can be potentially
+modeled as minimization of a modified version of tree automaton~\cite{minTree},
+where the next move of the automaton additionally depends on the ancestors
+and siblings of a letter in a tree word.
+This modeling may allow us to apply many out of the box theoretical results
+for our synthesis problem.
+For example, we may view the rule synthesis problem as an automaton minimization problem, i.e.,
+finding the minimum set of transitions of the automaton such that the given set of
+words are accepted.
+The variation from the standard tree automaton has signification consequences such that
+the known efficient methods for the minimization are not applicable.
+Please note that we have applied an SMT solver on the problem.
+However, as far as we know, the synthesis problem is not known to be NP-complete. There may be more efficient methods.
+
+%--------------------- DO NOT ERASE BELOW THIS LINE --------------------------
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

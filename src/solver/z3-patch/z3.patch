@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0be2de5..09e544f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -378,9 +378,9 @@ option(BUILD_LIBZ3_SHARED "Build libz3 as a shared library if true, otherwise bu
+ ################################################################################
+ # Symbol visibility
+ ################################################################################
+-if (NOT MSVC)
+-  z3_add_cxx_flag("-fvisibility=hidden" REQUIRED)
+-endif()
++# if (NOT MSVC)
++#   z3_add_cxx_flag("-fvisibility=hidden" REQUIRED)
++# endif()
+ 
+ ################################################################################
+ # Tracing
