@@ -1,0 +1,8 @@
+COMPILE
+-------
+$make
+
+RUN
+-----
+
+./vts-synth -r -i examples/ex1.sugar 
