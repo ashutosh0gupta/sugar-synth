@@ -1,4 +1,5 @@
 #include <sugar/sugar-encode.h>
+#include <stack> 
 
 //----------------
 // missing constraints
@@ -344,28 +345,112 @@ distinct_mol_pairs( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2 ) {
 //   return mk_and( ctx, no_equal );
 // }
 
-
-// add no repeat options
-z3::expr sugar_encoding::
-no_repeat_in_branch( const sugar_mol_ptr& m ) {
-  // No impact return
-  return mk_true( ctx );
-  auto m_rule_bits = m->get_cons()->get_rule_bits();
-  VecExpr no_equal;
-  sugar_mol* mp = m->get_parent();
-  while( mp ) {
-    auto mp_rule_bits = m->get_cons()->get_rule_bits();
-    // if they are same then disable
-    VecExpr diseq;
-    for( unsigned i=0 ; i < mp_rule_bits.size(); i++ ) {
-      diseq.push_back( m_rule_bits[i] != mp_rule_bits[i] );
-    }
-    no_equal.push_back( mk_or( ctx, no_equal) );
-    mp = mp->get_parent();
-    // parent_trail.push_back( mp );
-  }
-  return mk_and( ctx, no_equal );
+VecExpr sugar_encoding::match( const sugar_mol_ptr& root1, const sugar_mol_ptr& root2,const sugar_mol_ptr& stop){   
+  VecExpr v1;
+  if(root1 == stop){return v1;}
+  else{
+    auto uu = root1->get_unknown_sugar();
+    auto uv = root2->get_unknown_sugar();
+    for(unsigned i = 0; i < uu->get_num_sugar_bits(); i++ ){
+      v1.push_back(uu->get_sugar_bit(i)==uv->get_sugar_bit(i));
+    }   
+    for( unsigned i = 0; i < root1->get_children_num(); i++ ){
+        v1.push_back(mk_and(ctx,match(root1->get_child(i),root2->get_child(i), stop)));
+     }
 }
+return v1;}
+z3::expr sugar_encoding::compare(const sugar_mol_ptr& m1, const sugar_mol_ptr& m2, int maxdepth, int rmax, int tdmax){  //m1 concrete, m2 unknown
+  if(m1==nullptr && m2==nullptr){return mk_true(ctx);} // termination condn- max r , max total depth. compile (use make)
+  else if((m2==nullptr && m1!=nullptr) || (m1==nullptr && m2!=nullptr)){return mk_false(ctx);} // termination condn- max r , max total depth. compile (use make)
+  else {   
+    auto m1_n = m1->get_sugar_number();
+    auto us = m2->get_unknown_sugar();
+    // either same 
+    if(tdmax==0){
+      return mk_true(ctx);}
+    else{
+    VecExpr same;
+    for(unsigned i = 0; i < us->get_num_sugar_bits(); i++ ){
+      if(i==m1_n){same.push_back(us->get_sugar_bit(i));}
+      else{same.push_back(!us->get_sugar_bit(i));}
+    }
+     for( unsigned i = 0; i < m1->get_children_num(); i++ ){
+      VecExpr v2;
+      v2.push_back(compare(m1->get_child(i),m2->get_child(i),maxdepth,rmax,tdmax-1));
+        same.push_back(mk_and(ctx,v2)); // trace back from m2 max depth 3 constraint in implies 
+     }
+     // or repeat
+    VecExpr rep;  
+    rep.push_back(!us->get_sugar_bit(m1_n));
+    sugar_mol_ptr m = m2;
+    sugar_mol_ptr m3 = m2;
+    sugar_mol_ptr m4 = m2;
+    int maxd = maxdepth;
+    if(rmax==0){return mk_true(ctx);}
+    std::cerr<<"@@@@@";
+    while(maxd>0){
+      int d = maxd;
+      std::stack<int> s;
+      VecExpr temp;
+      sugar_mol* mp = m->get_parent(); 
+      auto m_rule_bits = m->get_cons()->get_rule_bits();   
+      while(mp!= nullptr && d>0){ 
+        s.push(m->get_sibling_num());         
+        auto mp_rule_bits = mp->get_cons()->get_rule_bits();
+        for( unsigned i=0 ; i < mp_rule_bits.size(); i++ ) {
+           temp.push_back( m_rule_bits[i] == mp_rule_bits[i] ); // rule same for runaway, comparrtment same for runaway, compare at each level
+        }
+        temp.push_back(m->get_cons()->get_compartment()==mp->get_cons()->get_compartment());
+        mp=mp->get_parent();
+        d--;      
+        if(d==0){
+          for(unsigned i = 0; i < us->get_num_sugar_bits(); i++ ){
+            temp.push_back((m->get_unknown_sugar()->get_sugar_bit(i) == us->get_sugar_bit(i)));
+        }
+    }     
+      }      
+      while(m4!=nullptr && !s.empty()){
+      int n =s.top();
+      s.pop();
+      m4=m4->get_child(n);
+    }
+
+    VecExpr vec=match(m3,m,m2);
+    vec.push_back(compare(m1,m4,maxdepth,rmax-1,tdmax-maxd));
+    rep.push_back(z3::implies(mk_and(ctx,temp),mk_and(ctx,vec))); // temp => (match for rep && tail)
+    maxd--;
+    }  
+    VecExpr final;
+    final.push_back(mk_and(ctx,same));
+    final.push_back(mk_and(ctx,rep));
+  return mk_or(ctx,final);
+}}}
+z3::expr sugar_encoding::no_repeat_in_branch( const sugar_mol_ptr& m1,  const sugar_mol_ptr& m2){  
+  VecExpr v;
+  v.push_back(compare(m1,m2,3,3,15));
+  return mk_and(ctx,v);
+}
+// add no repeat options
+// z3::expr sugar_encoding::
+// no_repeat_in_branch( const sugar_mol_ptr& m ) {
+//   // No impact return
+//   return mk_true( ctx );
+//   auto m_rule_bits = m->get_cons()->get_rule_bits();
+//   VecExpr no_equal;
+//   sugar_mol* mp = m->get_parent();
+//   while( mp ) {
+//     auto mp_rule_bits = m->get_cons()->get_rule_bits();
+//     // if they are same then disable
+//     VecExpr diseq;
+//     for( unsigned i=0 ; i < mp_rule_bits.size(); i++ ) {
+//       diseq.push_back( m_rule_bits[i] != mp_rule_bits[i] ); // rule same for runaway, comparrtment same for runaway, m2 is unknown so use those variables
+//     }
+//     no_equal.push_back( mk_or( ctx, no_equal) );
+//     mp = mp->get_parent();
+//     // parent_trail.push_back( mp );
+//   }
+//   return mk_and( ctx, no_equal );
+// }
 
 // m2 is not a sub-tree of m1
 void  sugar_encoding::
@@ -382,10 +467,10 @@ not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2,
   if( m1 == nullptr ) {
     // If M2 is bigger
     if( m2->get_sugar() ) {
-      dists.push_back( no_repeat_in_branch( m2 ) );
+      dists.push_back( no_repeat_in_branch( m1, m2) );
     }else {
       auto u2 = m2->get_unknown_sugar();
-      dists.push_back( u2->get_exists_cons() && no_repeat_in_branch( m2 ) );
+      dists.push_back( u2->get_exists_cons() && no_repeat_in_branch( m1, m2 ) );
     }
     // needed if we were counting!
     // for( unsigned i = 0; i < m2->get_children_num(); i++ ) {
@@ -407,7 +492,7 @@ not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2,
       if( i != m1_s )
         m2_diff_m1.push_back( u2->get_sugar_bit(i) );
     }
-    dists.push_back( mk_or( ctx, m2_diff_m1) && no_repeat_in_branch( m2 )  );
+    dists.push_back( mk_or( ctx, m2_diff_m1) && no_repeat_in_branch( m1, m2 )  );
     // if m2 is not there, then m2 no more extendible
     auto m2_and_not_m1 = !u2->get_sugar_bit( m1_s );
     if( m2->get_parent() ) {
@@ -421,7 +506,7 @@ not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2,
     auto m2_s = m2->get_sugar_number();
     //m2 is there, m1 is not there
     dists.push_back( !m1->get_unknown_sugar()->get_sugar_bit( m2_s )
-                     && no_repeat_in_branch( m2 ) );
+                     && no_repeat_in_branch( m1, m2 ) );
   }else if( m2->get_sugar() != m1->get_sugar() ) {
     dists.push_back( mk_true( ctx ) );
     return;
@@ -437,7 +522,7 @@ not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2,
     for( unsigned i = 0; i < u1->get_num_sugar_bits(); i++ ) {
       m2_big_m1.push_back( !u1->get_sugar_bit(i) && u2->get_sugar_bit(i));
     }
-    dists.push_back( mk_or( ctx, m2_big_m1) && no_repeat_in_branch( m2 )  );
+    dists.push_back( mk_or( ctx, m2_big_m1) && no_repeat_in_branch( m1,  m2 )  );
     //m2 is there, m1 is not there
     auto m2_and_not_m1 = !u1->get_exists_cons() && u2->get_exists_cons();
     if( m2->get_parent() ) {
