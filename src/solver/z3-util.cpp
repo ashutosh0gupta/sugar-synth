@@ -53,10 +53,10 @@ z3::expr parseFormula( z3::context& c, std::string str,
     ? "(assert (" + str + "))" : "(assert " + str + ")";
   z3::expr ast(c);
   try {
-    Z3_ast e = Z3_parse_smtlib2_string(c, cmd.c_str(), 0, NULL, NULL, s, symbols, decls);
+    Z3_ast_vector e = Z3_parse_smtlib2_string(c, cmd.c_str(), 0, NULL, NULL, s, symbols, decls);
     delete[] symbols;
     delete[] decls;
-    ast = to_expr(c, e);
+    ast = to_expr(c, Z3_ast_vector_get(c,e,0));
   }
   catch( z3::exception e ) {
     std::cerr << "Error parsing line \"" << str << "\"." << std::endl;
