@@ -78,7 +78,7 @@ $(BUILDDIR)/z3/patched : $(SRCDIR)/solver/z3-patch/z3.patch $(BUILDDIR)/z3/READM
 $(BUILDDIR)/z3/README.md : 
 	mkdir -p $(BUILDDIR)
 	cd $(BUILDDIR);$(git) clone git@github.com:Z3Prover/z3.git
-	cd $(BUILDDIR)/z3;$(git) checkout 4c949cdbac761730ea44656b69f66e11a8562393
+	cd $(BUILDDIR)/z3;$(git) checkout f17ead21f92ca2c48b4e8478cb752ecfca5da78e
 
 
 $(BUILDDIR)/z3/buildr/Makefile: $(BUILDDIR)/z3/patched
