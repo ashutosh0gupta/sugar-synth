@@ -144,8 +144,9 @@ private:
   z3::expr not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2);
   //z3::expr no_repeat_in_branch( const sugar_mol_ptr& m);
   z3::expr no_repeat_in_branch( const sugar_mol_ptr& m1, const  sugar_mol_ptr& m2 );
-  VecExpr match( const sugar_mol_ptr& root1, const sugar_mol_ptr& root2,const sugar_mol_ptr& stop);
-  z3::expr compare(const sugar_mol_ptr& m1,  const sugar_mol_ptr& m2, int maxdepth, int rmax, int tdmax);
+  z3::expr match( const sugar_mol_ptr& root1, const sugar_mol_ptr& root2,const sugar_mol_ptr& stop);
+  z3::expr exact_match(const sugar_mol_ptr& m1, const sugar_mol_ptr& mt);
+  z3::expr compare(const sugar_mol_ptr& m1, const sugar_mol_ptr& m2, int d, int r);
   void no_fast_match_cons( sugar_mol* m_parent, unsigned m_child_num,
                            z3::expr m_comp, VecExpr& r_no_matches );
   void no_fast_match_cons( const sugar_mol_ptr& m, VecExpr& no_matches );

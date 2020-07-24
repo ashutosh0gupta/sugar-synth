@@ -345,93 +345,165 @@ distinct_mol_pairs( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2 ) {
 //   return mk_and( ctx, no_equal );
 // }
 
-VecExpr sugar_encoding::match( const sugar_mol_ptr& root1, const sugar_mol_ptr& root2,const sugar_mol_ptr& stop){
-  VecExpr v1;
-  if(root1 == stop){return v1;}
+z3::expr sugar_encoding::match( const sugar_mol_ptr& root1, const sugar_mol_ptr& root2,const sugar_mol_ptr& stop){
+  
+  if(root1 == stop){return mk_true(ctx);}
+  else if(root1==nullptr && root2==nullptr){return mk_true(ctx);}
+  else if((root2==nullptr && root1!=nullptr) || (root1==nullptr && root2!=nullptr)){return mk_false(ctx);}
   else{
+    VecExpr v1;
     auto uu = root1->get_unknown_sugar();
     auto uv = root2->get_unknown_sugar();
+    auto m1_rule_bits = root1->get_cons()->get_rule_bits();
+    auto m2_rule_bits = root2->get_cons()->get_rule_bits();
+    for( unsigned i=0 ; i < m1_rule_bits.size(); i++ ) {
+        v1.push_back( m1_rule_bits[i] == m2_rule_bits[i] ); // rule same for runaway, comparrtment same for runaway, compare at each level
+      }
     for(unsigned i = 0; i < uu->get_num_sugar_bits(); i++ ){
       v1.push_back(uu->get_sugar_bit(i)==uv->get_sugar_bit(i));
     }
     for( unsigned i = 0; i < root1->get_children_num(); i++ ){
-        v1.push_back(mk_and(ctx,match(root1->get_child(i),root2->get_child(i), stop)));
+        v1.push_back(match(root1->get_child(i),root2->get_child(i), stop));
      }
-}
-return v1;}
-z3::expr sugar_encoding::compare(const sugar_mol_ptr& m1, const sugar_mol_ptr& m2, int maxdepth, int rmax, int tdmax){  //m1 concrete, m2 unknown
-  if(m1==nullptr && m2==nullptr){return mk_true(ctx);} // termination condn- max r , max total depth. compile (use make)
-  else if((m2==nullptr && m1!=nullptr) || (m1==nullptr && m2!=nullptr)){return mk_false(ctx);} // termination condn- max r , max total depth. compile (use make)
-  else {
+     return mk_and(ctx,v1);
+}}
+z3::expr sugar_encoding::exact_match(const sugar_mol_ptr& m1, const sugar_mol_ptr& mt){
+  if(m1==nullptr && mt==nullptr){return mk_true(ctx);}
+  else if((mt==nullptr && m1!=nullptr) || (m1==nullptr && mt!=nullptr)){return mk_false(ctx);}
+  else{
     auto m1_n = m1->get_sugar_number();
-    auto us = m2->get_unknown_sugar();
-    // either same
-    if(tdmax==0){
-      return mk_true(ctx);}
-    else{
-      VecExpr same;
-      for(unsigned i = 0; i < us->get_num_sugar_bits(); i++ ){
+    auto us = mt->get_unknown_sugar();
+    VecExpr same;
+    for(unsigned i = 0; i < us->get_num_sugar_bits(); i++ ){
         if(i==m1_n){same.push_back(us->get_sugar_bit(i));}
         else{same.push_back(!us->get_sugar_bit(i));}
       }
-      for( unsigned i = 0; i < m1->get_children_num(); i++ ){
-        VecExpr v2;
-        v2.push_back(compare(m1->get_child(i),m2->get_child(i),maxdepth,rmax,tdmax-1));
-        same.push_back(mk_and(ctx,v2)); // trace back from m2 max depth 3 constraint in implies
+    for( unsigned i = 0; i < m1->get_children_num(); i++ ){
+        same.push_back(exact_match(m1->get_child(i),mt->get_child(i)));
       }
-      // or repeat
-      VecExpr rep;
-      rep.push_back(!us->get_sugar_bit(m1_n));
-      sugar_mol_ptr m = m2;
-      sugar_mol_ptr m3 = m2;
-      sugar_mol_ptr m4 = m2;
-      int maxd = maxdepth;
-      if(rmax==0){return mk_true(ctx);}
-      std::cerr<<"@@@@@";
-      while(maxd>0){
-        int d = maxd;
-        std::stack<int> s;
-        VecExpr temp;
-        sugar_mol* mp = m->get_parent();
-        auto m_rule_bits = m->get_cons()->get_rule_bits();
-        while(mp!= nullptr && d>0){
-          s.push(m->get_sibling_num());
-          auto mp_rule_bits = mp->get_cons()->get_rule_bits();
-          for( unsigned i=0 ; i < mp_rule_bits.size(); i++ ) {
-            temp.push_back( m_rule_bits[i] == mp_rule_bits[i] ); // rule same for runaway, comparrtment same for runaway, compare at each level
-          }
-          temp.push_back(m->get_cons()->get_compartment()==mp->get_cons()->get_compartment());
-          mp=mp->get_parent();
-          d--;
-          if(d==0){
-            for(unsigned i = 0; i < us->get_num_sugar_bits(); i++ ){
-              temp.push_back((m->get_unknown_sugar()->get_sugar_bit(i) == us->get_sugar_bit(i)));
-            }
-          }
-        }
-        while(m4!=nullptr && !s.empty()){
-          int n =s.top();
-          s.pop();
-          m4=m4->get_child(n);
-        }
-
-        VecExpr vec=match(m3,m,m2);
-        vec.push_back(compare(m1,m4,maxdepth,rmax-1,tdmax-maxd));
-        rep.push_back(z3::implies(mk_and(ctx,temp),mk_and(ctx,vec))); // temp => (match for rep && tail)
-        maxd--;
-      }
-      VecExpr final;
-      final.push_back(mk_and(ctx,same));
-      final.push_back(mk_and(ctx,rep));
-      return mk_or(ctx,final);
-    }
+      return mk_and(ctx,same);
   }
 }
 
-z3::expr sugar_encoding::no_repeat_in_branch( const sugar_mol_ptr& m1,  const sugar_mol_ptr& m2){
+// z3::expr sugar_encoding::compare(const sugar_mol_ptr& m1, const sugar_mol_ptr& m2, int maxdepth, int rmax, int tdmax){  //m1 concrete, m2 unknown
+//   if(m1==nullptr && m2==nullptr){return mk_true(ctx);} // termination condn- max r , max total depth. compile (use make)
+//   else if((m2==nullptr && m1!=nullptr) || (m1==nullptr && m2!=nullptr)){return mk_false(ctx);} // termination condn- max r , max total depth. compile (use make)
+//   else {
+//     auto m1_n = m1->get_sugar_number();
+//     auto us = m2->get_unknown_sugar();
+//     // either same
+//     if(tdmax==0){
+//       return mk_true(ctx);}
+//     else{
+//       VecExpr same;
+//       for(unsigned i = 0; i < us->get_num_sugar_bits(); i++ ){
+//         if(i==m1_n){same.push_back(us->get_sugar_bit(i));}
+//         else{same.push_back(!us->get_sugar_bit(i));}
+//       }
+//       for( unsigned i = 0; i < m1->get_children_num(); i++ ){
+//         VecExpr v2;
+//         v2.push_back(compare(m1->get_child(i),m2->get_child(i),maxdepth,rmax,tdmax-1));
+//         same.push_back(mk_and(ctx,v2)); // trace back from m2 max depth 3 constraint in implies
+//       }
+//       // or repeat
+//       VecExpr rep;
+//       rep.push_back(!us->get_sugar_bit(m1_n));
+//       sugar_mol_ptr m = m2;
+//       sugar_mol_ptr m3 = m2;
+//       sugar_mol_ptr m4 = m2;
+//       int maxd = maxdepth;
+//       if(rmax==0){return mk_true(ctx);}
+//       std::cerr<<"@@@@@";
+//       while(maxd>0){
+//         int d = maxd;
+//         std::stack<int> s;
+//         VecExpr temp;
+//         sugar_mol* mp = m->get_parent();
+//         auto m_rule_bits = m->get_cons()->get_rule_bits();
+//         while(mp!= nullptr && d>0){
+//           s.push(m->get_sibling_num());
+//           auto mp_rule_bits = mp->get_cons()->get_rule_bits();
+//           for( unsigned i=0 ; i < mp_rule_bits.size(); i++ ) {
+//             temp.push_back( m_rule_bits[i] == mp_rule_bits[i] ); // rule same for runaway, comparrtment same for runaway, compare at each level
+//           }
+//           temp.push_back(m->get_cons()->get_compartment()==mp->get_cons()->get_compartment());
+//           mp=mp->get_parent();
+//           d--;
+//           if(d==0){
+//             for(unsigned i = 0; i < us->get_num_sugar_bits(); i++ ){
+//               temp.push_back((m->get_unknown_sugar()->get_sugar_bit(i) == us->get_sugar_bit(i)));
+//             }
+//           }
+//         }
+//         while(m4!=nullptr && !s.empty()){
+//           int n =s.top();
+//           s.pop();
+//           m4=m4->get_child(n);
+//         }
+
+//         VecExpr vec=match(m3,m,m2);
+//         vec.push_back(compare(m1,m4,maxdepth,rmax-1,tdmax-maxd));
+//         rep.push_back(z3::implies(mk_and(ctx,temp),mk_and(ctx,vec))); // temp => (match for rep && tail)
+//         maxd--;
+//       }
+//       VecExpr final;
+//       final.push_back(mk_and(ctx,same));
+//       final.push_back(mk_and(ctx,rep));
+//       return mk_or(ctx,final);
+//     }
+//   }
+// }
+z3::expr sugar_encoding::compare(const sugar_mol_ptr& m1, const sugar_mol_ptr& m2, int d, int r){
+  if(m1==nullptr && m2==nullptr){return mk_true(ctx);}
+  else if((m2==nullptr && m1!=nullptr) || (m1==nullptr && m2!=nullptr)){return mk_false(ctx);}
+  else {
+    auto m1_n = m1->get_sugar_number();
+    VecExpr rep;
+    sugar_mol_ptr m4 = m2; //m2 is const
+    for(int i=0;i<r;i++){
+      if(m4==nullptr){return mk_false(ctx);}
+      auto us = m4->get_unknown_sugar();    
+      rep.push_back(!us->get_sugar_bit(m1_n));      
+      sugar_mol_ptr m3 = m4; //for matching repeating subtree, stays at curr m2      
+      std::stack<int> s;
+      sugar_mol* mp = m4->get_parent();
+      if(i!=r-1){s.push(m4->get_sibling_num());}      
+      for(int j=0;j<d;j++){ 
+          if (mp==nullptr)
+          {
+            return mk_false(ctx);
+          } 
+          if(j!=d-1){s.push(mp->get_sibling_num());}          
+          rep.push_back(m4->get_cons()->get_compartment()==mp->get_cons()->get_compartment());
+          if(j!=d-1){mp=mp->get_parent(); }
+      }    
+      rep.push_back(match( std::make_shared<sugar_mol>(*mp),m3,m4));     
+      while(!s.empty()){
+      if(m4==nullptr){return mk_false(ctx);}
+      int n =s.top();
+      s.pop();
+      m4=m4->get_child(n);
+      }
+      if(i==r-1){
+        if(m4==nullptr){return mk_false(ctx);}
+        rep.push_back(exact_match(m1,m4->get_child(m1->get_sibling_num())));
+      }      
+    }    
+    //dump(rep);
+    return mk_and(ctx,rep);
+    
+  }
+}
+z3::expr sugar_encoding::no_repeat_in_branch( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2){
   VecExpr v;
-  v.push_back(compare(m1,m2,3,3,15));
-  return mk_and(ctx,v);
+  int maxd = 3;
+  int maxr = 3;
+  for(int i=1;i<=maxd;i++){
+    for(int j=0;j<=maxr;j++){
+      v.push_back(compare(m1,m2,i,j));
+    }
+  }
+  return z3::operator!(mk_or(ctx,v));
 }
 // add no repeat options
 // z3::expr sugar_encoding::
