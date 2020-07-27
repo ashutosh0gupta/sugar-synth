@@ -1173,6 +1173,8 @@ void sugar_encoding::eval_diagnostic_cons( z3::model& m ) {
   }
 }
 
+#define RULES_OPTIMIZE
+
 void sugar_encoding::do_synth() {
   VecExpr rule_cons;
   VecExpr rule_bits;
@@ -1216,10 +1218,17 @@ void sugar_encoding::do_synth() {
   }
   // dump(pos_cons);
   z3::expr rules_and_pos = mk_and( ctx, rule_cons) && mk_and( ctx, pos_cons);
-  // z3::solver find_rules(ctx);
+
+#ifdef RULES_OPTIMIZE
+  // enable optimization
   z3::optimize find_rules(ctx);
   find_rules.add( rules_and_pos );
   for( z3::expr b : rule_bits) find_rules.add( b, 1 );
+#else
+  // disable optimization
+  z3::solver find_rules(ctx);
+  find_rules.add( rules_and_pos );
+#endif
 
   VecExpr neg_cons;
   unknown_m->get_cons()->collect_local_cons( neg_cons );

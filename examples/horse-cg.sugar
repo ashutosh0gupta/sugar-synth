@@ -8,9 +8,9 @@
 # (max-rule-depth 4)
 # (max-compartments 2)
 
-(number-of-rules-to-learn 7)
-(max-rule-depth 3)
-(max-compartments 3)
+(number-of-rules-to-learn 5)
+(max-rule-depth 2)
+(max-compartments 2)
 
 #
 # declare sugar monomers and their arity

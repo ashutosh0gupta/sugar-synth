@@ -9,7 +9,7 @@
 # (max-compartments 2)
 
 (number-of-rules-to-learn 7)
-(max-rule-depth 2)
+(max-rule-depth 3)
 (max-compartments 2)
 
 #
