@@ -495,6 +495,8 @@ z3::expr sugar_encoding::compare(const sugar_mol_ptr& m1, const sugar_mol_ptr& m
   }
 }
 z3::expr sugar_encoding::no_repeat_in_branch( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2){
+  // No impact return
+  return mk_true( ctx );
   VecExpr v;
   int maxd = 3;
   int maxr = 3;
@@ -843,6 +845,15 @@ match_condition( rule_ptr curr_r,
 }
 
 
+//
+//           m_parent : parent_comp
+//             /               \
+//            /  < r : r_comp   \
+//           /                   \<--- added in r_comp + 1 should be used for matching
+//          m : m_comp, m_time   /\
+//
+//
+
 void sugar_encoding::
 no_fast_match_cons( sugar_mol* m_parent, unsigned m_child_num,
                     z3::expr m_comp, VecExpr& r_no_matches ) {
@@ -860,6 +871,7 @@ no_fast_match_cons( sugar_mol* m_parent, unsigned m_child_num,
       parent_trail.push_back( m_g );
       VecExpr chk_match;
       z3::expr dummy_mark(ctx); // creates null smart pointer
+      //todo: some thing is wrong r_comp endtime is not passed?
       match_condition(r, parent_trail, sibling_trail, dummy_mark,chk_match);
       no_matches.push_back( !mk_and(ctx, chk_match ) );
       sibling_trail.push_back( m_g->get_sibling_num() );
@@ -1147,7 +1159,7 @@ read_neg_mol( sugar_mol_ptr& ukn_m, z3::model& m, expr_set& q_vars ) {
   auto m_sols = mol_cons::make( ctx, mol, rs.size(), m_idx, is_cut,
                                 tstamp, compartment );
   // to use quantified negative constraints or not!!
-  if( false ) { //todo add an option
+  if( true ) { //todo add an option
     mol->set_sol( m_sols );
     auto quantified = mol_cons::make( ctx, mol, rs.size() );
     quantified->collect_variables( q_vars );
@@ -1173,7 +1185,7 @@ void sugar_encoding::eval_diagnostic_cons( z3::model& m ) {
   }
 }
 
-#define RULES_OPTIMIZE
+// #define RULES_OPTIMIZE
 
 void sugar_encoding::do_synth() {
   VecExpr rule_cons;
