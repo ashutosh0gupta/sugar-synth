@@ -150,7 +150,7 @@ private:
   void no_fast_match_cons( sugar_mol* m_parent, unsigned m_child_num,
                            z3::expr m_comp, VecExpr& r_no_matches );
   void no_fast_match_cons( const sugar_mol_ptr& m, VecExpr& no_matches );
-  z3::expr no_match_cons( const sugar_mol_ptr& m  );
+  z3::expr no_fast_match_cons_at_null_leaf( const sugar_mol_ptr& m  );
 
   // reading solutions
   sugar_mol_ptr read_neg_mol( sugar_mol_ptr&, z3::model&, expr_set& );
