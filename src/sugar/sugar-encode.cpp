@@ -496,7 +496,7 @@ z3::expr sugar_encoding::compare(const sugar_mol_ptr& m1, const sugar_mol_ptr& m
 }
 z3::expr sugar_encoding::no_repeat_in_branch( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2){
   // No impact return
-  return mk_true( ctx );
+  //return mk_true( ctx );
   VecExpr v;
   int maxd = 3;
   int maxr = 3;
@@ -577,7 +577,9 @@ not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2,
         m2->get_parent()->get_unknown_sugar()->get_exists_cons();
     }
     strict.push_back( m2_and_not_m1 );
-    blocked.push_back( z3::implies( m2_and_not_m1, no_fast_match_cons_at_null_leaf(m2) ) );
+    VecExpr no_matches;
+    no_fast_can_extend(m2,no_matches);
+    blocked.push_back( z3::implies( m2_and_not_m1, z3::operator!(mk_or(ctx,no_matches) ) ));
     // diagnostics_cons.push_back( no_match_cons( m2 ) );
   }else if( m2->get_sugar() && m1->get_sugar() == nullptr ) {
     auto m2_s = m2->get_sugar_number();
@@ -607,7 +609,9 @@ not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2,
         m2->get_parent()->get_unknown_sugar()->get_exists_cons();
     }
     strict.push_back( m2_and_not_m1 );
-    blocked.push_back( z3::implies( m2_and_not_m1, no_fast_match_cons_at_null_leaf(m2) ) );
+    VecExpr no_matches2;
+    no_fast_can_extend(m2,no_matches2);
+    blocked.push_back( z3::implies( m2_and_not_m1, z3::operator!(mk_or(ctx,no_matches2)) ) );
   }
 
   for( unsigned i = 0; i < m2->get_children_num(); i++ ) {
@@ -628,7 +632,11 @@ not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2 ) {
   VecExpr blocked;
   not_contain_mols( m1,  m2, dists, strict, blocked );
   //m1 contains m2 and all expansions of m2 are blocked
+  VecExpr no_matches3;
+  no_fast_can_extend(m2,no_matches3);
+  diagnostics_cons.push_back(mk_or(ctx,no_matches3));
   return mk_or( ctx, dists ) || (mk_or(ctx,strict) && mk_and(ctx ,blocked));
+  //return mk_or( ctx, dists ) || mk_or(ctx,strict);
 }
 
 // m2 does not contain in m1 or m2 is not extendable
@@ -847,10 +855,10 @@ match_condition( rule_ptr curr_r,
 
 //
 //           m_parent : parent_comp
-//             /               \
-//            /  < r : r_comp   \
+//             /               
+//            /  < r : r_comp   
 //           /                   \<--- added in r_comp + 1 should be used for matching
-//          m : m_comp, m_time   /\
+//          m : m_comp, m_time   /
 //
 //
 
@@ -888,6 +896,8 @@ no_fast_match_cons( sugar_mol* m_parent, unsigned m_child_num,
     }
     no_m_cond = no_m_cond.simplify();
     auto no_match = z3::implies( no_m_cond, mk_and( ctx, no_matches ) );
+    //diagnostics_cons.push_back(no_m_cond);
+    //diagnostics_cons.push_back(mk_and(ctx,no_matches));
     r_no_matches.push_back( no_match );
   }
 }
@@ -904,21 +914,63 @@ no_fast_match_cons( const sugar_mol_ptr& m, VecExpr& no_matches ) {
 
 //
 //     [m_parent] <-- point of operation
-//       /    \
-//      /      \
+//       /    
+//      /     
 //    m=[NULL]  Sibling
 //
 //  No fast rule is available to create m
-z3::expr sugar_encoding::
-no_fast_match_cons_at_null_leaf( const sugar_mol_ptr& m  ) {
+// z3::expr sugar_encoding::
+// no_fast_match_cons_at_null_leaf( const sugar_mol_ptr& m  ) {
+// void sugar_encoding::no_fast_can_extend_this(const sugar_mol_ptr& m, VecExpr& ans){  
+//   std::vector<sugar_mol*> parent_trail;
+//   std::vector< unsigned > sibling_trail;
+//   parent_trail.push_back( m.get() );
+//   // sibling_trail.push_back( 0 );
+//   for(auto r: rs){
+//     if( !r->check_is_empty() ) {
+//   for( unsigned d = 1; d < r->get_depth(); d++ ) {
+//     // find d deep match in past
+//     auto m_g = parent_trail.back();
+//     if( m_g->get_parent() ) {
+//       parent_trail.push_back( m_g->get_parent() );
+//       sibling_trail.push_back( m_g->get_sibling_num() );
+//     }else{
+//       break;
+//     }    
+    
+//       VecExpr match;
+//       match_condition(r,parent_trail,sibling_trail, m->get_cons()->get_tstamp(), match);
+//       ans.push_back(r->get_is_fast() && mk_and(ctx,match));
+//     }    
+//   }
+//   }
+//   return;
+// }
+z3::expr sugar_encoding::no_match_cons( const sugar_mol_ptr& m  ) {
   VecExpr no_matches;
   if( m->get_parent() == NULL ) return mk_true(ctx);
   // return mk_false(ctx);
   z3::expr m_comp(ctx);
   auto m_child_num = m->get_sibling_num();
   auto m_parent = m->get_parent();
+  //no_fast_can_extend_this(m,no_matches);
   no_fast_match_cons( m_parent, m_child_num, m_comp, no_matches );
-  return mk_and( ctx, no_matches );
+  //return mk_and( ctx, no_matches );
+  //return z3::operator!(mk_or(ctx,no_matches));
+  return mk_false(ctx);
+}
+void sugar_encoding::no_fast_can_extend(const sugar_mol_ptr& m, VecExpr& no_matches){
+  
+  if(m==nullptr){return;}  
+  z3::expr m_comp(ctx);
+  for(unsigned int i=0;i<m->get_children_num();i++){
+    if(m->get_child(i)==nullptr){ //m->pp(std::cout);std::cout<<std::endl;
+    VecExpr no_match;
+    no_fast_match_cons(m.get(),i,m_comp,no_match);
+    no_matches.push_back(mk_and(ctx,no_match));}
+    else{no_fast_can_extend(m->get_child(i),no_matches);}
+  }
+  return;
 }
 
 // z3::expr sugar_encoding::
@@ -1006,7 +1058,13 @@ z3::expr sugar_encoding::encode_neg_cons( sugar_mol_ptr& mol ) {
   // Think : Does it interfere with longer mols if no repetition????
   // cons.add( no_fast_match_cons_at_all_null_leaves( m ) )
   // dump(cons);
-  return !mk_and( ctx, cons ); // \/ mol_is_extendable_by_fast_reactions
+  //return !mk_and( ctx, cons ); // \/ mol_is_extendable_by_fast_reactions
+  no_fast_can_extend(mol,cons);
+  // VecExpr cons1;
+  // no_fast_can_extend(mol,cons1);
+  // dump(cons1);
+  // assert(false);
+  return !mk_and( ctx, cons );
 }
 
 //-------------------------------------------------------------------------
@@ -1186,18 +1244,20 @@ read_neg_mol( sugar_mol_ptr& ukn_m, z3::model& m, expr_set& q_vars ) {
   return mol;
 }
 
-void sugar_encoding::eval_diagnostic_cons( z3::model& m ) {
+void sugar_encoding::eval_diagnostic_cons( z3::model& m ) {  
   for( auto d_cons : diagnostics_cons ) {
-    dump( d_cons );
+    //dump( d_cons );
     expr_set d_vars;
-    get_variables( d_cons, d_vars);
-    dump( m.eval(d_cons));
-    std::cout << "{\n";
-    for( auto v : d_vars ) {
-      dump( v );
-      dump( m.eval(v) );
-    }
-    std::cout << "}\n";
+    get_variables( d_cons, d_vars);    
+    dump( m.eval(d_cons));    
+    // std::cout << "{\n";
+    // for( auto v : d_vars ) {
+    //   std::cout<<"@@@@"<<std::endl;
+    //   dump( v );
+    //   dump( m.eval(v) );
+    //   std::cout<<"@@@@"<<std::endl;
+    // }
+    // std::cout << "}\n";
   }
 }
 
@@ -1262,13 +1322,16 @@ void sugar_encoding::do_synth() {
   unknown_m->get_cons()->collect_local_cons( neg_cons );
   unknown_m->get_unknown_sugar()->collect_local_cons( neg_cons );
   neg_cons.push_back( mk_or( ctx, unknown_m_ls_exist ) );
+  encode_mol( unknown_m, neg_cons );
   for( auto m : pos_ms )
     neg_cons.push_back( not_contain_mols( m, unknown_m ) );
     // neg_cons.push_back( distinct_mol_pairs( m, unknown_m ) );
-  encode_mol( unknown_m, neg_cons );
+  
   //dump(neg_cons);
   z3::solver find_neg_mol(ctx);
   find_neg_mol.add( mk_and( ctx, neg_cons ) );
+  
+  //find_neg_mol.add( no_fast_can_extend(unknown_m)  );
 
   unsigned round = 1;
   for(;;) {
@@ -1279,9 +1342,9 @@ void sugar_encoding::do_synth() {
     z3::expr conc_rule_cons(ctx);
     if (find_rules.check() == z3::sat) {
       z3::model m = find_rules.get_model();
-      // if( verbose ) {
-      //   eval_diagnostic_cons( m );
-      // }
+      if( verbose ) {
+        eval_diagnostic_cons( m );
+      }
       // std::cout << m;
       // dump( m.eval(sorted) );
       conc_rule_cons = read_synthesized_rules( m );
@@ -1292,7 +1355,7 @@ void sugar_encoding::do_synth() {
     }
     z3::expr guard = get_fresh_bool( ctx, "g" );
     find_neg_mol.add( z3::implies( guard, conc_rule_cons ) );
-
+    std::cout<<find_neg_mol<<std::endl;
     // find negative tree; add to neagtive constraints
     if ( check( find_neg_mol, guard ) == z3::sat) {
       z3::model m = find_neg_mol.get_model();
