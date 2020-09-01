@@ -111,7 +111,7 @@ private:
   // all other numbers may be asked to be smaller than this
   z3::expr large_number = ctx.int_val( 10000 );
 
-  bool verbose = true;
+  bool verbose = false;
   VecExpr diagnostics_cons;
 
   // constraint utils
@@ -158,7 +158,7 @@ private:
   //void no_fast_can_extend_this(const sugar_mol_ptr& m, VecExpr& no_matches);
   z3::expr no_match_cons( const sugar_mol_ptr& m  );
   void no_fast_can_extend(const sugar_mol_ptr& m,VecExpr& no_matches);
-  
+
   // reading solutions
   sugar_mol_ptr read_neg_mol( sugar_mol_ptr&, z3::model&, expr_set& );
   sugar_t_ptr read_sugar( const VecExpr& sugar_bits, z3::model& m );
@@ -170,7 +170,8 @@ private:
 
   // Diagnostics functions
   void eval_diagnostic_cons( z3::model& m );
-  
+  void add_diagnostic_cons( VecExpr& es );
+  void add_diagnostic_cons( z3::expr& e );
 };
 
 #endif

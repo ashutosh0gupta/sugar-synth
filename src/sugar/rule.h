@@ -30,7 +30,10 @@ public:
   z3::expr get_occur_cons() const { return is_condition || is_extended; }
   z3::expr get_is_expand_cons() const { return is_extended && !is_condition; }
   z3::expr get_compartment() const { return compartment; }
-  z3::expr get_is_fast() const { return is_fast; }
+  z3::expr get_is_fast() const {
+    return mk_true(ctx);
+    //return is_fast;
+  }
   void collect_local_cons(VecExpr& , VecExpr& ) const;
 
   // for concerete rules
