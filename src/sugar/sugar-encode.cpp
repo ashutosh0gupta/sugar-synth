@@ -921,11 +921,11 @@ no_fast_match_cons_at_null_leaf( const sugar_mol_ptr& m  ) {
   return mk_and( ctx, no_matches );
 }
 
-z3::expr sugar_encoding::
-no_fast_match_cons_at_all_null_leaves( const sugar_mol_ptr& root_m  ) {
-  // enum all deadend edges call the above function
+// z3::expr sugar_encoding::
+// no_fast_match_cons_at_all_null_leaves( const sugar_mol_ptr& root_m  ) {
+//   // enum all deadend edges call the above function
 
-}
+// }
 
 void sugar_encoding::
 apply_rule_cons( sugar_mol_ptr& m, VecExpr& rule_matches ) {
@@ -1175,7 +1175,7 @@ read_neg_mol( sugar_mol_ptr& ukn_m, z3::model& m, expr_set& q_vars ) {
   auto m_sols = mol_cons::make( ctx, mol, rs.size(), m_idx, is_cut,
                                 tstamp, compartment );
   // to use quantified negative constraints or not!!
-  if( true ) { //todo add an option
+  if( is_quantified_neg_cons ) {
     mol->set_sol( m_sols );
     auto quantified = mol_cons::make( ctx, mol, rs.size() );
     quantified->collect_variables( q_vars );

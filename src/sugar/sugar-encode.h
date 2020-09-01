@@ -104,6 +104,9 @@ private:
   VecExpr unknown_m_ls_exist;
   unsigned m_depth_max = 0;
 
+  // solving confiuration
+  bool is_quantified_neg_cons = true;
+
   // a number to immidate a large number
   // all other numbers may be asked to be smaller than this
   z3::expr large_number = ctx.int_val( 10000 );

@@ -338,7 +338,8 @@ void read_file( std::istream& in, sugar_t_map& sugar_map,
                 sugar_mol_vec& mols,
                 std::vector< std::vector<unsigned> > group_mols,
                 unsigned& num_rules, unsigned& rule_depth,
-                unsigned& max_compartments ) {
+                unsigned& max_compartments,
+                bool& quantified_neg_cons ) {
   std::vector<unsigned> local_group;
   bool group_active = false;
   unsigned sugar_idx = 0;
@@ -377,6 +378,8 @@ void read_file( std::istream& in, sugar_t_map& sugar_map,
       rule_depth = read_unsigned( in );
     }else if( cmd == "max-compartments" ){
       max_compartments = read_unsigned( in );
+    }else if( cmd == "quantified-neg-cons" ){
+      quantified_neg_cons = (read_unsigned( in ) > 0);
     }else{
       bio_synth_error( "sugar_parse", "unknown command " << cmd << " !");
     }
@@ -399,6 +402,7 @@ void synth_sugar( std::string input ) {
   unsigned num_rules = 0;
   unsigned rule_depth = 0;
   unsigned max_compartments = 1;
+  bool quantified_neg_cons = true;
 
   std::ifstream in;
   in.open( input );
@@ -407,7 +411,7 @@ void synth_sugar( std::string input ) {
     //File does not exist code here
   }
   read_file( in, sugar_map, seed_mols, mols, group_mols, num_rules, rule_depth,
-             max_compartments );
+             max_compartments, quantified_neg_cons );
   if( seed_mols.size() == 0 ) {
     bio_synth_error( "sugar_parse", "no seed mols declared!" );
   }
