@@ -571,17 +571,17 @@ not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2,
     }
     dists.push_back( mk_or( ctx, m2_diff_m1) && no_repeat_in_branch( m1, m2 )  );
     // if m2 is not there, then m2 no more extendible
-    auto m2_and_not_m1 = !u2->get_sugar_bit( m1_s );
+    auto not_m2_and_m1 = !u2->get_sugar_bit( m1_s );
     if( m2->get_parent() ) {
-      m2_and_not_m1 = m2_and_not_m1 &&
+      not_m2_and_m1 = not_m2_and_m1 &&
         m2->get_parent()->get_unknown_sugar()->get_exists_cons();
     }
-    strict.push_back( m2_and_not_m1 );
+    strict.push_back( not_m2_and_m1 );
     VecExpr no_matches;
     no_fast_can_extend(m2,no_matches);
-    blocked.push_back( z3::implies( m2_and_not_m1, // z3::operator!
+    blocked.push_back( z3::implies( not_m2_and_m1, // z3::operator!
                                     (mk_and(ctx,no_matches) ) ));
-    diagnostics_cons.push_back( m2_and_not_m1 );
+    diagnostics_cons.push_back( not_m2_and_m1 );
     diagnostics_cons.push_back( (mk_and(ctx,no_matches) ) );
   }else if( m2->get_sugar() && m1->get_sugar() == nullptr ) {
     auto m2_s = m2->get_sugar_number();
