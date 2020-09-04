@@ -157,6 +157,7 @@ private:
 
   //void no_fast_can_extend_this(const sugar_mol_ptr& m, VecExpr& no_matches);
   z3::expr no_match_cons( const sugar_mol_ptr& m  );
+  void no_fast_can_extend_unknown(const sugar_mol_ptr& m,VecExpr& no_matches);
   void no_fast_can_extend(const sugar_mol_ptr& m,VecExpr& no_matches);
 
   // reading solutions

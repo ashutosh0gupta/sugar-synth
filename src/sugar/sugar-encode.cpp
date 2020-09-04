@@ -571,14 +571,15 @@ not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2,
     }
     dists.push_back( mk_or( ctx, m2_diff_m1) && no_repeat_in_branch( m1, m2 )  );
     // if m2 is not there, then m2 no more extendible
-    auto not_m2_and_m1 = !u2->get_sugar_bit( m1_s );
+    auto not_m2_and_m1 = !u2->get_exists_cons( );
     if( m2->get_parent() ) {
+      //std::cout<<"yes, parent exists"<<std::endl;
       not_m2_and_m1 = not_m2_and_m1 &&
         m2->get_parent()->get_unknown_sugar()->get_exists_cons();
-    }
+    }    
     strict.push_back( not_m2_and_m1 );
     VecExpr no_matches;
-    no_fast_can_extend(m2,no_matches);
+    no_fast_can_extend_unknown(m2,no_matches);
     blocked.push_back( z3::implies( not_m2_and_m1, // z3::operator!
                                     (mk_and(ctx,no_matches) ) ));
     diagnostics_cons.push_back( not_m2_and_m1 );
@@ -612,7 +613,7 @@ not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2,
     }
     strict.push_back( m2_and_not_m1 );
     VecExpr no_matches2;
-    no_fast_can_extend(m2,no_matches2);
+    no_fast_can_extend_unknown(m2,no_matches2);
     blocked.push_back( z3::implies( m2_and_not_m1, //z3::operator!
                                     (mk_and(ctx,no_matches2)) ) );
   }
@@ -963,7 +964,18 @@ z3::expr sugar_encoding::no_match_cons( const sugar_mol_ptr& m  ) {
   //return z3::operator!(mk_or(ctx,no_matches));
   return mk_false(ctx);
 }
-
+void sugar_encoding::
+no_fast_can_extend_unknown(const sugar_mol_ptr& m, VecExpr& no_matches){
+  //unknown && non-recursive
+  if(m->get_parent()){
+    //std::cout<<"yes, parent existed"<<std::endl;
+    z3::expr m_comp(ctx);
+    VecExpr no_match;
+    no_fast_match_cons(m->get_parent(),m->get_sibling_num(),m_comp,no_match);
+    no_matches.push_back(mk_and(ctx,no_match));
+  }
+  return;
+}
 void sugar_encoding::
 no_fast_can_extend(const sugar_mol_ptr& m, VecExpr& no_matches){
   if(m==nullptr) {
@@ -1266,7 +1278,7 @@ void sugar_encoding::add_diagnostic_cons( z3::expr& e ) {
 void sugar_encoding::eval_diagnostic_cons( z3::model& m ) {
   // std::cout << m;
   for( auto d_cons : diagnostics_cons ) {
-    // dump( d_cons );
+     dump( d_cons );
     expr_set d_vars;
     get_variables( d_cons, d_vars);
     dump( m.eval(d_cons));
