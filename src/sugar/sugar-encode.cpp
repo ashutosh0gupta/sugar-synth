@@ -582,8 +582,8 @@ not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2,
     no_fast_can_extend_unknown(m2,no_matches);
     blocked.push_back( z3::implies( not_m2_and_m1, // z3::operator!
                                     (mk_and(ctx,no_matches) ) ));
-    diagnostics_cons.push_back( not_m2_and_m1 );
-    diagnostics_cons.push_back( (mk_and(ctx,no_matches) ) );
+    //diagnostics_cons.push_back( not_m2_and_m1 );
+    //diagnostics_cons.push_back( (mk_and(ctx,no_matches) ) );
   }else if( m2->get_sugar() && m1->get_sugar() == nullptr ) {
     auto m2_s = m2->get_sugar_number();
     //m2 is there, m1 is not there
@@ -638,7 +638,7 @@ not_contain_mols( const sugar_mol_ptr& m1, const sugar_mol_ptr& m2 ) {
   //m1 contains m2 and all expansions of m2 are blocked
   // VecExpr no_matches3;
   // no_fast_can_extend(m2,no_matches3);
-  // diagnostics_cons.push_back( mk_and(ctx ,blocked) );
+  //diagnostics_cons.push_back( mk_and(ctx ,blocked) );
   //dump( mk_or(ctx,strict) && mk_and(ctx ,blocked) );
   return mk_or( ctx, dists ) || (mk_or(ctx,strict) && mk_and(ctx ,blocked));
   //return mk_or( ctx, dists ) || mk_or(ctx,strict);
@@ -897,7 +897,7 @@ no_fast_match_cons( sugar_mol* m_parent, unsigned m_child_num,
     if( m_comp ) {
       // add conditions for saturation of the fast rules in the compartments
       // from rules upto m_comp
-      no_m_cond = no_m_cond && r->get_is_fast() && r_comp < m_comp;
+      no_m_cond = no_m_cond && r->get_is_fast() ;//&& r_comp <= m_comp;
     }
     no_m_cond = no_m_cond.simplify();
     auto no_match = z3::implies( no_m_cond, mk_and( ctx, no_matches ) );
@@ -956,6 +956,7 @@ z3::expr sugar_encoding::no_match_cons( const sugar_mol_ptr& m  ) {
   if( m->get_parent() == NULL ) return mk_true(ctx);
   // return mk_false(ctx);
   z3::expr m_comp(ctx);
+  //auto m_comp = m->get_cons()->get_compartment();
   auto m_child_num = m->get_sibling_num();
   auto m_parent = m->get_parent();
   //no_fast_can_extend_this(m,no_matches);
@@ -969,9 +970,10 @@ no_fast_can_extend_unknown(const sugar_mol_ptr& m, VecExpr& no_matches){
   //unknown && non-recursive
   if(m->get_parent()){
     //std::cout<<"yes, parent existed"<<std::endl;
-    z3::expr m_comp(ctx);
+    //z3::expr m_comp(ctx);
+    //auto m_comp = m->get_cons()->get_compartment();
     VecExpr no_match;
-    no_fast_match_cons(m->get_parent(),m->get_sibling_num(),m_comp,no_match);
+    no_fast_match_cons(m->get_parent(),m->get_sibling_num(),ctx.int_val(max_compartments+1),no_match);
     no_matches.push_back(mk_and(ctx,no_match));
   }
   return;
@@ -981,7 +983,8 @@ no_fast_can_extend(const sugar_mol_ptr& m, VecExpr& no_matches){
   if(m==nullptr) {
     return;
   }
-  z3::expr m_comp(ctx);
+  //z3::expr m_comp(ctx);
+  auto m_comp = m->get_cons()->get_compartment();
   for(unsigned int i=0;i<m->get_children_num();i++){
     if( m->get_child(i)==nullptr ) {
       //m->pp(std::cout);std::cout<<std::endl;
@@ -1109,6 +1112,7 @@ construct_conc_rule( rule_ptr& r, rule_ptr& conc_r, z3::model& m,
   conc_r->set_is_condition( is_true( r->get_is_condition() , m ) );
   conc_r->set_compartment( get_int_val( r->get_compartment(), m ) );
   conc_r->set_is_fast( is_true( r->get_is_fast(), m ) );
+  //dump(conc_r->get_is_fast());
   unsigned idx = get_true_idx( r->get_sugar_bits(), m );
   conc_r->set_sugar( idx );
   for( unsigned i = 0; i < r->get_children_num(); i++ ) {
@@ -1162,6 +1166,7 @@ read_synthesized_rules( z3::model& m ) {
   unsigned i = 0;
   VecExpr conc_cons;
   for( auto r : rs ) {
+    //r->pp(std::cout);
     construct_conc_rule( r, rs_conc.at(i), m, conc_cons );
     i++;
   }
@@ -1338,7 +1343,9 @@ void sugar_encoding::do_synth() {
   }
   // dump(pos_cons);
   z3::expr rules_and_pos = mk_and( ctx, rule_cons) && mk_and( ctx, pos_cons);
-
+  // std::cout<<"######################"<<std::endl;
+  // dump(rule_cons);
+  // std::cout<<"######################"<<std::endl;
 #ifdef RULES_OPTIMIZE
   // enable optimization
   z3::optimize find_rules(ctx);
@@ -1375,12 +1382,13 @@ void sugar_encoding::do_synth() {
     z3::expr conc_rule_cons(ctx);
     if (find_rules.check() == z3::sat) {
       z3::model m = find_rules.get_model();
-      if( verbose ) {
-        eval_diagnostic_cons( m );
-      }
-      // std::cout << m;
-      // dump( m.eval(sorted) );
+      // if( verbose ) {
+      //     eval_diagnostic_cons( m );
+      // }
+      //std::cout << "HEY\n";
+      //dump( m.eval(sorted) );
       conc_rule_cons = read_synthesized_rules( m );
+      //print_result(std::cout);
     } else {
       print_fail_result( std::cout );
       return;
@@ -1388,11 +1396,11 @@ void sugar_encoding::do_synth() {
     }
     z3::expr guard = get_fresh_bool( ctx, "g" );
     find_neg_mol.add( z3::implies( guard, conc_rule_cons ) );
-    // std::cout<<find_neg_mol<<std::endl;
+    //std::cout<<find_neg_mol<<std::endl;
     // find negative tree; add to neagtive constraints
     if ( check( find_neg_mol, guard ) == z3::sat) {
       z3::model m = find_neg_mol.get_model();
-      eval_diagnostic_cons( m );
+      //eval_diagnostic_cons( m );
       assert(false);
       expr_set q_vars;
       sugar_mol_ptr neg_mol = read_neg_mol( unknown_m, m, q_vars );
