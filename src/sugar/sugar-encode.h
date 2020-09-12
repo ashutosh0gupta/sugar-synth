@@ -111,7 +111,7 @@ private:
   // all other numbers may be asked to be smaller than this
   z3::expr large_number = ctx.int_val( 10000 );
 
-  bool verbose = false;
+  bool verbose = true;
   VecExpr diagnostics_cons;
 
   // constraint utils
