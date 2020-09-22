@@ -125,7 +125,7 @@ private:
   //                     z3::expr mark_stamp, bool is_ub, VecExpr& sbits );
 
   void match_tree( rule_ptr r, sugar_mol_ptr m, z3::expr mark, bool is_ub,
-                   VecExpr&);
+                   VecExpr&, rule_ptr r_p, bool b);
   void match_cuts( z3::expr r_parent_occurs, rule_ptr r, sugar_mol_ptr m,
                     VecExpr& sbits );
   rule_ptr match_condition( rule_ptr curr_r,

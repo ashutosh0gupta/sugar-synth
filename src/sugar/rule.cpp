@@ -8,7 +8,7 @@
 rule::rule( z3::context& ctx_, sugar_t_vec& sugars_, unsigned num_sugars,
             rule_vec& children_, bool is_conc )
   : ctx(ctx_), sugars(sugars_), children( children_ ), depth(1),
-    is_extended(ctx_), is_condition(ctx_), compartment(ctx_), is_fast(ctx_),
+    is_extended(ctx_), is_condition(ctx_), is_hard_end(ctx_), compartment(ctx_), is_fast(ctx_), 
     local_constraints(ctx_) {
   //set depth
   for( unsigned i = 0; i < children.size(); i++ ) {
@@ -20,6 +20,7 @@ rule::rule( z3::context& ctx_, sugar_t_vec& sugars_, unsigned num_sugars,
   if( is_conc ) {
     is_extended = mk_false(ctx);
     is_condition = mk_false(ctx);
+    is_hard_end = mk_false(ctx);
     compartment = ctx.int_val( 0 );
     is_fast = ctx.bool_val(false);
     for(  unsigned i = 0; i < num_sugars; i++ ) {
@@ -29,6 +30,7 @@ rule::rule( z3::context& ctx_, sugar_t_vec& sugars_, unsigned num_sugars,
   }else{
     is_extended = get_fresh_bool( ctx, "r_e" );
     is_condition = get_fresh_bool( ctx, "r_c" );
+    is_hard_end = get_fresh_bool( ctx, "r_h" );
     node_sugar = get_fresh_bool_vec( ctx, num_sugars, "r_s" );
   }
   //make constraints
@@ -85,6 +87,7 @@ rule::rule( z3::context& ctx_, sugar_t_vec& sugars_, unsigned num_sugars,
 void rule::initialize_non_recursive( unsigned max_compartments_ ) {
   z3::expr _compartment = get_fresh_int( ctx, "r_comp" );
   z3::expr is_fast_ = get_fresh_bool( ctx, "r_f" );
+  
   initialize_non_recursive( _compartment, is_fast_ );
   if( max_compartments_ ) max_compartments_ = max_compartments_ - 1;
   local_constraints = local_constraints
@@ -165,6 +168,7 @@ void rule::set_is_extended ( bool v    ) { is_extended = ctx.bool_val( v ); }
 void rule::set_is_condition( bool v    ) { is_condition = ctx.bool_val( v ); }
 void rule::set_compartment ( unsigned c) {compartment = ctx.int_val( c ); }
 void rule::set_is_fast     ( bool v    ) { is_fast = ctx.bool_val( v ); }
+void rule::set_is_hard_end     ( bool v    ) { is_hard_end = ctx.bool_val( v ); }
 
 z3::expr sort_bit( z3::expr b1, z3::expr b2, z3::expr next ) {
   return (!b1 && b2) || ( b1 == b2 && next );
@@ -275,10 +279,22 @@ dump_dotty( std::string filename ) const {
 
 void rule::pp( std::ostream& out ) const {
   std::cout << get_compartment() ;
-  if( is_true( is_fast ) )
-    std::cout << ":";
-  else
-    std::cout << "::";
+  if( is_true( is_fast ) ){
+    if( is_true( is_hard_end )){
+      std::cout<< ": hard ";
+    }
+    else{
+      std::cout<< ": soft";
+    }
+  }
+  else{
+    if( is_true( is_hard_end )){
+      std::cout<< ":: hard ";
+    }
+    else{
+      std::cout<< ":: soft";
+    }
+  } 
   pp( out, true );
 }
 

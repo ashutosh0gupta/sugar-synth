@@ -770,7 +770,7 @@ bool free_extend_positions = false;
 
 void sugar_encoding::
 match_tree(  rule_ptr r, sugar_mol_ptr m, z3::expr mark, bool is_match_part,
-             VecExpr& match ) {
+             VecExpr& match, rule_ptr r_parent, bool b ) {
   if( r == nullptr ) {
     if( mark ) if( free_extend_positions && is_match_part && m != nullptr ) {
         match.push_back( m->get_cons()->get_tstamp() > mark );
@@ -794,9 +794,13 @@ match_tree(  rule_ptr r, sugar_mol_ptr m, z3::expr mark, bool is_match_part,
   z3::expr ccons = is_match_part ? r_comp >= m->get_cons()->get_compartment()
                                  : m->get_cons()->get_compartment() == r_comp;
   match.push_back( z3::implies( r->get_occur_cons(), s_bit && tcons && ccons));
-
-  for( unsigned i = 0; i < m->get_children_num(); i++ ) {
-    match_tree( r->get_child(i), m->get_child(i), mark, is_match_part, match );
+  if(b){
+    if (mark){
+      match.push_back( z3::implies(  !r->get_occur_cons() && r_parent->get_occur_cons() && r->get_is_hard_end(),  m->get_cons()->get_tstamp() > mark  ));  
+    }    
+  }  
+  for( unsigned i = 0; i < m->get_children_num(); i++ ) {    
+    match_tree( r->get_child(i), m->get_child(i), mark, is_match_part, match, r, b );
   }
 }
 
@@ -834,7 +838,7 @@ match_condition( rule_ptr curr_r,
     auto p = *p_rit; p_rit++;
     auto sibling_num = *rit;
     if( p->get_sugar() ) {
-      match.push_back( curr_r->get_sugar_bit( p->get_sugar_number() ) );
+      match.push_back( curr_r->get_sugar_bit( p->get_sugar_number() ) );           
     }else{
       eq_sugar( curr_r->get_sugar_bits(),
                 p->get_unknown_sugar()->get_sugar_bits(), match );
@@ -848,7 +852,7 @@ match_condition( rule_ptr curr_r,
     // match condition parts parts of rules
     for( unsigned k = 0; k < p->get_children_num(); k++ ) {
       if( k == sibling_num ) continue;
-      match_tree( curr_r->get_child(k), p->get_child(k), mark, true, match );
+      match_tree( curr_r->get_child(k), p->get_child(k), mark, true, match, curr_r,true );
     }
     curr_r = curr_r->get_child( sibling_num );
   }
@@ -1035,7 +1039,7 @@ apply_rule_cons( sugar_mol_ptr& m, VecExpr& rule_matches ) {
 
       // arg1=false to simulate cut mismatch between rule and molecule
       match_cuts( mk_false(ctx), curr_r, m, match );
-      match_tree( curr_r, m, mark, false, match );
+      match_tree( curr_r, m, mark, false, match, curr_r, false );
 
       depth_matches.push_back( mk_and( ctx, match ) );
     }
@@ -1070,7 +1074,7 @@ encode_mol( sugar_mol_ptr& m, VecExpr& cons ) {
     VecExpr seed_match;
     z3::expr dummy_mark(ctx);
     match_cuts( mk_false(ctx), seed, m, seed_match );
-    match_tree( seed, m, dummy_mark, false, seed_match );
+    match_tree( seed, m, dummy_mark, false, seed_match, seed, false );
     seeds_match.push_back( mk_and( ctx, seed_match ) );
   }
   cons.push_back( mk_or( ctx, seeds_match ) );

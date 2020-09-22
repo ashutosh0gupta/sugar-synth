@@ -34,6 +34,9 @@ public:
     //return mk_true(ctx);
     return is_fast;
   }
+  z3::expr get_is_hard_end() const {
+    return is_hard_end;
+  }
   void collect_local_cons(VecExpr& , VecExpr& ) const;
 
   // for concerete rules
@@ -43,6 +46,7 @@ public:
   void set_is_condition( bool );
   void set_compartment( unsigned num );
   void set_is_fast( bool );
+  void set_is_hard_end( bool );
   void add_no_empty_condition();
 
   z3::context& get_context() const { return ctx; }
@@ -64,11 +68,11 @@ private:
   z3::expr is_extended; // bit endcodes that node will be extended
   z3::expr is_condition;// bit encodes that the node is monitored
                         // if both the above bits are false; node is donot care
-
+  z3::expr is_hard_end;
   // rule specific property; unnecessarily copies are created for subfromulas
-  z3::expr compartment;
+  z3::expr compartment;  
   z3::expr is_fast; // to recode a rule is fast or slow wrt of exit rates
-
+  
   // ------------------
   // Encoding constraints
   z3::expr local_constraints;
