@@ -1112,10 +1112,14 @@ construct_conc_rule( rule_ptr& r, rule_ptr& conc_r, z3::model& m,
   if(!r ) return;
   assert(r);
   assert( conc_r );
+
+  // assign learned values to concrete rules
   conc_r->set_is_extended( is_true( r->get_is_extended() , m ) );
   conc_r->set_is_condition( is_true( r->get_is_condition() , m ) );
   conc_r->set_compartment( get_int_val( r->get_compartment(), m ) );
   conc_r->set_is_fast( is_true( r->get_is_fast(), m ) );
+  conc_r->set_is_hard_end( is_true( r->get_is_hard_end(), m ) );
+
   //dump(conc_r->get_is_fast());
   unsigned idx = get_true_idx( r->get_sugar_bits(), m );
   conc_r->set_sugar( idx );
@@ -1124,17 +1128,14 @@ construct_conc_rule( rule_ptr& r, rule_ptr& conc_r, z3::model& m,
     rule_ptr conc_r_i = conc_r->get_child(i);
     construct_conc_rule( r_i, conc_r_i, m, conc_rules);
   }
+
+  // record learned rules in a constraint
   conc_rules.push_back( r->get_is_extended() == conc_r->get_is_extended() );
   conc_rules.push_back( r->get_is_condition() == conc_r->get_is_condition());
   conc_rules.push_back( r->get_compartment() == conc_r->get_compartment() );
   conc_rules.push_back( r->get_is_fast() == conc_r->get_is_fast() );
-  // if( idx == r->get_sugar_bits().size() ) {
-  //   for( unsigned i = 0; i < r->get_sugar_bits().size(); i++  ) {
-  //     conc_rules.push_back( !r->get_sugar_bit( i ) );
-  //   }
-  // }else{
-  //   conc_rules.push_back( r->get_sugar_bit( idx ) );
-  // }
+  conc_rules.push_back( r->get_is_hard_end() == conc_r->get_is_hard_end() );
+
   for( unsigned i = 0; i < r->get_sugar_bits().size(); i++  ) {
     if( i == idx )
       conc_rules.push_back( r->get_sugar_bit( i ) );

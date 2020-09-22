@@ -280,20 +280,22 @@ dump_dotty( std::string filename ) const {
 void rule::pp( std::ostream& out ) const {
   std::cout << get_compartment() ;
   if( is_true( is_fast ) ){
-    if( is_true( is_hard_end )){
-      std::cout<< ": hard ";
-    }
-    else{
-      std::cout<< ": soft";
-    }
+    std::cout<< ":";
+    // if( is_true( is_hard_end )){
+    //   std::cout<< ": hard ";
+    // }
+    // else{
+    //   std::cout<< ": soft";
+    // }
   }
   else{
-    if( is_true( is_hard_end )){
-      std::cout<< ":: hard ";
-    }
-    else{
-      std::cout<< ":: soft";
-    }
+    std::cout<< "::";
+    // if( is_true( is_hard_end )){
+    //   std::cout<< ":: hard ";
+    // }
+    // else{
+    //   std::cout<< ":: soft";
+    // }
   } 
   pp( out, true );
 }
@@ -339,7 +341,11 @@ void rule::pp( std::ostream& out, bool parent_cond ) const {
     if( parent_cond && !is_cond ) out << "]";
     // out << ")";
   }else{
-    out << "_";
+   if( is_true( is_hard_end )){
+     out << "<";
+   }else{
+     out << "_";
+   }
   }
 
 }
