@@ -68,7 +68,8 @@ private:
   z3::expr is_extended; // bit endcodes that node will be extended
   z3::expr is_condition;// bit encodes that the node is monitored
                         // if both the above bits are false; node is donot care
-  z3::expr is_hard_end;
+  z3::expr is_hard_end; // true only if node does not exists i.e. (!is_extended and !is_condition)
+
   // rule specific property; unnecessarily copies are created for subfromulas
   z3::expr compartment;  
   z3::expr is_fast; // to recode a rule is fast or slow wrt of exit rates
