@@ -1,10 +1,11 @@
 In the previous section, we have presented a simplified version of
 the synthesis problem.
 However, the biological problem has more details.
-There are unsettled modeling choices.
-We have developed and implemented several variations of the
+% There are unsettled modeling choices.
+We have developed % and implemented
+several variations of the
 above method.
-The user may choose the variation depending on the choice of model.
+% A user may choose the variation depending on the choice of model.
 
 \subsection{Compartments}
 
@@ -51,7 +52,7 @@ by the following line, which also inserts extra constraints.
   \State $c \landplus \tau(v') < mark \land compart(v_r) \geq compart(v')$
   \vspace{1ex}
 \end{algorithmic}
-After adding the above constraints, we can divide the learned rules
+Using the above constraints, we can divide the learned rules
 into compartments.
 
 \subsection{Compartment stay model}
@@ -120,41 +121,6 @@ the production rules add a new copy of the subtree only after looking
 within the context of the previous copy of the subtree,
 and once the rules for repeating pattern are active
 all the other rules of the last compartment must not be applicable. 
-
-\subsection{Full organism data vs single cell data}
-
-The experiments that observe the set of glycan molecules are of two kinds. In one kind, we isolate a single cell type of an organism and identify all the glycans present in the cells. In our presentation, we have assumed this kind of source of data. However, the experiments are difficult to conduct.
-In another and more convenient way, we smash the whole organism and identify all the glycans present in all the cells.
-So the information that which glycans are coming from which
-cells is unknown.
-In this situation, the synthesis has another task to map the molecules
-in $\mu$ to several cell types.
-A glycan may be present in multiple cell types.
-
-Our method is easily adapted to consider this kind of data.
-We search for a small covering set of subsets of
-$\powerset{\mu}$ such that each set in the cover allows a small
-set of production rules.
-The cover sets indicate the different types of cells in terms of
-the presence of glycans.
-This variation makes the problem particularly hard.
-There can be a potentially large number of covering subsets.
-So far, we have not encountered a large enough data set such that
-we apply the variation effectively. 
-
-
-\subsection{Incomplete data}
-
-The experiments are imperfect. They may not detect all possible glycans
-in a cell.
-We may need to leave the possibility of allowing a few more molecules to be
-producible beyond $\mu$.
-We replace the no extra molecule constraint by a constraint that allow molecules
-that are `similar' to molecules in $\mu$.
-However, we could not imagine any measure of similarity that naturally stems from
-biological intuition.
-For now, our tool supports the count of the number of monomer differences
-as a measure of similarity.
 
 
 

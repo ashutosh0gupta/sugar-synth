@@ -1,5 +1,6 @@
+\documentclass{llncs}
 %% For double-blind review submission, w/o CCS and ACM Reference (max submission space)
-\documentclass[acmsmall,review,anonymous]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
+% \documentclass[acmsmall,review,anonymous]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
 %% For double-blind review submission, w/ CCS and ACM Reference
 %\documentclass[acmsmall,review,anonymous]{acmart}\settopmatter{printfolios=true}
 %% For single-blind review submission, w/o CCS and ACM Reference (max submission space)
@@ -12,11 +13,11 @@
 
 % \documentclass[conference,10pt]{IEEEtran}
 
-\bibliographystyle{ACM-Reference-Format}
+% \bibliographystyle{ACM-Reference-Format}
 %% Citation style
 %% Note: author/year citations are required for papers published as an
 %% issue of PACMPL.
-\citestyle{acmauthoryear}   %% For author/year citations
+% \citestyle{acmauthoryear}   %% For author/year citations
 
 \input{macro.tex}
 
@@ -28,11 +29,12 @@
 
 \begin{document}
 
+\maketitle
+
 \begin{abstract}
   Glycans are tree-like polymers made up of sugar monomer building blocks. They are found on the surface of all living cells, and distinct glycan trees act as identity markers for distinct cell types. Proteins called GTase enzymes assemble glycans via the successive addition of monomer building blocks. The rules by which these enzymes operate are not fully understood. In this paper, we present a novel SMT-solver-based iterative method that infers the assembly process of the glycans by analyzing the set of glycans found in a cell. We have build a tool based on this method and have used it to infer rules based on published glycan data sets.
 \end{abstract}
 
-\maketitle
 
 \section{Introduction}
 \label{sec:intro}
@@ -77,7 +79,223 @@
 \label{sec:conclusion}
 \input{conclusion.tex}
 
-% % \bibliographystyle{unsrt}
+\bibliographystyle{unsrt}
 \bibliography{biblio}
+
+\appendix
+
+\section{Implementation optimizations}
+
+% \subsection{Optimizations}
+We have incorporated several optimizations to gain efficiency or reduce
+the number of iterations in the method. Let us discuss some of the remarkable
+optimizations.
+
+\paragraph{Ordered templates}
+Our method constructs a list of templates.
+Since the templates are symmetric, there is a potential of unnecessary
+iterations.
+Let us suppose the method rejects a set of learned rules.
+In the subsequent queries include the constraints that reject the set of rules,
+the solvers may choose the same set of rules again by permuting the mapping
+from the templates to the learned rule.
+To avoid these iterations, we define an arbitrary total order over the rules.
+We add ordering constraints stating that any assignments to the list of templates should produce
+ordered rules with respect to the total order.
+
+\paragraph{Quantifier instantiations}
+The constraints for rejecting the counterexample molecule is universally quantified at line~\ref{line:negCons} in algorithm~\ref{alg:sugar-synth}.
+For any assignment, the solver needs to try sufficiently many instantiations of the quantifiers
+to ensure that the query is not unsatisfiable.
+The instantiations sufficiently slow down the solving process.
+We assist the solver by also adding an instantiation of the quantifiers that is equal
+to the values of the corresponding variables in the assignment $a$ at line~\ref{line:negModel}.
+We observe that for some inputs only adding the instantiations and not the universally quantified
+formula is more effective.
+
+\paragraph{Constraints for counterexample molecules}
+In the presentation of \textsc{SugarSynth}, we construct constraints of counterexample molecules
+at line~\ref{line:consNewR} in each iteration.
+The repeated work is impractical because the formula management system of Z3 will be overwhelmed by
+the construction of many terms repeatedly. In our implementation, we construct the constraints
+once outside the while loop.
+We pass the templates as the second parameter instead of concrete rules to~\textsc{EncodeProduce}.
+Later at the solving time in line~\ref{line:negModel}, constraints are added to assign values
+of the template variables that were returned by the solver at line~\ref{line:posModel}.
+Due to the assignments, the templates become concrete rules in the context of solving.
+
+\section{Features to support in future}
+
+\subsection{Full organism data vs single cell data}
+
+The experiments that observe the set of glycan molecules are of two kinds. In one kind, we isolate a single cell type of an organism and identify all the glycans present in the cells. In our presentation, we have assumed this kind of source of data. However, the experiments are difficult to conduct.
+In another and more convenient way, we smash the whole organism and identify all the glycans present in all the cells.
+So the information that which glycans are coming from which
+cells is unknown.
+In this situation, the synthesis has another task to map the molecules
+in $\mu$ to several cell types.
+A glycan may be present in multiple cell types.
+
+Our method is easily adapted to consider this kind of data.
+We search for a small covering set of subsets of
+$\powerset{\mu}$ such that each set in the cover allows a small
+set of production rules.
+The cover sets indicate the different types of cells in terms of
+the presence of glycans.
+This variation makes the problem particularly hard.
+There can be a potentially large number of covering subsets.
+So far, we have not encountered a large enough data set such that
+we apply the variation effectively. 
+
+
+\subsection{Incomplete data}
+
+The experiments are imperfect. They may not detect all possible glycans
+in a cell.
+We may need to leave the possibility of allowing a few more molecules to be
+producible beyond $\mu$.
+We replace the no extra molecule constraint by a constraint that allow molecules
+that are `similar' to molecules in $\mu$.
+However, we could not imagine any measure of similarity that naturally stems from
+biological intuition.
+For now, our tool supports the count of the number of monomer differences
+as a measure of similarity.
+
+
+
+\section{Extended related work}
+
+
+% Success of formal methods
+Formal methods have successful in applications to a vast range of
+problems from the analysis of systems.
+%
+In particular,
+the verification of hardware designs
+using SAT solver based model-checking has been applied
+to industrial-scale problems~\cite{biere1999symbolic2}.
+%
+The verification of software systems is a much harder problem, and
+many methods like bounded model-checking~\cite{biere2003bounded},
+abstract interpretation~\cite{lattice77}, and
+counterexample guided abstraction refinement (CEGAR)~\cite{ClarkeCEGAR} have
+been successful for the problem.
+%
+
+Synthesis of programs that implements a given behavior
+has been a focus of research for a while~\cite{PnueliSynthesis}.
+%
+In recent years, the synthesis of programs using SAT/SMT solvers
+has gained momentum.
+%
+The approach encodes the search of a program that exhibits a certain
+behavior into a satisfiability problem.
+%
+The solvers attempt to find a solution of the satisfiability problem.
+%
+The solution is the synthesized program.
+%
+In~\cite{SrivastavaSynthesis,Solar-Lezama2005},
+the method has been successfully applied
+to find programs that satisfy quantified specifications like sorting
+programs, and have missing ``holes'' and need proper implementations
+for them.
+%
+In~\cite{exampleSynth},
+a set of pairs of input and output examples is the specification of a program,
+and the synthesis method searches for programs in a space defined by a
+template~\cite{sygus}.
+
+
+% Boolean networks
+
+% Program synthesis
+Since the formal methods have been exhibiting effectiveness in the vast
+range of problems, the
+systems biology community has been applying the methods for various
+biological problems~\cite{fisher2007executable}.
+The formal methods approach is distinctly different from the statistical
+approach traditionally used in biology.
+In formal methods, we aim to match precisely the expected behavior rather
+than learn approximate artifacts from biological data.
+The use of formal methods belongs to two broad categories:
+the analysis of biological models and the synthesis of the models.
+
+The key focus has been to model gene regulatory networks (GRNs), since
+they are the core of the central dogma of biology.
+Boolean networks are often used to model
+GRNs to find stable points or attractors, i.e., nodes in the networks
+where a system eventually reaches no matter where it starts~\cite{wang2012BooleanOverview}.
+% In~\cite{boolean-networks-stabilty}, the networks are used to evaluate
+% stability of GRNs under mutations.
+The Boolean networks are not often sufficient to adequately model the behavior
+of GRNs.
+The continuous-time Markov chains (CTMCs) are used to bring in the aspects of
+timing and probabilistic constraints to GRNs.
+The transient behaviors of GRNs are also crucial for various aspects
+of biology.
+% For example, the decision making in some cells is based on
+% response timing to stimulus~\cite{response-timing-paper}.
+In~\cite{delayedCTMC}, a methods based on
+model-checking is used to estimate the time evolution of the probability
+distributions over states of GRNs.
+
+
+There are many biological processes where we can observe the system behavior,
+but the exact mechanisms of the processes are not known.
+%
+Recently, the methods for formal synthesis are finding their applications in biology
+\cite{dunn2014defining,xuPluripotency,booleanModelKarp13,paoletti2014analyzing}.
+%
+In~\cite{koksal2013synthesis},
+GRNs with unknown interactions are modeled using
+a automata-like model with missing components
+and the specification is the variations of the behavior of the system under mutations.
+Their approach uses a counterexample-guided inductive synthesis (CEGIS) based algorithm~\cite{cegis}.
+CEGIS is a framework for synthesis. It first finds a program that may satisfy `samples' from
+the specification. If the synthesized program satisfies the specifications, the CEGIS terminates.
+Otherwise, the method learns a new sample where the program violates the specifications.
+It adds the sample to the set and goes to the next iteration.
+Typically, the constraint solvers find the programs during intermediate steps of CEGIS by
+solving the generated queries.
+%
+Our method follows a similar pattern, where
+a set of sampled observations is a specification, i.e., output molecules,
+and we need to find the governing programs, i.e., production rules.
+%
+In a subsequent work~\cite{fisher2015synthesising}, a Boolean network model is used,
+the functions attached to the nodes are considered unknown, and
+a different kind of data sets provides the behavior specification.
+In this approach, their earlier method is adopted to work in the new situation.
+%
+
+As far as we know, there has been no similar computation based analysis of glycan production rules.
+%
+However, there has been a theoretical analysis of the properties of the production
+rules in~\cite{Jaiman2018}. The work identifies the conditions for the production
+of a finite set of molecules and the cases of unique production methods.
+%
+In our work, we are taking the computational approach of synthesis from formal methods
+instead of looking for the theoretical conditions.
+
+% 
+% To resolve this paradox we borrow from the field of
+% al-gorithmic self-assembly, which explores how small buildingblocks
+% with stochastic local interactions assemble into various global
+% configurations [23]–[25].  A central inverse problemin self-assembly
+% is to design building blocks that assembleinto a target shape.  This
+% process has been studied using thetheoretical framework of Wang tiles:
+% square building blockswith colored sides that stick to one another
+% along sides withmatching colors [26].  For efficient assembly of Wang
+% tiles,their coloring must be cleverly chosen so the target shape isthe
+% unique terminal output of the stochastic assembly process[27].   That
+% is, their assembly must be algorithmic.  Glycans may be considered a
+% natural realization of the Wang construct,with monomers acting like
+% tiles whose stickiness is encodedby GTase enzymes.  If glycan
+% biosynthesis could be madealgorithmic, cells could suppress unwanted
+% byproducts andgenerate only desired glycan oligomers with high yield.
+
+
+
 
 \end{document}

@@ -100,7 +100,7 @@ Formally, the templates are defined as follows.
     \draw[dashed] (-1.5cm,-1.7cm) -- ++(-1.2cm,-1.2cm) -- ++(2.4cm,0cm) -- cycle;
   \end{tikzpicture}
 
-  \caption{Illustrating parts of production rules that are to be encoded in the rule templates.}
+  \caption{Parts of production rules in the rule templates.}
   \label{fig:rule-parts}
 \end{figure}
 
@@ -139,7 +139,8 @@ The third encodes the tree structure of the rule.
 The last three encode the relative positions of the four
 parts of the rule.
 \begin{enumerate}
-\item If a node is present, then it is labeled with a sugar. Otherwise, we ignore the label.
+\item If a node is present, then it is labeled with a sugar.
+  %Otherwise, we ignore the label.
 $$
 \Land_{s \in S} \Land_{v \in V} (\kappa(v) \neq Absent \limplies \nu(v) \neq \bot )
 $$
@@ -220,11 +221,11 @@ The last encodes that new molecule must not be the same as any molecule in $\mu$
   $$
   \Land_{i\in[1,w]}\Land_{\mathrlap{\text{internal node } v \in V}} (\nu(C(v,i) ) \neq \bot \limplies \nu( v ) \neq \bot )  
   $$
-\item The number of children of a node should match with the arity of the labeled sugar.
+\item The children count of a node matches with the arity of the labeled sugar.
   $$
   \Land_{s \in S} \Land_{i \in (arity(s),w] }\Land_{v \in V} (\nu(v) = s \limplies \kappa( C(v,i) ) = Absent )
   $$
-\item At least one of the leaves is present. This constraint is for
+\item At least one of the leaves is present. This is for
   avoiding the trivial solution.
   $$
   \Lor_{ v \in V \text{ and } depth(v) > d' } \nu( v ) \neq \bot,
@@ -246,13 +247,13 @@ The last encodes that new molecule must not be the same as any molecule in $\mu$
   \Lor_{\mathclap{i \in [1,w]}} Neq( C(v,i), C(v',i ) )\\
     Neq(v,\bot) :=\;&  \nu(v) \neq \bot
   \end{align*}
-  The disequality constraint is
-  \begin{align*}
-    \Lor_{\mathclap{m = (\_,\_,\_, v_0)\in \mu}}  Neq(\hat{v_0},v).
-  \end{align*}
-  In our implementation, we have an option to strengthen
-  the constraints.
-  We have an option to also ignore all the subtrees of
+  The constraint is
+  % \begin{align*}
+  $\Lor_{%\mathclap
+    {m = (\_,\_,\_, v_0)\in \mu}}  Neq(\hat{v_0},v).$
+  % \end{align*}
+  In our implementation, 
+  we have an option to also ignore the subtrees of
   the molecules of $\mu$.
 \end{enumerate}
 %

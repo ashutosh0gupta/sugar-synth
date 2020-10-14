@@ -1,12 +1,12 @@
-\begin{figure}[h!]
+\begin{figure}[ht!]
 % (sugar a 2)     #Box Yellow
 % (sugar c 1)     #Circle yellow
 % (sugar b 1)     #Box Blue
 % (sugar d 0)     #Diamond red
-
+  \small
   \begin{minipage}{0.5\linewidth}
     \mbox{}
-    \centering
+    % \centering
   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
     % (mol (a (c d) d) )
     \node[loc] (v0) {$A$};
@@ -18,21 +18,7 @@
     \path[->] (v1) edge (v2);
     \path[->] (v0) edge (v3);
   \end{tikzpicture}
-  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
-    % (mol (a (c d) (b (c d)) ) )
-    \node[loc] (v0) {$A$};
-    \node[loc, below left of=v0] (v1) {$C$};
-    \node[loc, below of=v1] (v2) {$D$};
-    \node[loc, below right of=v0] (v3) {$B$};
-    \node[loc, below of=v3] (v4) {$C$};
-    \node[loc, below of=v4] (v5) {$D$};
-
-    \path[->] (v0) edge (v1);
-    \path[->] (v1) edge (v2);
-    \path[->] (v0) edge (v3);
-    \path[->] (v3) edge (v4);
-    \path[->] (v4) edge (v5);
-  \end{tikzpicture}
+  \qquad
   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
     % (mol (a (c (b (c d)) ) (b (c d)) ) )
     \node[loc] (v0) {$A$};
@@ -51,8 +37,26 @@
     \path[->] (v0) edge (v3);
     \path[->] (v2) edge (v6);
     \path[->] (v6) edge (v7);
-  \end{tikzpicture}\\
-  (a)
+  \end{tikzpicture}
+  \vspace{-15mm}\par
+  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+    % (mol (a (c d) (b (c d)) ) )
+    \node[loc] (v0) {$A$};
+    \node[loc, below left of=v0] (v1) {$C$};
+    \node[loc, below of=v1] (v2) {$D$};
+    \node[loc, below right of=v0] (v3) {$B$};
+    \node[loc, below of=v3] (v4) {$C$};
+    \node[loc, below of=v4] (v5) {$D$};
+
+    \path[->] (v0) edge (v1);
+    \path[->] (v1) edge (v2);
+    \path[->] (v0) edge (v3);
+    \path[->] (v3) edge (v4);
+    \path[->] (v4) edge (v5);
+  \end{tikzpicture}
+  \vspace{-3mm}
+  \\
+  \mbox{}\hfill(a)\hfill\mbox{}
 \end{minipage}
 \vrule
   \begin{minipage}{0.48\linewidth}
@@ -162,7 +166,7 @@
 %     \end{tikzpicture}\\\vspace{2ex}
     (b)
   \end{minipage}
-  \vspace{3ex}\hrule\vspace{3ex}
+  \hrule
   \begin{minipage}{1.0\linewidth}
     \centering
   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
@@ -221,9 +225,10 @@
     % \draw [decorate,decoration={brace,amplitude=7pt}]
     % (5,0.5) -- ++(8.5cm,0) node [midway,above,yshift=3pt] {Compartment 2};
   \end{tikzpicture}\\
+  \vspace{-3mm}
   (c)
 \end{minipage}
-\vspace{3ex}\hrule\vspace{3ex}
+\hrule
 \begin{minipage}{0.2\linewidth}
   \centering
   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
@@ -284,7 +289,7 @@
     \node[loc] (v0) {$A$};
     \node[sqloc, below right of=v0] (v1) {$D$};
     \path[->] (v0) edge (v1);
-  \end{tikzpicture}\\\vspace{2ex}
+  \end{tikzpicture}
   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
     % 0:(c [(b-b c)])
     \node[loc] (v0) {$C$};
@@ -305,8 +310,6 @@
     \node[sqloc, below left of=v0] (v1) {$B$};
     \path[->] (v0) edge (v1);
   \end{tikzpicture}
-  \\
-
   % % 0:(a _ [b])
   % % 0:(a _ [d])
   % % 1:(a [c] _)
@@ -355,9 +358,18 @@
     (f)
   \end{minipage}
 
-  \caption{(a) A schematic example of a data set that includes three glycan oligomers. Note that we have used a convention of keeping the root on top, which is opposite to the biological convention of keeping the root at the bottom. (b) A set of production rules for the glycan molecules (c) The steps of producing the middle glycan molecule in (d) An undesired molecule. The conditions on siblings help us avoid producing it. (e) Another undesired molecule.
-    The conditions on ancestors help us avoid producing it.  (f) the synthesized rules at the first iteration.}
+  \caption{(a) A schematic example of a data set that includes three glycan oligomers.
+    % Note that we have used a convention of keeping the root on top, which is opposite to the biological convention of keeping the root at the bottom.
+    (b) A set of production rules for the glycan molecules
+    (c) The steps of producing the middle glycan molecule
+    (d) An undesired molecule.
+    The conditions on siblings help us avoid producing it.
+    (e) Another undesired molecule.
+    % The conditions on ancestors help us avoid producing it.
+    (f) the synthesized rules at the first iteration.
+  }
   \label{fig:ex-gly}
+  \vspace{-7mm}
 \end{figure}
 
 %%% Local Variables:

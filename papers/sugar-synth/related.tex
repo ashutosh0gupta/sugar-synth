@@ -1,24 +1,11 @@
 % Success of formal methods
 Formal methods have successful in applications to a vast range of
-problems from the analysis of systems.
-%
-In particular,
-the verification of hardware designs
-using SAT solver based model-checking has been applied
-to industrial-scale problems~\cite{biere1999symbolic2}.
-%
-The verification of software systems is a much harder problem, and
-many methods like bounded model-checking~\cite{biere2003bounded},
-abstract interpretation~\cite{lattice77}, and
-counterexample guided abstraction refinement (CEGAR)~\cite{ClarkeCEGAR} have
-been successful for the problem.
-%
-
+problems from the analysis of
+systems~\cite{biere1999symbolic2,biere2003bounded,lattice77,ClarkeCEGAR}.
 Synthesis of programs that implements a given behavior
 has been a focus of research for a while~\cite{PnueliSynthesis}.
-%
 In recent years, the synthesis of programs using SAT/SMT solvers
-has gained momentum.
+has gained momentum~\cite{SrivastavaSynthesis,Solar-Lezama2005,sygus}.
 %
 The approach encodes the search of a program that exhibits a certain
 behavior into a satisfiability problem.
@@ -26,17 +13,7 @@ behavior into a satisfiability problem.
 The solvers attempt to find a solution of the satisfiability problem.
 %
 The solution is the synthesized program.
-%
-In~\cite{SrivastavaSynthesis,Solar-Lezama2005},
-the method has been successfully applied
-to find programs that satisfy quantified specifications like sorting
-programs, and have missing ``holes'' and need proper implementations
-for them.
-%
-In~\cite{exampleSynth},
-a set of pairs of input and output examples is the specification of a program,
-and the synthesis method searches for programs in a space defined by a
-template~\cite{sygus}.
+
 
 
 % Boolean networks
@@ -46,87 +23,37 @@ Since the formal methods have been exhibiting effectiveness in the vast
 range of problems, the
 systems biology community has been applying the methods for various
 biological problems~\cite{fisher2007executable}.
-The formal methods approach is distinctly different from the statistical
-approach traditionally used in biology.
-In formal methods, we aim to match precisely the expected behavior rather
-than learn approximate artifacts from biological data.
-The use of formal methods belongs to two broad categories:
-the analysis of biological models and the synthesis of the models.
-
-The key focus has been to model gene regulatory networks (GRNs), since
-they are the core of the central dogma of biology.
-Boolean networks are often used to model
-GRNs to find stable points or attractors, i.e., nodes in the networks
-where a system eventually reaches no matter where it starts~\cite{wang2012BooleanOverview}.
-% In~\cite{boolean-networks-stabilty}, the networks are used to evaluate
-% stability of GRNs under mutations.
-The Boolean networks are not often sufficient to adequately model the behavior
-of GRNs.
-The continuous-time Markov chains (CTMCs) are used to bring in the aspects of
-timing and probabilistic constraints to GRNs.
-The transient behaviors of GRNs are also crucial for various aspects
-of biology.
-% For example, the decision making in some cells is based on
-% response timing to stimulus~\cite{response-timing-paper}.
-In~\cite{delayedCTMC}, a methods based on
-model-checking is used to estimate the time evolution of the probability
-distributions over states of GRNs.
-
+The key focus has been to model gene regulatory networks (GRNs)~\cite{wang2012BooleanOverview,delayedCTMC}.
 
 There are many biological processes where we can observe the system behavior,
 but the exact mechanisms of the processes are not known.
 %
-Recently, the methods for formal synthesis are finding their applications in biology
-\cite{dunn2014defining, xuPluripotency, booleanModelKarp13, paoletti2014analyzing}.
+Recently, the methods for formal synthesis are finding their applications in biology~\cite{dunn2014defining,xuPluripotency,booleanModelKarp13,paoletti2014analyzing,koksal2013synthesis,fisher2015synthesising}.
 %
-In~\cite{koksal2013synthesis},
-GRNs with unknown interactions are modeled using
-a automata-like model with missing components
-and the specification is the variations of the behavior of the system under mutations.
-Their approach uses a counterexample-guided inductive synthesis (CEGIS) based algorithm~\cite{cegis}.
-CEGIS is a framework for synthesis. It first finds a program that may satisfy `samples' from
-the specification. If the synthesized program satisfies the specifications, the CEGIS terminates.
-Otherwise, the method learns a new sample where the program violates the specifications.
-It adds the sample to the set and goes to the next iteration.
-Typically, the constraint solvers find the programs during intermediate steps of CEGIS by
-solving the generated queries.
-%
-Our method follows a similar pattern, where
-a set of sampled observations is a specification, i.e., output molecules,
-and we need to find the governing programs, i.e., production rules.
-%
-In a subsequent work~\cite{fisher2015synthesising}, a Boolean network model is used,
-the functions attached to the nodes are considered unknown, and
-a different kind of data sets provides the behavior specification.
-In this approach, their earlier method is adopted to work in the new situation.
-%
-
 As far as we know, there has been no similar computation based analysis of glycan production rules.
-%
-However, there has been a theoretical analysis of the properties of the production
-rules in~\cite{Jaiman2018}. The work identifies the conditions for the production
-of a finite set of molecules and the cases of unique production methods.
-%
-In our work, we are taking the computational approach of synthesis from formal methods
-instead of looking for the theoretical conditions.
 
-% 
-% To resolve this paradox we borrow from the field of
-% al-gorithmic self-assembly, which explores how small buildingblocks
-% with stochastic local interactions assemble into various global
-% configurations [23]–[25].  A central inverse problemin self-assembly
-% is to design building blocks that assembleinto a target shape.  This
-% process has been studied using thetheoretical framework of Wang tiles:
-% square building blockswith colored sides that stick to one another
-% along sides withmatching colors [26].  For efficient assembly of Wang
-% tiles,their coloring must be cleverly chosen so the target shape isthe
-% unique terminal output of the stochastic assembly process[27].   That
-% is, their assembly must be algorithmic.  Glycans may be considered a
-% natural realization of the Wang construct,with monomers acting like
-% tiles whose stickiness is encodedby GTase enzymes.  If glycan
-% biosynthesis could be madealgorithmic, cells could suppress unwanted
-% byproducts andgenerate only desired glycan oligomers with high yield.
 
+% In~\cite{},
+% GRNs with unknown interactions are modeled using
+% a automata-like model with missing components
+% and the specification is the variations of the behavior of the system under mutations.
+% Their approach uses a counterexample-guided inductive synthesis (CEGIS) based algorithm~\cite{cegis}.
+% CEGIS is a framework for synthesis. It first finds a program that may satisfy `samples' from
+% the specification. If the synthesized program satisfies the specifications, the CEGIS terminates.
+% Otherwise, the method learns a new sample where the program violates the specifications.
+% It adds the sample to the set and goes to the next iteration.
+% Typically, the constraint solvers find the programs during intermediate steps of CEGIS by
+% solving the generated queries.
+% %
+% Our method follows a similar pattern, where
+% a set of sampled observations is a specification, i.e., output molecules,
+% and we need to find the governing programs, i.e., production rules.
+% %
+% In a subsequent work~\cite{}, a Boolean network model is used,
+% the functions attached to the nodes are considered unknown, and
+% a different kind of data sets provides the behavior specification.
+% In this approach, their earlier method is adopted to work in the new situation.
+% %
 
 
 %--------------------- DO NOT ERASE BELOW THIS LINE --------------------------

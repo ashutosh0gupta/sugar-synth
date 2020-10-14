@@ -27,31 +27,32 @@ space use templates to define and limit their search space,
 such as learning invariants of programs~\cite{InvGenTACAS09},
 and synthesizing missing components in programs~\cite{sygus,Solar-Lezama2005}.
 We also use templates to model the space of the production rules.
-The templates usually have parameters that limit the search space.
-In our case, the size and number of templates are the parameters that
-limit sizes of pieces of trees that are added in one step,
-number of the production rules, and
-the depth of surrounding that are checked to control the rules.
+% The templates usually have parameters that limit the search space.
+% In our case, the size and number of templates are the parameters that
+% limit sizes of pieces of trees that are added in one step,
+% number of the production rules, and
+% the depth of surrounding that are checked to control the rules.
 
-\begin{figure}[t]
-  \begin{tikzpicture}[thick,shorten >=1pt,node distance=2cm,on grid]
-    \node[sqloc]   (q0)                {Synthesis query};
-    \node   (qi) [xshift=-1cm, left=of q0]                {Input glycans};
-    \node[sqloc]           (q1) [xshift=2cm, right=of q0] {Counterexample query};
-    \node   (qo) [ below=of q1]                {Synthesized rules};
-    \node   (qf) [ below=of q0]                {Synthesis failed};
-    \path[->] (q0) edge [bend left=45] node [above] {Synthesized rules} node [below,xshift=-1.2cm,yshift=-3mm] {sat} (q1);
-    \path[->] (q1) edge [bend left=45] node [below] {Counterexample} node [above,xshift=1.2cm,yshift=3.5mm] {sat} (q0);
-    \path[->] (qi) edge  (q0);
-    \path[->] (q1) edge node [right,yshift=6mm] {unsat} (qo);
-    \path[->] (q0) edge node [left,yshift=6mm] {unsat} (qf);  
-  \end{tikzpicture}
-  \caption{The architecture of our synthesis method}
-  \label{fig:illus-method}
-\end{figure}
+% \begin{figure}[t]
+%   \begin{tikzpicture}[thick,shorten >=1pt,node distance=2cm,on grid]
+%     \node[sqloc]   (q0)                {Synthesis query};
+%     \node   (qi) [xshift=-1cm, left=of q0]                {Input glycans};
+%     \node[sqloc]           (q1) [xshift=2cm, right=of q0] {Counterexample query};
+%     \node   (qo) [ below=of q1]                {Synthesized rules};
+%     \node   (qf) [ below=of q0]                {Synthesis failed};
+%     \path[->] (q0) edge [bend left=45] node [above] {Synthesized rules} node [below,xshift=-1.2cm,yshift=-3mm] {sat} (q1);
+%     \path[->] (q1) edge [bend left=45] node [below] {Counterexample} node [above,xshift=1.2cm,yshift=3.5mm] {sat} (q0);
+%     \path[->] (qi) edge  (q0);
+%     \path[->] (q1) edge node [right,yshift=6mm] {unsat} (qo);
+%     \path[->] (q0) edge node [left,yshift=6mm] {unsat} (qf);  
+%   \end{tikzpicture}
+%   \caption{The architecture of our synthesis method}
+%   \label{fig:illus-method}
+% \end{figure}
 
-Our method is iterative, as illustrated in Figure~\ref{fig:illus-method}.
-Our tool first constructs quantifier-free constraints encoding that a set of unknown rules
+Our method is iterative.
+%as illustrated in Figure~\ref{fig:illus-method}.
+Our tool first constructs constraints encoding that a set of unknown rules
 defined by templates can assemble the input set of molecules.
 The generated constraints involve Boolean variable, finite range variables, and integer ordering
 constraints.
@@ -70,7 +71,7 @@ We generate another set of constraints using the templates for the unknown molec
 are there other molecules that can be generated using the synthesized rules.
 We again solve the constraints using an SMT solver.
 We call the query to the solver {\em counterexample query}.
-If there is no such molecule, our method terminates and reports
+If there is no such molecule, our method reports
 the synthesized rules.
 Otherwise, we have found a producible molecule that is not in the input set.
 
@@ -110,18 +111,18 @@ The key contributions of this paper are the following.
 
 
 We organize the paper as follows.
-In section~\ref{sec:bio}, we introduce the biological background of the synthesis problem and present the basis of the formal model.
-If the reader wants to avoid getting into the biological details, she may skip the section.
+In section~\ref{sec:bio}, we introduce the biological background.
+%of the synthesis problem and present the basis of the formal model.
+% If the reader wants to avoid getting into the biological details, she may skip the section.
 In section~\ref{sec:motivation}, we present a motivating example to illustrate our method.
-In section~\ref{sec:model}, we present the formal model of the glycans, their production
-rules, and the templates.
-In section~\ref{sec:algo}, we present our method of solving the synthesis problem.
-In section~\ref{sec:variations}, we present the variations of the problem and the modifications
-in our methods to support the variations.
-In section~\ref{sec:experiments}, we present our implementation of the method and experiments on
-some glycan data.
+In section~\ref{sec:model}, we present the formal model of the glycans,
+and their production rules.
+In section~\ref{sec:algo}, we present our method for the synthesis problem.
+In section~\ref{sec:variations}, we present the variations of the problem.
+%and the modifications in our methods to support the variations.
+In section~\ref{sec:experiments}, we present our implementation of the method and experiments. %on some glycan data.
 In section~\ref{sec:related} and section~\ref{sec:conclusion},
-we present the related work, future directions, and conclude the paper.
+we present the related work, and conclude the paper.
 
 %--------------------- DO NOT ERASE BELOW THIS LINE --------------------------
 

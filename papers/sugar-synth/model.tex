@@ -63,36 +63,26 @@ We will refer to the descendants of $v_e$ as {\em expanding nodes}
 and all the other nodes as {\em matching nodes}.
 
 
-\begin{example}
-  In Figure~\ref{fig:exrule}(a), we present a rule. That has
-  two kinds of nodes.
-  The rule adds the square node.
-  Therefore, $v_e$ is the square node.
-  The circular nodes $A$ and its right child $B$ are part of a pattern.
-  The pattern must be present in the molecule to apply the rule.
-  In Figure~\ref{fig:exrule}(b), we present an application of the rule.
-  The solid tree with three nodes is the initial molecule.
-  The middle node $A$ and its right child $B$ forms a pattern, where the rule is applicable.
-  Upon applying the rule, the rule adds a left child with label $A$ to the middle node.
-  The rule is not applicable at the root $A$, since it has a right child $A$
-  and the combination does not match the pattern.
-\end{example}
-
-\begin{figure}[t]
-  \begin{minipage}{0.48\linewidth}
-    \center
-  \begin{tikzpicture}[shorten >=1pt,thick,node distance=2cm,on grid]
+\begin{wrapfigure}{r}{0.37\textwidth}
+  \vspace{-5mm}
+    % \begin{minipage}{0.48\linewidth}
+      \small
+    % \center
+  \begin{tikzpicture}[shorten >=1pt,thick,node distance=1cm,on grid]
     \node[loc] (v0) {$A$};
     \node[loc, below right of=v0] (v1) {$B$};
     \node[sqloc, below left of=v0] (v2) {$A$};
     \path[->] (v0) edge (v1);
     \path[->] (v0) edge (v2);
-  \end{tikzpicture}\par
-  (a)
-  \end{minipage}
-  \begin{minipage}{0.48\linewidth}
-        \center
-  \begin{tikzpicture}[shorten >=1pt,thick,node distance=2cm,on grid]
+  \end{tikzpicture}
+  % \par
+  % (a)
+  % \end{minipage}
+  % \begin{minipage}{0.48\linewidth}
+    % \small
+    % \center
+  \quad
+  \begin{tikzpicture}[shorten >=1pt,thick,node distance=1cm,on grid]
     \node[loc] (v0) {$A$};
     \node[loc, below right of=v0] (v1) {$A$};
     \node[loc, below right of=v1] (v3) {$B$};
@@ -101,13 +91,28 @@ and all the other nodes as {\em matching nodes}.
     \path[->,dashed] (v1) edge (v2);
     \path[->] (v1) edge (v3);
   \end{tikzpicture}
-  \par
-  (b)
-  \end{minipage}
-
-  \caption{(a) An example of a rule. (b) An application of the rule.}
+  % \par
+  \hfill (a) \hfill (b)\hfill\mbox{}
+  % (b)
+  % \end{minipage}
+  \caption{(a) An example rule. (b) An application of the rule.}
   \label{fig:exrule}
-\end{figure}
+  \vspace{-8mm}
+\end{wrapfigure}
+\paragraph{Example:} In Figure~\ref{fig:exrule}(a), we present a rule. That has
+  two kinds of nodes.
+  The rule adds the square node.
+  Therefore, $v_e$ is the square node.
+  The circular nodes %$A$ and its right child $B$
+  are part of a pattern.
+  The pattern must be present in the molecule to apply the rule.
+  In Figure~\ref{fig:exrule}(b), we present an application of the rule.
+  The solid tree with three nodes is the initial molecule.
+  The middle node $A$ and its right child $B$ forms a pattern, where the rule is applicable.
+  Upon applying the rule, the rule adds a left child with label $A$ to the middle node.
+  The rule is not applicable at the root $A$, since it has a right child $A$
+  and the combination does not match the pattern.
+
 
 We naturally extend the definitions related to molecules, including $Match$ and $Copy$,
 to the production rules.
