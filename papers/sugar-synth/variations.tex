@@ -44,12 +44,11 @@ the {\bf if} by the following code.
 In the above code, we have inserted constraints related to compartments
 as discussed earlier.
 Similarly, we also need to modify the function
-$\textsc{EncodeP}$ by replacing line~\ref{line:encodep-ans-order}
-by the following line, which also inserts extra constraints.
+$\textsc{EncodeP}$ by inserting the following line after~\ref{line:encodep-ans-match}.
 \begin{algorithmic}[1]
   \vspace{1ex}
   \setcounterref{ALG@line}{line:encodep-ans-match}
-  \State $c \landplus \tau(v') < mark \land compart(v_r) \geq compart(v')$
+  \State $c \landplus compart(v_r) \geq compart(v')$
   \vspace{1ex}
 \end{algorithmic}
 Using the above constraints, we can divide the learned rules

@@ -25,34 +25,29 @@ Here we have assumed certain rules of operation that are most consistent with th
 The goal of this paper is to infer the rules.
 
 
-Now we may consider the abstract general problem. In Figure~\ref{fig:ex-gly}(a), we present a set of
-glycan molecules present in a cell consists of three molecules, which are structurally similar to the
-three glycan molecules in Figure~\ref{fig:dataset-gly}.
-To keep things simple for illustration, we have dropped the third glycan molecule
-(inside light blue square) from the four in
-Figure~\ref{fig:dataset-gly}.
-%
+Now we consider the synthesis problem. In Figure~\ref{fig:ex-gly}(a), we present a set of
+glycan molecules present in a cell consists of three molecules, which are structurally similar to the three glycan molecules in Figure~\ref{fig:dataset-gly}.
+To keep illustration simple, we dropped the third glycan molecule.
 The molecules contain four types of monomers.
 As we are considering the abstract case, we have named them $A$, $B$, $C$, $D$.
 Each monomer is associated with an arity, i.e., the maximum number of potential children.
 The arities of the monomers are $2$, $1$, $1$, and $0$, respectively.
 
-Before considering the synthesis problem that produces exactly
-the three molecules,
-let us consider a set of rules in Figure~\ref{fig:ex-gly}(b)
+% Before considering the synthesis problem that produces exactly
+% the three molecules,
+Let us first consider six rules in Figure~\ref{fig:ex-gly}(b)
 that produce the molecules.
-There are six rules.
 All the rules are in the same compartment.
-% The first compartment has four rules and the second compartment has three rules.
 The rules have two kinds of nodes.
-If the circular nodes are present around a leaf,
-the rule is enabled and appends the molecule at the leaf with the square nodes.
-In Figure~\ref{fig:ex-gly}(c), we show the steps of generating the middle
+If the circular nodes are present around a node,
+the rule is enabled and may append the molecule at the
+node with the square nodes.
+In Figure~\ref{fig:ex-gly}(c), we show the steps of generating the last
 glycan molecule.
 The first two steps add two nodes at a time.
 The last step looks at the two ancestors before adding a single node.
-We may avoid the need for compartments if the operations can add multiple nodes at
-a time or look for a deep context for being enabled.
+% We may avoid the need for compartments if the operations can add multiple nodes at
+% a time or look for a deep context for being enabled.
 
 The second last rule in Figure~\ref{fig:ex-gly}(b) has a non-trivial condition
 on the sibling of the anchor leaf node.
@@ -64,15 +59,15 @@ The molecule is not in a subtree of any of the three input glycan molecules.
 Therefore, there are scenarios where rules must look into the context before applying
 themselves.
 
-Furthermore, there is another interesting case occurs in this example.
-Please look at the last two rules.
-The second last rule adds $C\rightarrow B$ branch.
-The last rule checks if $C\rightarrow B$ nodes are present then adds $C$.
-If both rules were adding one node at a time without checking deep context,
-then the undesired molecule pattern in Figure~\ref{fig:ex-gly}(e) is
-also producible.
-We would have needed compartments to avoid the undesirable molecule.
-Therefore, there is a tread-off between rule sizes and the number of compartments.
+% Furthermore, there is another interesting case occurs in this example.
+% Please look at the last two rules.
+% The second last rule adds $C\rightarrow B$ branch.
+% The last rule checks if $C\rightarrow B$ nodes are present then adds $C$.
+% If both rules were adding one node at a time without checking deep context,
+% then the undesired molecule pattern in Figure~\ref{fig:ex-gly}(e) is
+% also producible.
+% We would have needed compartments to avoid the undesirable molecule.
+% Therefore, there is a tread-off between rule sizes and the number of compartments.
 
 
 Our method for synthesis takes the three glycan molecules as input.

@@ -19,16 +19,14 @@
   \begin{algorithmic}[1]
     \If{$ancestor(v,\ell) = \bot$} \quad \Return $\lfalse$
     \EndIf
-    \State $mark := \tau(v)$
-    \State $c := \ltrue$, \; $v_r := v_{0r}$, \; $i = \ell$
+    \State $mark := \tau(v)$\; $c := \ltrue$, \; $v_r := v_{0r}$, \; $i = \ell$
     \While{$i > 0$}
     \label{line:encodep-while}
     \State $v' = ancestor(v,i)$
-    \State $c \landplus  \kappa(v_r) = MatchAns \land \nu(v_r) = M(v') $
+    \State $c \landplus  \kappa(v_r) = MatchAns \land \nu(v_r) = M(v') \land \tau(v') < mark$
     \label{line:encodep-ans-match}
-    % \label{funnnny}
-    \State $c \landplus \tau(v') < mark$
-    \label{line:encodep-ans-order}
+    % \State $c \landplus \tau(v') < mark$
+    % \label{line:encodep-ans-order}
     \For{ $j \in [1,NumberChildren(v')]$ }
     \label{line:encodep-sub-for-loop}
     \If{$C(v',j) = ancestor(v,i-1)$}
@@ -63,11 +61,12 @@
     \label{line:matchtree-vr-absent}
     \If{$v = \bot$} \Return $\kappa(v_r) = Absent$ \EndIf
     \label{line:matchtree-v-absent}
-    \If{$isExpand$}
-      \State $tCons := ( mark \leq \tau(v) )$
-    \Else
-      \State $tCons := ( \tau(v) < mark ) $
-    \EndIf
+    \State $tCons := isExpand$ \;? $( mark \leq \tau(v) ): ( \tau(v) < mark )$
+    % \If{$isExpand$}
+    %   \State $tCons := ( mark \leq \tau(v) )$
+    % \Else
+    %   \State $tCons := ( \tau(v) < mark ) $
+    % \EndIf
     \State $c := \kappa(v_r) \neq Absent \limplies tCons \land \nu(v_r)= M(v) $
     \label{line:matchtree-cons}
     \For{ $i \in [1,NumberOfChidren(v)]$ }

@@ -1,9 +1,8 @@
 \begin{algorithm}[t]
-  \caption{ \textsc{SugarSynth}( $\mu$ : set of molecules, $d$ : maximum rule depths, $n$ : maximum number of rules )}
+  \caption{ \textsc{SugarSynth}( $\mu$ : molecules, $d$ : maximum rule depth, $n$ : number of rules)}
   \label{alg:sugar-synth}
   \begin{algorithmic}[1]
-  \State Let $S$ be the set of monomers appear in $\mu$
-  \State Let $w$ be the maximum arity of a monomer in $S$.
+  \State $S$ := the set of monomers appear in $\mu$, $w$ := the maximum arity of a monomer in $S$
   \State $T$ := \textsc{MakeTemplatesRule}( $S$, $d$, $w$, $n$)
   \label{line:createRtemp}
   \State tCons := \textsc{RuleTemplateCorrectness}(T)

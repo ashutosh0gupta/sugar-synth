@@ -1,12 +1,14 @@
 
 In this section, we present the formal model for the synthesis problem.
-We model glycan molecules as labeled trees and production rules are also modeled using small pieces of trees. The glycan molecules are assembled by applying the production rules repeatedly.
+We model glycan molecules and production rules as labeled trees. The glycan molecules are assembled by applying the production rules repeatedly.
 Our synthesis problem reduces into finding the pieces of trees that represent the production rules.
 
 Let $S$ be the set of sugar monomers that builds glycans,
 the oligomer molecules. Each $s \in S$ is associated with arity $m$ 
-(written $arity(s) = m$), {\em i.e.}, the maximum number of children for $s$. The children of the monomers are indexed, which means we can refer to the $k$th child of $s$ for some $k \leq arity(s)$.
-In the monomers, they correspond to bonds at specific positions from where children are connected.
+(written $arity(s) = m$).
+% , {\em i.e.}, the maximum number of children for $s$.
+The children of the monomers are indexed. We refer to the $k$th child of $s$ for some $k \leq arity(s)$.
+They correspond to bonds at specific positions in the monomers where children are connected.
 Now we define the glycan molecules as labeled trees. Now onward we refer to the glycans simply as molecules.
 
 \begin{df}
@@ -14,15 +16,15 @@ A {\em molecule} $m = (V,M,C,v_0)$ is a labeled tree, where
 $V$ is a set of nodes in the tree,
 $M : V \maps S$ maps nodes to their label, 
 $C : V \times \naturals \pmaps V$ maps the indexed children of nodes, and
-$v_0 \in V$ is the root of the tree.
-Furthermore, a molecule must satisfy the conditions of the arity of monomers.
-Formally, let $M(v) = s$, if $C(v,n) = v'$ then $n \leq arity(s)$.
+$v_0 \in V$ is the root of $m$.
+A molecule must respect the arity of monomers, i.e., if $M(v) = s$ and $C(v,n) = v'$ then $n \leq arity(s)$.
 \end{df}
 
 Let $m = (V,M,C,v_0)$ and $m' = (V',M',C',v_0')$ be molecules.
 With some abuse of notation, we write $v \in m$ to denote $v \in V$.
 For each $v \in m$, if $(v,n)$ is not in the domain of $C$, we write $C(v,n) = \bot$.
-We assume that $C(v,0) = \bot$ and if $n > n' > 0$ and $C(v,n) \neq \bot$, then $C(v,n') \neq \bot$.
+We assume that $C(v,0) = \bot$.
+%and if $n > n' > 0$ and $C(v,n) \neq \bot$, then $C(v,n') \neq \bot$.
 Let $NumberOfChildren(v)$ be equal to the number of $n$s such that $C(v,n) \neq \bot$. 
 A node $v \in V$ is a {\em leaf} of $m$ if $C(v,n) = \bot$ for each $n$.
 Let $depth(v)$ be the length of the path from $v_0$ to $v$.
@@ -41,7 +43,7 @@ $V''$ is a set of fresh nodes, $Match(m,v,m'',v_0'')$, and $Match(m'',v_0'',m,v)
 Both the $Match$ conditions say that the trees rooted at
 $v$ and $v_0''$ are identical.
 
-Now let us define the model of the production process of the molecules.
+Now we define the model of the production process of the molecules.
 A production rule expands a molecule $m$ by attaching a new piece of tree at a node that has a vacant spot among its children if the surroundings of the
 node satisfy some condition.
 The rule is modeled as a tree that has two parts.
@@ -49,22 +51,22 @@ One part should already be there in $m$ and the other part will be appended to $
 
 \begin{df}
   A {\em production rule} $r = (V, M, C, v_0, v_e)$ is a labeled tree, where
-  $V$ is a set of nodes in the tree,
-  $M : V \maps S$ maps nodes to their label, 
+  $V$ is a set of nodes,
+  $M : V \maps S$ maps nodes to labels, 
   $C : V \times \naturals \pmaps V$ maps the indexed children of nodes,
-  $v_0 \in V$ is the root of the tree, and
+  $v_0 \in V$ is the root, and
   $v_e \in V$ is the root of expanding part of the rule.
 \end{df}
 
 If we {\em apply}, a rule $r$ on a molecule $m$, then it is extended at some node
-$v \in m$. A copy of the descendants of $v_e$ will be be attached to
+$v \in m$. A copy of the descendants of $v_e$ will be attached to
 $v$ in $m$, and the rest of the nodes in the rule have to match $v$ and above.
-We will refer to the descendants of $v_e$ as {\em expanding nodes}
+We call the descendants of $v_e$ as {\em expanding nodes}
 and all the other nodes as {\em matching nodes}.
 
 
 \begin{wrapfigure}{r}{0.37\textwidth}
-  \vspace{-5mm}
+  \vspace{-12mm}
     % \begin{minipage}{0.48\linewidth}
       \small
     % \center
@@ -95,23 +97,23 @@ and all the other nodes as {\em matching nodes}.
   \hfill (a) \hfill (b)\hfill\mbox{}
   % (b)
   % \end{minipage}
-  \caption{(a) An example rule. (b) An application of the rule.}
+  \caption{(a) A rule. (b) An application of the rule.}
   \label{fig:exrule}
   \vspace{-8mm}
 \end{wrapfigure}
-\paragraph{Example:} In Figure~\ref{fig:exrule}(a), we present a rule. That has
+\paragraph{Example:} In Figure~\ref{fig:exrule}(a), we present a rule. It has
   two kinds of nodes.
-  The rule adds the square node.
-  Therefore, $v_e$ is the square node.
+  The rule adds the square node ($v_e$).
   The circular nodes %$A$ and its right child $B$
-  are part of a pattern.
-  The pattern must be present in the molecule to apply the rule.
+  are the pattern, which must be present in the molecule to apply the rule.
   In Figure~\ref{fig:exrule}(b), we present an application of the rule.
   The solid tree with three nodes is the initial molecule.
   The middle node $A$ and its right child $B$ forms a pattern, where the rule is applicable.
-  Upon applying the rule, the rule adds a left child with label $A$ to the middle node.
-  The rule is not applicable at the root $A$, since it has a right child $A$
-  and the combination does not match the pattern.
+  %Upon applying the rule,
+  The rule adds a left child with label $A$ to the middle node.
+  The rule is not applicable at the root $A$ due to pattern mismatch.
+  % , since it has a right child $A$
+  % and the combination does not match the pattern.
 
 
 We naturally extend the definitions related to molecules, including $Match$ and $Copy$,
@@ -154,39 +156,35 @@ trees obtained after applying the rule sets one after another.
 
 
 \subsection{Synthesis problem}
-As discussed in section~\ref{sec:bio},
-we observe a set of glycan molecules present in a cell.
+We observe a set of glycan molecules $\mu$ present in a cell.
 %
 However, we do not know the production rules to produce the molecules.
 %
 We will be developing a method to find the production rules.
 %
-Let us suppose we are given a set of molecules $\mu$ produced by some
-unknown set of production rules.
-%
 The {\em synthesis problem} is to find a set $R$ of production rules
 such that $\mu = P(S,R)$,
 where $S$ is the set of monomers.
 
-%
-We can define a more general form of the synthesis problem.
-Let us suppose we are also given $k$ compartments with unknown rules.
-The goal of synthesis is to find  $R_1,...,R_k$ such that
-$\mu = P(S, R_1,..,R_k)$.
-We may relax the requirement of exactly producing $\mu$.
-We may say that molecules in $\mu$ have to be produced, but we are ok
-if subtrees of the molecules of $\mu$ are also produced.
-Formally, we may weaken the requirement to $\mu \subseteq P(Q, R_1,..,R_k) \subseteq subtree(\mu)$.
+% %
+% We can define a more general form of the synthesis problem.
+% Let us suppose we are also given $k$ compartments with unknown rules.
+% The goal of synthesis is to find  $R_1,...,R_k$ such that
+% $\mu = P(S, R_1,..,R_k)$.
+% We may relax the requirement of exactly producing $\mu$.
+% We may say that molecules in $\mu$ have to be produced, but we are ok
+% if subtrees of the molecules of $\mu$ are also produced.
+% Formally, we may weaken the requirement to $\mu \subseteq P(Q, R_1,..,R_k) \subseteq subtree(\mu)$.
 
-The above are a few simplified versions of the biological problem.
-We may generalize the problem further where
-%rules are partitioned and the partitions are applied in phases one after another,
-rules are not applied exhaustively due to time constraints,
-the given $\mu$ is finite and may not be exhaustive,
-and we only know the weights of the parts of molecules in $\mu$.
-We will first present a method for solving a simplified version of the problem.
-However, our tool handles some of the above variations.
-We will discuss the variations in section~\ref{sec:variations}.
+% The above are a few simplified versions of the biological problem.
+% We may generalize the problem further where
+% %rules are partitioned and the partitions are applied in phases one after another,
+% rules are not applied exhaustively due to time constraints,
+% the given $\mu$ is finite and may not be exhaustive,
+% and we only know the weights of the parts of molecules in $\mu$.
+% We will first present a method for solving a simplified version of the problem.
+% However, our tool handles some of the above variations.
+% We will discuss the variations in section~\ref{sec:variations}.
 
 %--------------------- DO NOT ERASE BELOW THIS LINE --------------------------
 

@@ -3,63 +3,88 @@ a set of production rules that produce a given set $\mu$ of molecules.
 Here, we are considering only single compartment case.
 The generalizations are discussed in section~\ref{sec:variations}.
 Our synthesis method \textsc{SugarSynth} is presented in algorithm~\ref{alg:sugar-synth}.
-At a high level, our method is iterative.
-The method first synthesizes a set of rules $R$ that can produce the molecules in input set $\mu$, i.e., $\mu \subseteq P(S,R)$.
-However, there is also an additional requirement that a molecule
-that is not in $\mu$ is not producible by the synthesized rules $R$.
-Therefore, the method looks for the producible molecules that are not in $\mu$, called
-{\em counterexample molecule}.
-If there is no such molecule, our method terminates and reports
-the synthesized rules.
-If there is a molecule in $P(S,R) - \mu$, we add constraints that says
-that look for rules
-that do not generate
-the molecule and go for another iteration.
-Now let us look at the details of the method.
+
+% At a high level, our method is iterative.
+% The method first synthesizes a set of rules $R$ that can produce the molecules in input set $\mu$, i.e., $\mu \subseteq P(S,R)$.
+% However, there is also an additional requirement that a molecule
+% that is not in $\mu$ is not producible by the synthesized rules $R$.
+% Therefore, the method looks for the producible molecules that are not in $\mu$, called
+% {\em counterexample molecule}.
+% If there is no such molecule, our method terminates and reports
+% the synthesized rules.
+% If there is a molecule in $P(S,R) - \mu$, we add constraints that says
+% that look for rules
+% that do not generate
+% the molecule and go for another iteration.
+% Now let us look at the details of the method.
 
 \input{alg-synth.tex}
 
 \subsection{\textsc{SugarSynth} in detail}
 
-The method assumes that the input set $\mu$ is finite, which a
-natural assumption.
+The method assumes that the input set $\mu$ is finite.
 Even if a set of rules can produce
-an unboundedly large number of molecules.
-No real-life biology will exhibit such a set in a cell.
-Since we are synthesizing production rules, our method
-needs to bound the search space.
+an unbounded number of molecules.
+No biology will exhibit such a set in a cell.
+Our method
+bounds the search space of production rules.
 The method also takes two numbers as input:
 $d$ is the maximum height of the learned rules
 and 
-$n$ is the maximum number of the learned rules.
-The parameters eliminate potential
-unbounded search space.
+$n$ is the maximum number of them.
+% The parameters eliminate potential
+% unbounded search space.
 If the method fails to find production rules,
 the user can always call the method with larger parameters.
-However, we do not expect to find a large number of or sized rules
-because chemical reactions do not usually have many conditional
-on the precursors and do not apply large changes in a single step.
+% However, we do not expect to find a large number of or sized rules
+% because chemical reactions do not usually have many conditional
+% on the precursors and do not apply large changes in a single step.
 First, the method initializes $S$ with the set of monomers occurring
 in $\mu$
 and sets $w$ to be the maximum arity of any monomer in $S$.
 
 
 We use templates to model the search space of rules.
-A template is also a tree that has a certain depth and
+A template is also a tree that has a depth and
 the internal nodes of the tree have the same number of children.
 Two variables label each node of the template.
 One variable is for choosing the sugar at the node and the other is for describing
 the `situation' of the node.
-The first variable at the node encodes choices of
-sugar monomers or their absence.
-The domain of the variables is $S \union \{\bot\}$.
+% The first variable at the node encodes choices of
+% sugar monomers or their absence.
+The domain of the first variables is $S \union \{\bot\}$.
 Let $SVars$ be the set of uncountable variables with the domain.
 We will use the pool of $SVars$ to add variables to the templates.
 
+\begin{wrapfigure}{r}{0.37\textwidth}
+    \vspace{-6mm}
+        \center
+  \begin{tikzpicture}[shorten >=1pt,thick,node distance=1cm,on grid,scale=0.5]
+    \node[loc] (v0) {$v_0$};
+    \node[sqloc, below right of=v0] (v1) {$v_e$};
+    \draw [->] plot [smooth] coordinates { (v0.south)
+          ($(v0.south)+(3mm,-2mm)$)
+          ($(v0.south)+(10mm,1mm)$)
+          % ($(v0.south)+(9mm,-6mm)$)
+          % ($(v0.east)+(8mm,-8mm)$)
+          (v1.north) };
+    % \path[->] (v0) edge (v1);
+    % \path[->,dashed] (v1) edge (v2);
+    % \path[->] (v1) edge (v3);
+    \fill[fill=gray,opacity=0.2] 
+    (0,0) -- ++(-1.5cm,-1.7cm) -- ++(1.2cm,-1.2cm) -- ++(6cm,0cm) -- cycle;
+    \fill[fill=gray,opacity=0.4] 
+    (v1.center) -- ++(-1.5cm,-1.5cm) -- ++(3cm,0cm) -- cycle;
+    \draw[dashed] (-1.5cm,-1.7cm) -- ++(-1.2cm,-1.2cm) -- ++(2.4cm,0cm) -- cycle;
+  \end{tikzpicture}
+  \caption{Parts of production rules in the rule templates.}
+  \label{fig:rule-parts}
+  \vspace{-8mm}
+\end{wrapfigure}
 A node in a production rule can be in four situations.
-In Figure~\ref{fig:rule-parts}, we illustrate the situations of the nodes in a rule.
+In Figure~\ref{fig:rule-parts}, we illustrate the situations.
 The first situation is when a node position may be in the expanding part.
-The nodes in the dark gray area are the expanding nodes.
+The dark gray nodes are the expanding nodes.
 The second situation is when a node position may not be present in the rule.
 The dashed area includes absent nodes
 from the full tree.
@@ -79,30 +104,6 @@ Let $KVars$ be the set of uncountable variables with domain $K$.
 We will use the pool of $KVars$ to add variables to the templates.
 Formally, the templates are defined as follows.
 
-\begin{figure}[t]
-        \center
-  \begin{tikzpicture}[shorten >=1pt,thick,node distance=2cm,on grid]
-    \node[loc] (v0) {$v_0$};
-    \node[sqloc, below right of=v0] (v1) {$v_e$};
-    \draw [->] plot [smooth] coordinates { (v0.south)
-          ($(v0.south)+(3mm,-2mm)$)
-          ($(v0.south)+(2mm,-6mm)$)
-          ($(v0.south)+(9mm,-6mm)$)
-          % ($(v0.east)+(8mm,-8mm)$)
-          (v1.north) };
-    % \path[->] (v0) edge (v1);
-    % \path[->,dashed] (v1) edge (v2);
-    % \path[->] (v1) edge (v3);
-    \fill[fill=gray,opacity=0.2] 
-    (0,0) -- ++(-1.5cm,-1.7cm) -- ++(1.2cm,-1.2cm) -- ++(6cm,0cm) -- cycle;
-    \fill[fill=gray,opacity=0.4] 
-    (v1.center) -- ++(-1.5cm,-1.5cm) -- ++(3cm,0cm) -- cycle;
-    \draw[dashed] (-1.5cm,-1.7cm) -- ++(-1.2cm,-1.2cm) -- ++(2.4cm,0cm) -- cycle;
-  \end{tikzpicture}
-
-  \caption{Parts of production rules in the rule templates.}
-  \label{fig:rule-parts}
-\end{figure}
 
 
 \begin{df}
@@ -409,7 +410,7 @@ if the ancestors of $v$ also traverse along with the $j$th child
 
 Let us consider the body of the loop in detail.
 Let $v'$ be the $i$th ancestor at some iteration of the loop.
-At lines~\ref{line:encodep-ans-match} and~\ref{line:encodep-ans-order}, the loop adds constraints stating that the corresponding node $v_r$ in the template rule is
+At line~\ref{line:encodep-ans-match}, the loop adds constraints stating that the corresponding node $v_r$ in the template rule is
 declared $MatchAns$, sugar matches in $v_r$ and $v'$, and
 node $v'$ is added before $mark$.
 The for loop at \ref{line:encodep-sub-for-loop}, iterates over
