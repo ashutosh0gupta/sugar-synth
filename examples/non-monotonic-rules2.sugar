@@ -9,6 +9,7 @@
 (sugar e-b 0)     
 (sugar d 0)
 (seed-mol b-y)
+(mol (b-y (c d) (b-b (c d)) ) )
 (mol (b-y (c d) (b-b (c (e-b)))))
 (mol (b-y (c d) (b-b (c (a-b)))))
 
