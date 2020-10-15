@@ -240,35 +240,11 @@
     \path[->] (v1) edge (v2);
     \path[->] (v0) edge (v3);
   \end{tikzpicture}\\
-  \vspace{12ex}
+  % \vspace{12ex}
   (d)
 \end{minipage}
 \vrule
-\begin{minipage}{0.3\linewidth}
-  \centering
-  \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
-    \node[loc] (v0) {$A$};
-    \node[loc, below left of=v0] (v1) {$C$};
-    \node[loc, below of=v1] (v2) {$B$};
-    \node[loc, below of=v2] (v6) {$C$};
-    \node[loc, below of=v6] (v7) {$B$};
-    % \node[loc, below right of=v0] (v3) {$B$};
-
-    \path[->] (v0) edge (v1);
-    \path[->] (v1) edge (v2);
-    % \path[->] (v3) edge (v4);
-    % \path[->] (v4) edge (v5);
-    % \path[->] (v0) edge (v3);
-    \path[->] (v2) edge (v6);
-    \path[->] (v6) edge (v7);
-    \draw [decorate,decoration={brace,amplitude=7pt}]
-    (-0.3cm,-2cm) -- ++(0cm,-2cm) node [midway,right,xshift=2mm]
-    {Repeated pattern};
-  \end{tikzpicture}\\
-  (e)
-\end{minipage}
-\vrule
-\begin{minipage}{0.45\linewidth}
+\begin{minipage}{0.75\linewidth}
   \centering
   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
     % 0:(a [(c _)] _)    
@@ -290,8 +266,9 @@
     \node[sqloc, below right of=v0] (v1) {$D$};
     \path[->] (v0) edge (v1);
   \end{tikzpicture}
-  \vspace{-6mm}
-  \\
+  % \vspace{-6mm}
+  % \\
+  \quad
   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
     % 0:(c [(b-b c)])
     \node[loc] (v0) {$C$};
@@ -299,13 +276,13 @@
     \node[sqloc, below of=v1] (v2) {$C$};
     \path[->] (v0) edge (v1);
     \path[->] (v1) edge (v2);
-  \end{tikzpicture}\qquad
+  \end{tikzpicture}\quad
   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
     % 0:(c [(d)])
     \node[loc] (v0) {$C$};
     \node[sqloc, below of=v0] (v1) {$D$};
     \path[->] (v0) edge (v1);
-  \end{tikzpicture}\qquad
+  \end{tikzpicture}\quad
   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
     % 0:[(a (b-b _) _)]
     \node[loc] (v0) {$A$};
@@ -357,18 +334,44 @@
   %     \node[sqloc, below of=v0] (v1) {$C$};
   %     \path[->] (v0) edge (v1);
   %   \end{tikzpicture}\\\vspace{2ex}
-    (f)
+    (e)
   \end{minipage}
+
+% \vrule
+% \begin{minipage}{0.3\linewidth}
+%   \centering
+%   \begin{tikzpicture}[align at top, shorten >=1pt,thick,node distance=1cm,on grid]
+%     \node[loc] (v0) {$A$};
+%     \node[loc, below left of=v0] (v1) {$C$};
+%     \node[loc, below of=v1] (v2) {$B$};
+%     \node[loc, below of=v2] (v6) {$C$};
+%     \node[loc, below of=v6] (v7) {$B$};
+%     % \node[loc, below right of=v0] (v3) {$B$};
+
+%     \path[->] (v0) edge (v1);
+%     \path[->] (v1) edge (v2);
+%     % \path[->] (v3) edge (v4);
+%     % \path[->] (v4) edge (v5);
+%     % \path[->] (v0) edge (v3);
+%     \path[->] (v2) edge (v6);
+%     \path[->] (v6) edge (v7);
+%     \draw [decorate,decoration={brace,amplitude=7pt}]
+%     (-0.3cm,-2cm) -- ++(0cm,-2cm) node [midway,right,xshift=2mm]
+%     {Repeated pattern};
+%   \end{tikzpicture}\\
+%   (e)
+% \end{minipage}
+  
   \vspace{-3mm}
   \caption{(a) A schematic example of a data set that includes three glycan oligomers.
     % Note that we have used a convention of keeping the root on top, which is opposite to the biological convention of keeping the root at the bottom.
     (b) A set of production rules for the glycan molecules
     (c) The steps of producing the middle glycan molecule
     (d) An undesired molecule.
-    The conditions on siblings help us avoid producing it.
-    (e) Another undesired molecule.
+    % The conditions on siblings help us avoid producing it.
+    % (e) Another undesired molecule.
     % The conditions on ancestors help us avoid producing it.
-    (f) the synthesized rules at the first iteration.
+    (e) the synthesized rules at the first iteration.
   }
   \label{fig:ex-gly}
   \vspace{-9mm}

@@ -1,32 +1,30 @@
-\begin{algorithm}[h!]
+\begin{algorithm}[t]
   \caption{\textsc{EncodeProduce}( $m$ : molecule (template), $T$ : rule (template) )}
   \label{alg:produce}
   \begin{algorithmic}[1]
-    \State \Return $\displaystyle
+    \State \Return $
     \Land_{v\in m}
     \Land_{t \in T}
-    % \Land_{\mathclap{\substack{m=(V,\_,\_,\_) \\ v\in V \\ t \in T }}}
+    % \Land_{{\substack{m=(V,\_,\_,\_) \\ v\in V \\ t \in T }}}
     \left[
-      rmatch(v) = t \land cuts(v) \limplies \Lor_{ \mathclap{\ell \in [1,d)}} \textsc{EncodeP}( v, t, \ell)
+      rmatch(v) = t \land cuts(v) \limplies \Lor_{ {\ell \in [1,d)}} \textsc{EncodeP}( v, t, \ell)
       \right]
       $
   \end{algorithmic}
   \hrule
-  \vspace{2ex}
+  \vspace{1ex}
   \hrule\vspace{2pt}
   \textsc{EncodeP}( $v$, $t = (\_,\nu,\kappa,v_{0r})$, $\ell$)\hfill\mbox{}
   \vspace{2pt}\hrule
   \begin{algorithmic}[1]
     \If{$ancestor(v,\ell) = \bot$} \quad \Return $\lfalse$
     \EndIf
-    \State $mark := \tau(v)$\; $c := \ltrue$, \; $v_r := v_{0r}$, \; $i = \ell$
+    \State $mark := \tau(v)$,\; $c := \ltrue$, \; $v_r := v_{0r}$, \; $i = \ell$
     \While{$i > 0$}
     \label{line:encodep-while}
-    \State $v' = ancestor(v,i)$
+    \State $v' := ancestor(v,i)$
     \State $c \landplus  \kappa(v_r) = MatchAns \land \nu(v_r) = M(v') \land \tau(v') < mark$
     \label{line:encodep-ans-match}
-    % \State $c \landplus \tau(v') < mark$
-    % \label{line:encodep-ans-order}
     \For{ $j \in [1,NumberChildren(v')]$ }
     \label{line:encodep-sub-for-loop}
     \If{$C(v',j) = ancestor(v,i-1)$}
@@ -38,21 +36,20 @@
        \label{line:mtree}
     \EndIf
     \EndFor
-    \State $v_r := v_r'$
+    \State $v_r := v_r'$,\; $i := i - 1$
     \label{line:encodep-update-vr}
-    \State $i := i - 1$
     \EndWhile
     \label{line:encodep-end-whileloop}
-    \State $c \landplus  \kappa(v_r) = Expand$
+    \State $c \landplus  \kappa(v_r) = Expand \land \textsc{MatchTree}(v, v_r,mark,\ltrue) \land \textsc{MatchCut}(v, v_r,\lfalse)$
     \label{line:encodep-vr-expand}
-    \State $c \landplus  \textsc{MatchTree}(v, v_r,mark,\ltrue) $
-    \label{line:encodep-mtree-expand}
-    \State $c \landplus  \textsc{MatchCut}(v, v_r,\lfalse)
-    $\label{line:mcut}
+    % % \State $c \landplus   $
+    % \label{line:encodep-mtree-expand}
+    % % \State $c \landplus  $
+    % \label{line:mcut}
     \State \Return $c$
   \end{algorithmic}
   \hrule
-  \vspace{2ex}
+  \vspace{1ex}
   \hrule\vspace{2pt}
   \textsc{MatchTree}( $v$, $v_r$, $mark$, $isExpand$ )\hfill\mbox{}
   \vspace{2pt}\hrule
@@ -69,28 +66,30 @@
     % \EndIf
     \State $c := \kappa(v_r) \neq Absent \limplies tCons \land \nu(v_r)= M(v) $
     \label{line:matchtree-cons}
-    \For{ $i \in [1,NumberOfChidren(v)]$ }
-    \State\hspace{-2ex} $c \landplus \textsc{MatchTree}( C(v,i), C(v_r,i), mark, isExpand)$
+    % \For{ $i \in [1,NumberOfChidren(v)]$ }
+    % \State\hspace{-2ex} $c \landplus \textsc{MatchTree}( C(v,i), C(v_r,i), mark, isExpand)$
+    % \EndFor
+    \State  $c \landplus \Land_{i \in [1,NumberOfChidren(v)]} \textsc{MatchTree}( C(v,i), C(v_r,i), mark, isExpand)$
     \label{line:matchtree-recurse}
-    \EndFor
     \State \Return $c$   
   \end{algorithmic}
   \hrule
-  \vspace{3ex}
+  \vspace{1ex}
   \hrule\vspace{2pt}
-  \textsc{MatchCut}( $v$, $v_r$, $pOccurs$ )\hfill\mbox{}
+  \textsc{MatchCut}( $v$, $v_r$, $ruleParentIsNotAbsent$ )\hfill\mbox{}
   \vspace{2pt}\hrule
   \begin{algorithmic}[1]
     \If{$v = \bot$} \Return $\ltrue$ \EndIf
     \label{line:mcut-no-v}
-    \If{$v_r = \bot$} \Return $pOccurs \limplies cuts(v)$ \EndIf
+    \If{$v_r = \bot$} \Return $parentIsNotAbsent \limplies cuts(v)$ \EndIf
     \label{line:mcut-no-vr}
-    \State $c := pOccurs \limplies ( \kappa(v_r) = Absent) = cuts(v)$
+    \State $c := ruleParentIsNotAbsent \limplies ( \kappa(v_r) = Absent) = cuts(v)$
     \label{line:mcut-cons}
-    \For{ $i \in [1,NumberOfChidren(v)]$ }
-    \State \hspace{-1.5ex}$c \landplus \textsc{MatchCut}( C(v,i), C(v_r,i), \kappa(v_r) \neq Absent)$
+    % \For{ $i \in [1,NumberOfChidren(v)]$ }
+    % \State \hspace{-1.5ex}$c \landplus \textsc{MatchCut}( C(v,i), C(v_r,i), \kappa(v_r) \neq Absent)$
+    % \EndFor
+    \State $c \landplus \Land_{i \in [1,NumberOfChidren(v)]}\textsc{MatchCut}( C(v,i), C(v_r,i), \kappa(v_r) \neq Absent)$
     \label{line:mcut-kids}
-    \EndFor
     \State \Return $cons$
   \end{algorithmic}      
 

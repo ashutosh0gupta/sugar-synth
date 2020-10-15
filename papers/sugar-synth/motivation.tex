@@ -73,32 +73,37 @@ themselves.
 Our method for synthesis takes the three glycan molecules as input.
 It also needs the budget of resources to search for the production rules.
 If we allow an arbitrary number of rules,
-the rules to look at their context up to
-an arbitrary depth, and an arbitrarily large number of compartments,
+and the rules to look at their context up to
+an arbitrary depth, % and an arbitrarily large number of compartments,
 then there is a trivial solution.
-Therefore, our method needs three parameters.
-The first parameter limits the number of rules.
-The second parameter limits the maximum height of the rule trees.
-The third parameter limits the maximum number of compartments.
-If we give larger values to the parameters, then we have more chances to
-find the production rules.
-For this illustration, we searched for the production rules with
-seven as the limit on the number of rules, three as the limit on the rule heights,
-and a single compartment.
+Therefore, our method limits the number and size of rules.
+% parameters.
+% The first parameter limits the number of rules.
+% The second parameter limits the maximum height of the rule trees.
+% The third parameter limits the maximum number of compartments.
+% If we give larger values to the parameters, then we have more chances to
+% find the production rules.
+For this illustration, we searched for the seven production rules with
+three as the limit on the rule heights.
+All rules are in single compartment.
 
 \ourtool, the tool that implements the method, reported the synthesized rules from
 Figure~\ref{fig:ex-gly}(b) in 0.4 seconds.
 In our tool, we first construct a synthesis query using the templates to encode
 that a set of rules produces the input molecules.
 We call a solver to solve the synthesis query.
-After the first query, we obtain the rules presented in Figure~\ref{fig:ex-gly}(f).
-Next, we look for another molecule that may be produced by the rule.
-Using another query to the solver, we find a counterexample molecule that is
-producible by the rules but is not in the input set.
-Coincidently, we have already presented the counterexample molecule in Figure~\ref{fig:ex-gly}(e).
-Afterword, we add constraints that the molecule must not
-be producible by the synthesized rules in our synthesis query and go for the next iteration.
-After 19 iterations, our tool synthesizes a set of rules that satisfies the requirements.
+After the first query, we obtain the rules presented in Figure~\ref{fig:ex-gly}(e).
+The rule set can produce molecules that are not are not in input.
+% Next, we look for another molecule that may be produced by the rule.
+% Using another query to the solver, we find a counterexample molecule that is
+% producible by the rules but is not in the input set.
+% Coincidently, we have already presented the counterexample molecule in Figure~\ref{fig:ex-gly}(e).
+% Afterword, we add constraints that the molecule must not
+% be producible by the synthesized rules in our synthesis query and
+% go for the next iteration.
+We need to iterate further.
+After 19 iterations, our tool synthesizes a set of rules that
+satisfies the requirements.
 
 
 %--------------------- DO NOT ERASE BELOW THIS LINE --------------------------
