@@ -126,9 +126,9 @@ We apply $r$ on $m$ at node $v \in m$ such that $C(v,i) = \bot$.
 We obtain an expanded molecule as follows.
 Let $(V',M',C',v_0') = Copy(r,v_e)$.
 The expanded molecule is
-$$
+$
 m' = (V \uplus V', M \uplus M', C \uplus C' \uplus \{(v,i) \mapsto v_0'\}, v_0)
-$$ if
+$ if
 $Match( r, v_{0r}, m', ancestor(m', v_0', d) )$.
 The match condition states that after attaching the new nodes $V'$
 the rule tree must be embedded in $m'$ at the $d$th ancestor of $v'_0$. 

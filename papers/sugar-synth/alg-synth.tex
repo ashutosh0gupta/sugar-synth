@@ -10,7 +10,7 @@
   \State Let $h$ is maximum of the heights of molecules in $\mu$
   \State $\hat{m}$ := \textsc{MakeTemplateMol}( $S$, $h$, $w$ )
   \label{line:createMtemp}
-  \State $mCons := \textsc{MolTemplateCorrectness}(\mu)$
+  \State $mCons := \textsc{MolTemplateCorrectness}(\hat{m},\mu)$
   \label{line:molCorr}
   \State $pCons$ := $\Land_{m \in \mu}$ \textsc{EncodeProduce}(m,T)
     \label{line:molenc}

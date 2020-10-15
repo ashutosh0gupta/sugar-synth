@@ -57,7 +57,7 @@ Let $SVars$ be the set of uncountable variables with the domain.
 We will use the pool of $SVars$ to add variables to the templates.
 
 \begin{wrapfigure}{r}{0.37\textwidth}
-    \vspace{-12mm}
+    \vspace{-3mm}
         \center
   \begin{tikzpicture}[shorten >=1pt,thick,node distance=1cm,on grid,scale=0.5]
     \node[loc] (v0) {$v_0$};
@@ -246,7 +246,7 @@ valid assignments for molecule template $\hat{m} = (V, \nu, C, \hat{v_0})$.
   % between $h$ and $h-d$
   % because the maximum depth of a rule is $d$.
 \item We find a molecule that is not in $\mu$.
-  We encode $\Lor_{{m = (\_,\_,\_, v_0)\in \mu}}  Neq(\hat{v_0},v).$, where
+  We encode $\Land_{{(\_,\_,\_, v_0)\in \mu}}  Neq(\hat{v_0},v_0)$, where
    predicate $Neq$ be recursively defined as follows.\\
   $Neq(v, v') :=\; \nu(v) \neq M(v') \lor
   \Lor_{{i \in [1,w]}} Neq( C(v,i), C(v',i ) )$\\
@@ -486,7 +486,7 @@ is absent or not.
 % because we need to enable constraints only when there is a possibility of transition
 % from presence to absence.
 The call to $\textsc{MatchCuts}$ in \textsc{EncodeP} passes $\lfalse$ as the third input.
-Even if the parent of $v_r$ in \textsc{EncodeP} is present,
+Even if the parent of $v_r$ is present,
 $v_r$ is a cut point adding cut pattern constraints for the node will create inconsistency.
 Therefore, we are passing $\lfalse$.
 

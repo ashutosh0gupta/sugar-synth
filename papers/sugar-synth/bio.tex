@@ -18,7 +18,7 @@ can we infer the set of enzymes that produce the glycans? This is the problem we
       for example, GalNAc (yellow square), GlcNAc (blue square), Galactose (yellow circle), Sialic Acid (purple diamond), Fucose (red triangle) and so on \cite{Varki2017}.}
     \label{fig:glycan-rule}
   \end{minipage}
-\vspace{-9mm}
+% \vspace{-9mm}
 \end{figure}
 
 In Figure~\ref{fig:glycan-rule}, we present details of glycan production. A glycan is a tree-like sugar tree (nodes linked by edges) attached to a substrate protein at the root (labeled `R'). Distinct edge orientations correspond to covalent bonds of distinct carbons on the sugar monomer. Curved boxes represent reaction compartments within cells, which are the site of glycan production. Each step of glycan growth (black arrows) represents the addition of a single new monomer to a specific attachment point on the tree. Each such step is catalyzed by an enzyme, labeled $E_i$. At any stage of growth, the tree can exit the reaction compartment as an output. Alternatively, it can be passed to a subsequent reaction compartment for further growth driven by different enzymes. Note that the enzymatic rule is sensitive to the two monomers being linked by a bond, as well as any branches. For example, enzyme $E_2$ will add a Galactose to a GalNAc only if the GlcNAc branch is present; otherwise, the reaction will not proceed (`X'). The structures, reactions, and enzymes shown here are illustrative, and they do not correspond to any measured data set; see the following section for a real example. In biological experiments, the combined outputs of every compartment are measured; the underlying reactions must be inferred.
