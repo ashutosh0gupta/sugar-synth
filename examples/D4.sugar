@@ -1,5 +1,5 @@
 # input file format
-(number-of-rules-to-learn 8)
+(number-of-rules-to-learn 7)
 (max-rule-depth 2)
 (max-compartments 1)
 (sugar b-y 2)     
