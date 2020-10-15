@@ -30,6 +30,7 @@
         \label{line:negModel}
         \State $m' :=$ \textsc{getNegMol}( $\hat{m}$, a)
         \State $nCons \landplus \forall \tau,cuts. \lnot \textsc{EncodeProduce}(m',T)$
+        \label{line:encode-neg-mol}
         \label{line:negCons}
     \Else
        \State \Return synthesized rules $R$

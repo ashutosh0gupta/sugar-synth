@@ -54,73 +54,117 @@ $\textsc{EncodeP}$ by inserting the following line after~\ref{line:encodep-ans-m
 Using the above constraints, we can divide the learned rules
 into compartments.
 
-\subsection{Compartment stay model}
+% \subsection{Compartment stay model}
 
-When molecules pass through compartments, they are expected to stay
-for a while in the compartments.
-%
-The length of the stay determines the number of rule applications
-occurring on the molecule.
-%
-In our method, we assume that the molecules may stay any length of time
-in a compartment, which may result in any number of applications of the rules.
-%
-% This allows the maximum number of molecules are produced for a given set of rules.
-%
-We can assume a whole range of {\em stay models} for the synthesis.
-%
-We have considered one more stay model, where a molecule stays
-in the compartment until no more rule applications are possible.
-%
-We call the stay model as {\em infinite stay}.
+% When molecules pass through compartments, they are expected to stay
+% for a while in the compartments.
+% %
+% The length of the stay determines the number of rule applications
+% occurring on the molecule.
+% %
+% In our method, we assume that the molecules may stay any length of time
+% in a compartment, which may result in any number of applications of the rules.
+% %
+% % This allows the maximum number of molecules are produced for a given set of rules.
+% %
+% We can assume a whole range of {\em stay models} for the synthesis.
+% %
+% We have considered one more stay model, where a molecule stays
+% in the compartment until no more rule applications are possible.
+% %
+% We call the stay model as {\em infinite stay}.
 
-To encode the infinite stay model, we need to add constraints that
-say when a molecule goes to the next compartment, no rule of
-the current compartment is applicable.
-%
-We add the following constraints in \textsc{EncodeProduce}.
-$$
-\Land_{v\in m}\Land_{i \text{ such that } C(v,i) \neq \bot}\Land_{t \in T}
-compart( v ) \leq compart(t) < compart(C(v,i)) 
-\limplies \Land noMatch(C(v,i),t)
-$$
-where constraint $noMatch(v,t)$ is collected in \textsc{EncodeP}
-by inserting the following code after the while loop and an update on $c$ before making the last two updates on $c$.
-$noMatch(v,t)$ is $\ltrue$
-before the call to \textsc{EncodeP}.
+% To encode the infinite stay model, we need to add constraints that
+% say when a molecule goes to the next compartment, no rule of
+% the current compartment is applicable.
+% %
+% We add the following constraints in \textsc{EncodeProduce}.
+% $$
+% \Land_{v\in m}\Land_{i \text{ such that } C(v,i) \neq \bot}\Land_{t \in T}
+% compart( v ) \leq compart(t) < compart(C(v,i)) 
+% \limplies \Land noMatch(C(v,i),t)
+% $$
+% where constraint $noMatch(v,t)$ is collected in \textsc{EncodeP}
+% by inserting the following code after the while loop and an update on $c$ before making the last two updates on $c$.
+% $noMatch(v,t)$ is $\ltrue$
+% before the call to \textsc{EncodeP}.
+% \begin{algorithmic}[1]
+%   \vspace{1ex}
+%   \setcounterref{ALG@line}{line:encodep-vr-expand}
+%   \State $nomatch(v,t) \landplus \lnot c$
+%   \vspace{1ex}
+% \end{algorithmic}
+% The constraints state that for each node $v$ and template rule $t$
+% if a rule adds node $v$ before or at the compartment of $t$
+% and its $i$th child after the compartment of $t$,
+% then $t$ must not be applicable at the $i$th child.
+% The above constraints effectively encode that the molecule
+% cannot expand at some node until all the relevant rules on
+% earlier compartments are disabled.
+% Note that if there is no child at the $i$th node, we are adding no constraints of disabling rules of future compartments.
+% One may also add those as a requirement, depending on
+% the interpretation of the stay model.
+
+\subsection{Fast and slow reactions}
+During the stay of a molecule in a compartment, it could be observed that some reactions were dominating than others. This can be explained by characterizing reactions as either slow or fast. A slow reaction can occur only when no other fast reaction is able to extend the molecule in that compartment. We can now define \textsc{Extend} recursively as follows:
+\begin{align*}
+  \textsc{Extends}(r, m) :=\;&   Apply(m,r) \lor
+  \Lor_{\mathclap{i \in [1,w]}} \textsc{Extends}( r, C(m,i ) )\\
+    \textsc{Extends}(r, \bot) :=\;&  \nu(v) \neq \bot
+  \end{align*}
+We now modify $\textsc{EncodeP}$ after~\ref{line:mcut}:
 \begin{algorithmic}[1]
   \vspace{1ex}
-  \setcounterref{ALG@line}{line:encodep-vr-expand}
-  \State $nomatch(v,t) \landplus \lnot c$
+  \setcounterref{ALG@line}{line:mcut}
+  \State $c \landplus \lnot \textsc{Fast}(v_r) \implies 
+  \Land_{t \in T} (\textsc{Fast}(t) \implies \lnot\textsc{Extends}(t,v))$
   \vspace{1ex}
 \end{algorithmic}
-The constraints state that for each node $v$ and template rule $t$
-if a rule adds node $v$ before or at the compartment of $t$
-and its $i$th child after the compartment of $t$,
-then $t$ must not be applicable at the $i$th child.
-The above constraints effectively encode that the molecule
-cannot expand at some node until all the relevant rules on
-earlier compartments are disabled.
-Note that if there is no child at the $i$th node, we are adding no constraints of disabling rules of future compartments.
-One may also add those as a requirement, depending on
-the interpretation of the stay model.
+Here, \textsc{Fast} sets the constraint on the rule to be fast.
+A negative molecule which is a proper subtree of an input molecule will cease to be negative if there is any fast reaction that is able to extend it as fast reactions happen aggressively and can make partial molecules complete. Therefore, we modify the function $\textsc{SugarSynth}$ after~\ref{line:encode-neg-mol}:
+\begin{algorithmic}[1]
+  \vspace{1ex}
+  \setcounterref{ALG@line}{line:encode-neg-mol}
+  \State $nCons \landplus
+  \lnot  \Lor_{r \in R} \textsc{Fast}(r) \land \textsc{Extends}(r,m')$
+  \vspace{1ex}
+\end{algorithmic}
+Here, \textsc{Fast} constraints the rule to be fast. The constraints state that none of the rules should be both fast and able to extend the negative molecule received from the model.
 
 \subsection{Unbounded molecules}
-
 We always observe a finite set of molecules. However,
 a set of production rules is capable of producing
-an unboundedly large size of molecules.
-If due to some biological intuition, we believe that a subtree in a molecule
-will form a repeating pattern by attaching a copy of itself to
-one of its leaves.
-We pass such information to our method.
-We add constraints to our method to encode that
-the last compartment consists of rules for the repeating pattern,
-the production rules add a new copy of the subtree only after looking
-within the context of the previous copy of the subtree,
-and once the rules for repeating pattern are active
-all the other rules of the last compartment must not be applicable. 
+an unboundedly large size of molecules. In such cases, rules are allowed to form molecules having repeating patterns of a subtree while rest of the tree being exactly same as one of the input molecules. Constraints are added to encode that those rules are all applied in the same compartment and are slow reactions. We put a limit on the depth of such repeating subtrees ($d_0$) and the number of repetitions ($r_0$) . Then, for a particular depth $d$ and repetitions $r$, we recursively define \textsc{Repeat} and \textsc{ExactMatch} as follows:
+\begin{align*}
+  \textsc{Repeat}(m, m', r, d) :=\;&  \textsc{Repeat}(m, ancestor(m'), r, d-1)\\
+    \textsc{Repeat}(m, m', r, 0) :=\;& (compart(m) = compart(m')) \land \textsc{Repeat}(m, C^{2d}(m'), r-1, d) \\
+    \textsc{Repeat}(m, m', 0, d) :=\;&  \textsc{ExactMatch}(m,C^{2d}(m')) \\
+    \textsc{Repeat}(\bot, \bot, r, d) :=\;&  \top \\
+    \textsc{Repeat}(m, \bot, r, d) :=\;&  \bot \\
+    \textsc{Repeat}(\bot, m', r, d) :=\;&  \bot \\
+    \textsc{ExactMatch}(m,m') :=\;& (M(m) = M(m')) \land \Land_{i \in [1,w]} \textsc{ExactMatch}(C(m,i),C(m',i)) \\
+    \textsc{ExactMatch}(\bot,m') :=\;& \bot \\
+    \textsc{ExactMatch}(m,\bot) :=\;& \bot 
+  \end{align*}
+  where $ancestor(m')$ is the parent node of $m'$ and $C^{2*d}$ is the application of $C(m',i)$, $2d$ times and $i$ comes from the reverse of the path traversed by m' to reach it's $d^{th}$ parent.
+The constraints for allowing runaway reactions are added after~\ref{line:consNewR} to modify \textsc{SugarSynth}.
+\begin{algorithmic}[1]
+  \vspace{1ex}
+  \setcounterref{ALG@line}{line:consNewR}
+  \State $mCons \landplus \Lor_{1 \leq r \leq r_0} \Lor_{1 \leq d \leq d_0} \Lor_{m \in \mu} (M(m) \neq M(\hat{m})) \implies  \textsc{Repeat}(m, \hat{m}, r, d) $
+  \vspace{1ex}
+\end{algorithmic}
+where \textsc{Repeat} adds the constraints described above due to which runaway reactions are allowed.
 
+\subsection{Non-monotonic rules}
+Some molecules produced dictate that after a certain rule is applied to them in a compartment, it restricts the application of any other rule from that point of time. Such a rule is said to have \textsc{HardEnds}. This feature of rules help in producing an exact set of desired molecules. We modify the function $\textsc{MatchTree}$ by inserting the following constraints after~\ref{line:matchtree-cons}:
+\begin{algorithmic}[1]
+  \vspace{1ex}
+  \setcounterref{ALG@line}{line:matchtree-cons}
+  \State $c \landplus \textsc{HardEnds}(v_r) \implies (mark \leq \tau(v))$
+  \vspace{1ex}
+\end{algorithmic}
+In our method, \textsc{HardEnds} sets a constraint on the given rule to have hard ends. The constraints state that if the applicable rule has \textsc{HardEnds}, then it has to be added at a time earlier than the current time of the molecule, effectively restricting the addition of further rules.
 
 
 %--------------------- DO NOT ERASE BELOW THIS LINE --------------------------
