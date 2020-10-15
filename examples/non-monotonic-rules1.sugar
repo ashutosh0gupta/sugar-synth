@@ -8,4 +8,4 @@
 (sugar D 0)
 (seed-mol A)
 (mol (A (B C _ ) ) )
-(mol (A (B _ D ) ))
+(mol (A (B _ D ) )) #should be fast

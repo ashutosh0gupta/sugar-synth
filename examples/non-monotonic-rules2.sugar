@@ -1,0 +1,14 @@
+# input file format
+(number-of-rules-to-learn 8)
+(max-rule-depth 2)
+(max-compartments 1)
+(sugar b-y 2)     
+(sugar c 1)       
+(sugar b-b 1)     
+(sugar a-b 0)     
+(sugar e-b 0)     
+(sugar d 0)
+(seed-mol b-y)
+(mol (b-y (c d) (b-b (c (e-b)))))
+(mol (b-y (c d) (b-b (c (a-b)))))
+
