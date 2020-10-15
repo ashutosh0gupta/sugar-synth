@@ -159,7 +159,8 @@ private:
   z3::expr no_match_cons( const sugar_mol_ptr& m  );
   void no_fast_can_extend_unknown(const sugar_mol_ptr& m,VecExpr& no_matches);
   void no_fast_can_extend(const sugar_mol_ptr& m,VecExpr& no_matches);
-
+  unsigned int depth_of(const sugar_mol_ptr& m);
+  bool partial(const sugar_mol_ptr& m1, const sugar_mol_ptr& m2);
   // reading solutions
   sugar_mol_ptr read_neg_mol( sugar_mol_ptr&, z3::model&, expr_set& );
   sugar_t_ptr read_sugar( const VecExpr& sugar_bits, z3::model& m );

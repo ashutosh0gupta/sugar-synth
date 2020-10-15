@@ -1,0 +1,8 @@
+(number-of-rules-to-learn 4)
+(max-rule-depth 4)
+(max-compartments 1)
+(sugar a 2)
+(sugar b 1)
+(seed-mol a)
+(mol (a (b _) (b _)) )
+(mol (a (a (a (b _) _) (a (a _ _) (b _))) (a (a (a _ _) (b _)) (a (b _) _))) )

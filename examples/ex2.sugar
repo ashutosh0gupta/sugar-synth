@@ -1,8 +1,8 @@
 # input file format
-(number-of-rules-to-learn 3)
-(max-rule-depth 3)
-(max-compartments 2)
+(number-of-rules-to-learn 2)
+(max-rule-depth 2)
+(max-compartments 1)
 (sugar A 2)
 (sugar D 0)
 (seed-mol A)
-(mol (A (A _ A) _) )
+(mol (A (A _ A) _) ) #should fail, not infinite loop 

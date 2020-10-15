@@ -357,7 +357,7 @@ z3::expr sugar_encoding::match( const sugar_mol_ptr& root1, const sugar_mol_ptr&
     auto m1_rule_bits = root1->get_cons()->get_rule_bits();
     auto m2_rule_bits = root2->get_cons()->get_rule_bits();
     for( unsigned i=0 ; i < m1_rule_bits.size(); i++ ) {
-        v1.push_back( m1_rule_bits[i] == m2_rule_bits[i] ); // rule same for runaway, comparrtment same for runaway, compare at each level
+        v1.push_back( (m1_rule_bits[i] == m2_rule_bits[i]) && !rs.at(i)->get_is_fast() ); // rule same for runaway, comparrtment same for runaway, compare at each level
       }
     for(unsigned i = 0; i < uu->get_num_sugar_bits(); i++ ){
       v1.push_back(uu->get_sugar_bit(i)==uv->get_sugar_bit(i));
@@ -476,7 +476,7 @@ z3::expr sugar_encoding::compare(const sugar_mol_ptr& m1, const sugar_mol_ptr& m
           if(j!=d-1){s.push(mp->get_sibling_num());}          
           rep.push_back(m4->get_cons()->get_compartment()==mp->get_cons()->get_compartment());
           if(j!=d-1){mp=mp->get_parent(); }
-      }    
+      }  
       rep.push_back(match( std::make_shared<sugar_mol>(*mp),m3,m4));     
       while(!s.empty()){
       if(m4==nullptr){return mk_false(ctx);}
@@ -796,7 +796,7 @@ match_tree(  rule_ptr r, sugar_mol_ptr m, z3::expr mark, bool is_match_part,
   match.push_back( z3::implies( r->get_occur_cons(), s_bit && tcons && ccons));
   if(b){
     if (mark){
-      match.push_back( z3::implies(  !r->get_occur_cons() && r_parent->get_occur_cons() && r->get_is_hard_end(),  m->get_cons()->get_tstamp() > mark  ));  
+    match.push_back( z3::implies(  !r->get_occur_cons() && r_parent->get_occur_cons() && r->get_is_hard_end(),  m->get_cons()->get_tstamp() > mark  ));  
     }    
   }  
   for( unsigned i = 0; i < m->get_children_num(); i++ ) {    
@@ -901,7 +901,7 @@ no_fast_match_cons( sugar_mol* m_parent, unsigned m_child_num,
     if( m_comp ) {
       // add conditions for saturation of the fast rules in the compartments
       // from rules upto m_comp
-      no_m_cond = no_m_cond && r->get_is_fast() ;//&& r_comp <= m_comp;
+      no_m_cond = no_m_cond && r->get_is_fast() && r_comp <= m_comp;
     }
     no_m_cond = no_m_cond.simplify();
     auto no_match = z3::implies( no_m_cond, mk_and( ctx, no_matches ) );
@@ -987,8 +987,8 @@ no_fast_can_extend(const sugar_mol_ptr& m, VecExpr& no_matches){
   if(m==nullptr) {
     return;
   }
-  //z3::expr m_comp(ctx);
-  auto m_comp = m->get_cons()->get_compartment();
+  //z3::expr m_comp(ctx);  
+    auto m_comp = m->get_cons()->get_compartment();
   for(unsigned int i=0;i<m->get_children_num();i++){
     if( m->get_child(i)==nullptr ) {
       //m->pp(std::cout);std::cout<<std::endl;
@@ -1001,7 +1001,25 @@ no_fast_can_extend(const sugar_mol_ptr& m, VecExpr& no_matches){
   }
   return;
 }
+unsigned int sugar_encoding::depth_of(const sugar_mol_ptr& m){
+  if(!m->get_parent()){return 1;}
+  else{return 1 + depth_of(std::make_shared<sugar_mol>(*m->get_parent()));}
+}
 
+bool sugar_encoding::partial(const sugar_mol_ptr& m1, const sugar_mol_ptr& m2){
+  if(m2==nullptr){return true;}
+  else if(m1==nullptr){return false;}
+  else{
+    if(m1->get_sugar_number() != m2->get_sugar_number()){return false;}
+    else{
+      bool b=true;
+      for(unsigned i=0; i<m1->get_children_num();i++){
+        b = b && partial(m1->get_child(i),m2->get_child(i));
+      }
+      return b;
+    }
+  }
+}
 // z3::expr sugar_encoding::
 // no_fast_match_cons_at_all_null_leaves( const sugar_mol_ptr& root_m  ) {
 //   // enum all deadend edges call the above function
@@ -1044,11 +1062,12 @@ apply_rule_cons( sugar_mol_ptr& m, VecExpr& rule_matches ) {
       depth_matches.push_back( mk_and( ctx, match ) );
     }
     auto match_cond = cut_bit && cons_ptr->get_rule_bit( i );
-    z3::expr r_match = z3::implies( match_cond, mk_or( ctx, depth_matches ) );
-    rule_matches.push_back( r_match );
-  }
-  if( false ) //ashu: options
-    no_fast_match_cons( m, rule_matches );
+    VecExpr r_matches;
+    no_fast_can_extend_unknown( m, r_matches );
+    //if(!m->get_sugar()) {m->pp(std::cerr); std::cerr<<std::endl; diagnostics_cons.push_back( mk_and(ctx,r_matches));}
+    z3::expr r_match = z3::implies( match_cond, mk_or( ctx, depth_matches ) && z3::implies(!r->get_is_fast() , mk_and(ctx,r_matches)) ); //&& z3::implies( r->get_is_hard_end(),  m->get_cons()->get_tstamp() > mark  ));
+    rule_matches.push_back( r_match );    
+  }  
 }
 
 
@@ -1084,13 +1103,18 @@ z3::expr sugar_encoding::encode_neg_cons( sugar_mol_ptr& mol ) {
   VecExpr cons;
   mol->get_cons()->collect_local_cons( cons );
   encode_mol( mol, cons );
+  mol->pp(std::cerr);
+  std::cout<<std::endl;  
   // Think : Does it interfere with longer mols if no repetition????
   // cons.add( no_fast_match_cons_at_all_null_leaves( m ) )
   // dump(cons);
-  //return !mk_and( ctx, cons ); // \/ mol_is_extendable_by_fast_reactions
-  no_fast_can_extend(mol,cons);
-  // VecExpr cons1;
-  // no_fast_can_extend(mol,cons1);
+  //return !mk_and( ctx, cons ); // \/ mol_is_extendable_by_fast_reactions 
+  bool b = false; 
+  for (auto m: pos_ms){
+    b = b || partial(m,mol);
+  }
+  if(b){
+    no_fast_can_extend(mol,cons);}
   // dump(cons1);
   // assert(false);
   return !mk_and( ctx, cons );
@@ -1288,7 +1312,7 @@ void sugar_encoding::add_diagnostic_cons( z3::expr& e ) {
 void sugar_encoding::eval_diagnostic_cons( z3::model& m ) {
   // std::cout << m;
   for( auto d_cons : diagnostics_cons ) {
-     dump( d_cons );
+    dump( d_cons );
     expr_set d_vars;
     get_variables( d_cons, d_vars);
     dump( m.eval(d_cons));
@@ -1385,6 +1409,7 @@ void sugar_encoding::do_synth() {
     // if(verbose) std::cout <<"\n"; else std::cout <<"\r";
     // find rules
     z3::expr conc_rule_cons(ctx);
+    //std::cout << "#####\n";
     if (find_rules.check() == z3::sat) {
       z3::model m = find_rules.get_model();
       // if( verbose ) {
