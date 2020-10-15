@@ -57,7 +57,7 @@ Let $SVars$ be the set of uncountable variables with the domain.
 We will use the pool of $SVars$ to add variables to the templates.
 
 \begin{wrapfigure}{r}{0.37\textwidth}
-    \vspace{-6mm}
+    \vspace{-12mm}
         \center
   \begin{tikzpicture}[shorten >=1pt,thick,node distance=1cm,on grid,scale=0.5]
     \node[loc] (v0) {$v_0$};
@@ -83,26 +83,26 @@ We will use the pool of $SVars$ to add variables to the templates.
 \end{wrapfigure}
 A node in a production rule can be in four situations.
 In Figure~\ref{fig:rule-parts}, we illustrate the situations.
-The first situation is when a node position may be in the expanding part.
+The first situation is when a node position is in the expanding part.
 The dark gray nodes are the expanding nodes.
-The second situation is when a node position may not be present in the rule.
-The dashed area includes absent nodes
-from the full tree.
-Among the matching nodes, we make two cases, namely if the expanding
-nodes are the descendants of the matching node or not. 
+The second situation is when a node position is not in the rule.
+The dashed area are the absent nodes.
+Among the matching nodes, we have two cases.
+% , namely if the expanding
+% nodes are the descendants of the matching node or not.
 The third situation is when a node position is in the matching part
 and has expanding decadents.
-The solid path from $v_0$ to the root $v_e$ of the expanding part includes
-the nodes that are ancestors of expanding part among the matching nodes.
-Finally, the fourth situation is when a node position is in the matching part and
-has no expanding decedents.
-The nodes in the rest of the light gray area are in the fourth situation.
-Another variable is mapped to a node to encode the four situations.
+The nodes on the solid path from $v_0$ to the root $v_e$ of the expanding part are in the third situation.
+% the nodes that are ancestors of expanding part among the matching nodes.
+Finally, the fourth situation is the rest of node positions
+in the matching part, which is the light gray area.
+% The nodes in the rest of the light gray area are in the fourth situation.
+A variable is mapped to a node to encode the four situations.
 Let $K =\{Expand,Absent,MatchAns,Match\}$ be the set of symbols to
 indicate the set of four situations.
 Let $KVars$ be the set of uncountable variables with domain $K$. 
-We will use the pool of $KVars$ to add variables to the templates.
-Formally, the templates are defined as follows.
+% We will use the pool of $KVars$ to add variables to the templates.
+The templates are defined as follows.
 
 
 
@@ -117,145 +117,151 @@ $C : V \times \naturals \pmaps V$ maps the indexed children of nodes,
 and
 $v_{0r} \in V$ is the root of the tree.
 \end{df}
-In the method at line~\ref{line:createRtemp}, we use the
-call to \textsc{MakeTemplatesRule}( $S$, $d$, $w$, $n$) to create $n$ templates for
-height $d$ and children width $w$. We get $d$ and $n$ as input, and
-we let $w$ be the maximum arity of any sugar that occurs in $\mu$.
-This allows us to map any node to any sugar.
-We also assume that templates
-returned by $\textsc{MakeTemplatesRule}$ do not share variables.
-We obtain a production rule from a template by assigning values
-to the variables.
-If for a node $v$ in a template if we assign $\kappa(v) = Absent$,
+In the algorithm at line~\ref{line:createRtemp}, we call \textsc{MakeTemplatesRule}( $S$, $d$, $w$, $n$) to create $n$ templates for
+height $d$ and children width $w$.
+% We get $d$ and $n$ as input, and
+% we let $w$ be the maximum arity of any sugar that occurs in $\mu$.
+Since $w$ is the maximum arity of any sugar, we can map any node to any sugar.
+% We also assume that templates
+% returned by $\textsc{MakeTemplatesRule}$ do not share variables.
+% We obtain a production rule from a template by assigning values
+% to the variables of the template.
+For a node $v$ in a template if we assign $\kappa(v) = Absent$,
 we call the node {\em absent}. Otherwise, we call the node {\em present}.
-Not all the assignments may result in a valid rule.
+% Not all the assignments may result in a valid rule.
 Next at line~\ref{line:ruleCorr}, we will construct constraints
 that encode the set of valid rules. 
-
 A valid assignment to the variables in
 a template  $t = (V, \nu, \kappa, C, r)$ must
 satisfy the following six conditions.
-The first two encode the basic agreement among variables.
-The third encodes the tree structure of the rule.
-The last three encode the relative positions of the four
-parts of the rule.
+% The first two encode the basic agreement among variables.
+% The third encodes the tree structure of the rule.
+% The last three encode the relative positions of the four
+% parts of the rule.
 \begin{enumerate}
-\item If a node is present, then it is labeled with a sugar.
+\item If a node is present, then it is labeled with a sugar.\\
   %Otherwise, we ignore the label.
-$$
+$
 \Land_{s \in S} \Land_{v \in V} (\kappa(v) \neq Absent \limplies \nu(v) \neq \bot )
-$$
-\item  The number of children of a node should match with the arity of the labeled sugar.
-  The following formula states that the children that are at greater arity than that of the label
-  must be absent.
-$$
+$
+\item
+  % The number of children of a node should match with the arity of the labeled sugar.
+  % The following formula states that
+
+  The children that are at greater arity than that of the label
+  are absent.\\
+$
 \Land_{s \in S} \Land_{i \in (arity(s),w] }\Land_{v \in V} (\nu(v) = s \limplies \kappa( C(v,i) ) = Absent )
-$$
-\item If a node is present, then the parent of the node is also present.
-  $$
+$
+\item If a node is present, then the parent of the node is also present.\\
+  $
   \Land_{{\text{internal node } v \in V}}
   \Land_{i\in[1,w]} (\kappa(C(v,i) ) \neq Absent \limplies \kappa( v ) \neq Absent )  
-  $$
-\item If a node is $Expand$, then its children are also $Expand$ if present. The following constraints state that once one reached the expanding part, there
-are no descendants that are matching.
-  $$
-\Land_{i\in[1,w]} \Land_{\mathrlap{\text{internal node } v \in V}} (\kappa(v) = Expand \limplies \kappa(C(v,i)) \in \{Expand,Absent\}   )
-$$
-\item If a node is $Match$, then its children are also $Match$ if present.
-  Similarly, the following constraints state that once one reached the matching part without expanding descendants, there are no descendants that are expanding.
-$$
-\Land_{i\in[1,w]} \Land_{\mathrlap{\text{internal node } v \in V}} (\kappa(v) = Match \limplies \kappa(C(v,i)) \in \{Match,Absent\}   )
-$$
-\item If a node is $MatchAns$, then exactly one child is $MatchAns$ or $Expand$.
-  The following constraints encode that there is exactly one subtree that is expanding part
-  by stating that there is no branching in $MatchAns$ nodes and they form a path.  
-$$
-\Land_{\mathrlap{\text{internal node } v \in V}} (\kappa(v) = MatchAns \limplies \sum_{i\in[1,w]}( \kappa(C(v,i)) \in \{MatchAns,Expand\}) = 1
-$$
+  $
+\item If a node is $Expand$, then its children are also $Expand$ if present.\\
+  % The following constraints state that once one reached the expanding part, there are no descendants that are matching.
+  $
+\Land_{i\in[1,w]} \Land_{{\text{internal node } v \in V}} (\kappa(v) = Expand \limplies \kappa(C(v,i)) \in \{Expand,Absent\}   )
+$
+\item If a node is $Match$, then its children are also $Match$ if present.\\
+  % Similarly, the following constraints state that once one reached the matching part without expanding descendants, there are no descendants that are expanding.
+$
+\Land_{i\in[1,w]} \Land_{{\text{internal node } v \in V}} (\kappa(v) = Match \limplies \kappa(C(v,i)) \in \{Match,Absent\}   )
+$
+\item If a node is $MatchAns$, then exactly one child is $MatchAns$ or $Expand$.\\
+  % The following constraints encode that there is exactly one subtree that is expanding part
+  % by stating that there is no branching in $MatchAns$ nodes and they form a path.
+\mbox{}\hspace{-5mm}  
+$
+\Land_{v \in V} (\kappa(v) = MatchAns \limplies \sum_{i\in[1,w]}( \kappa(C(v,i)) \in \{MatchAns,Expand\}) = 1
+$
 \end{enumerate}
 
-In the method, the call to $\textsc{RuleTemplateCorrectness}$ at
+The call to $\textsc{RuleTemplateCorrectness}$ at
 line~\ref{line:ruleCorr} creates the above constraints
 and store them in $tCons$.
 Next, we will also be searching for the molecules that may be produced by the learned rules.
 Therefore, we need to define the search space for the molecules.
-We use similar templates for defining the search space.
-Since we always search in bounded space, we limit the template size using a parameter,
+We use templates for defining the search space.
+We limit the template size using a parameter,
 namely the height of the template.
 \begin{df}
 For given integers $h$ and $w$,
 a {molecule template} $\hat{m} = (V, \nu, C, v_{0m})$ is a labeled full tree with height $h$ and 
-every internal node has $w$ children, where 
+each internal node has $w$ children, where 
 $V$ is a set of nodes, $\nu : V \maps SVars$ maps nodes to sugar choice variables,
 $C : V \times \naturals \pmaps V$ maps the indexed children of nodes,
 and
-$v_{0m} \in V$ is the root of the tree.
+$v_{0m} \in V$ is the root.
 \end{df}
 At line~\ref{line:createMtemp}, we use the call to \textsc{MakeTemplateMol}($S$, $h$, $w$) to
 create a template of height $h$ and children width $w$.
 %
 Our method searches for unwanted producible molecules up to the height of $h$,
-which we choose to be the maximum of the heights of molecules in $\mu$.
+which we set to the maximum of the heights of molecules in $\mu$.
 %
-The choice of $h$ is somewhat arbitrary.
-%
-We assume if the rules could have produced a molecule with height less than $h$,
-then it must be in $\mu$.
-On the other hand, we ignore the potential formation of the large size of molecules.
-%
-Since we observe only finite molecules in any wet experiment, we may assume
-there may be large producible molecules, but we did not observe them.
-However, this point is debatable and $h$ may be viewed as a parameter of the whole
-method.
+The choice of $h$ is arbitrary.
+% %
+% We assume if the rules could have produced a molecule with height less than $h$,
+% then it must be in $\mu$.
+% On the other hand, 
+% We ignore the potential formation of the large size of molecules.
+% %
+% Since we observe only finite molecules in any wet experiment, we may assume
+% there may be large producible molecules, but we did not observe them.
+% However, this point is debatable and $h$ may be viewed as
+% a parameter of the whole method.
 
 %
 Similar to the rule templates, not all assignments to molecule template variables
 are valid.
-We add the following four conditions for
+We add the following conditions for
 valid assignments for molecule template $\hat{m} = (V, \nu, C, \hat{v_0})$.
-The first  two conditions encode the tree structure of the molecule and
-matching the number of children with label arity for each node.
-The second encodes that the height of the molecule is large enough.
-The last encodes that new molecule must not be the same as any molecule in $\mu$.
+% The first  two conditions encode the tree structure of the molecule and
+% matching the number of children with label arity for each node.
+% The second encodes that the height of the molecule is large enough.
+% The last encodes that new molecule must not be the same as any molecule in $\mu$.
 \begin{enumerate}
-\item If a node is present, then the parent of the nodes is also present.
-  $$
-  \Land_{i\in[1,w]}\Land_{\mathrlap{\text{internal node } v \in V}} (\nu(C(v,i) ) \neq \bot \limplies \nu( v ) \neq \bot )  
-  $$
-\item The children count of a node matches with the arity of the labeled sugar.
-  $$
+\item If a node is present, then the parent of the nodes is also present.\\
+  $
+  \Land_{i\in[1,w]}\Land_{{\text{internal node } v \in V}} (\nu(C(v,i) ) \neq \bot \limplies \nu( v ) \neq \bot )  
+  $
+\item The children count of a node matches with the arity of the labeled sugar.\\
+  $
   \Land_{s \in S} \Land_{i \in (arity(s),w] }\Land_{v \in V} (\nu(v) = s \limplies \kappa( C(v,i) ) = Absent )
-  $$
-\item At least one of the leaves is present. This is for
-  avoiding the trivial solution.
-  $$
-  \Lor_{ v \in V \text{ and } depth(v) > d' } \nu( v ) \neq \bot,
-  $$
-  where $d'$ is a number close to and smaller than $height(\hat{v_0})$.
-  This allows us to look for all molecules that are close
-  to height $h$.
-  We choose $d' = h-d$, where $d$ is the height of the rule templates.
-  This $d'$ ensures that we do not miss producible molecules that
-  can not have exact height $h$ but is slightly larger than $h$.
-  Then, there must be another producible
-  molecule that is a subtree of the molecule and has height in
-  between $h$ and $h-d$
-  because the maximum depth of a rule is $d$.
+  $
+% \item At least one of the leaves is present. This is for
+%   avoiding the trivial solution.\\
+%   $
+%   \Lor_{ v \in V \text{ and } depth(v) > d' } \nu( v ) \neq \bot,
+%   $
+%   where $d'$ is a number close to and smaller than $height(\hat{v_0})$.
+%   This allows us to look for all molecules that are close
+%   to height $h$.
+%   We choose $d' = h-d$, where $d$ is the height of the rule templates.
+  % This $d'$ ensures that we do not miss producible molecules that
+  % can not have exact height $h$ but is slightly larger than $h$.
+  % Then, there must be another producible
+  % molecule that is a subtree of the molecule and has height in
+  % between $h$ and $h-d$
+  % because the maximum depth of a rule is $d$.
 \item We find a molecule that is not in $\mu$.
-  To encode the constraints, let predicate $Neq$ be recursively defined as follows.
-  \begin{align*}
-  Neq(v, v') :=\;&   \nu(v) \neq M(v') \lor
-  \Lor_{\mathclap{i \in [1,w]}} Neq( C(v,i), C(v',i ) )\\
-    Neq(v,\bot) :=\;&  \nu(v) \neq \bot
-  \end{align*}
-  The constraint is
+  We encode $\Lor_{{m = (\_,\_,\_, v_0)\in \mu}}  Neq(\hat{v_0},v).$, where
+   predicate $Neq$ be recursively defined as follows.\\
+  $Neq(v, v') :=\; \nu(v) \neq M(v') \lor
+  \Lor_{{i \in [1,w]}} Neq( C(v,i), C(v',i ) )$\\
+  $Neq(v,\bot) :=\;  \nu(v) \neq \bot$
   % \begin{align*}
-  $\Lor_{%\mathclap
-    {m = (\_,\_,\_, v_0)\in \mu}}  Neq(\hat{v_0},v).$
+  % Neq(v, v') :=\;&   \nu(v) \neq M(v') \lor
+  % \Lor_{\mathclap{i \in [1,w]}} Neq( C(v,i), C(v',i ) )\\
+  %   Neq(v,\bot) :=\;&  \nu(v) \neq \bot
   % \end{align*}
-  In our implementation, 
-  we have an option to also ignore the subtrees of
-  the molecules of $\mu$.
+  % The constraint is
+  % % \begin{align*}
+  % % \end{align*}
+  % In our implementation, 
+  % we have an option to also ignore the subtrees of
+  % the molecules of $\mu$.
 \end{enumerate}
 %
 In our method, the call to $\textsc{MolTemplateCorrectness}$ at
@@ -268,21 +274,20 @@ Using procedure $\textsc{EncodeProduce}$, we generate
 the corresponding constraints.
 We will discuss the procedure in-depth shortly.
 Let us continue with~\textsc{SugarSynth}.
-At~\ref{line:molenc} line, we call $\textsc{EncodeProduce}$ for
+At line~\ref{line:molenc}, we call $\textsc{EncodeProduce}$ for
 each molecule in $\mu$ and generate constraints $pCons$ stating that
 the solutions of the templates will produce the molecules in $\mu$.
 
 After producing the constraints $tCons$, $mCons$, and $pCons$,
 the method enters in the loop.
 It first checks the satisfiability of conjunction
-$tCons \land pCons \land nCons$
-using some SMT solver, where $nCons$ is $\ltrue$ in the first iteration
+$tCons \land pCons \land nCons$, where $nCons$ is $\ltrue$ in the first iteration
 and will encode constraints related to counterexample molecules.
 If the conjunction is unsatisfiable, there are no rules of
 the input number and height,
 and the method returns failure of synthesis.
 If it is satisfiable, it constructs the rules at line~\ref{line:getR} from
-the satisfying assignment $a$
+%the satisfying assignment $a$
 and stores them in $R$.
 
 At line~\ref{line:consNewR}, we construct constraints $rCons$ again using
@@ -290,25 +295,25 @@ $\textsc{EnocdeProduce}$ that says that template molecule $\hat{m}$
 is generated by rules $R$.
 We check the satisfiability of $rCons \land mCons$.
 If it is not satisfiable, we have found the rules that generate exactly
-the molecules in $\mu$ within our search range of counterexample molecules,
-and the loop terminates.
+the molecules in $\mu$ and the loop terminates.
 Otherwise, we use the satisfying assignment to create a
 counterexample molecule $m'$.
 At line~\ref{line:negCons}, we add constraints to $nCons$ stating that
-all possible applications of templates rules in $T$ must not produce $m'$.
+all possible applications of template rules in $T$ must not produce $m'$.
 We use shorthand $F \landplus G$ for $ F := F \land G$.
 As we will see that $\textsc{EnocdeProduce}$ introduces fresh variable
 maps $\tau$ and $cuts$ in the encoding.
 Since we negate the returned formula by $\textsc{EnocdeProduce}$ 
-and then we check the satisfiability, the encoding will not be correct
-due to the fresh variables.
-Therefore, we will need to introduce universal quantifiers to the
+and then we check the satisfiability.
+% the encoding will not be correct
+% due to the fresh variables.
+Therefore, we need to introduce universal quantifiers to the
 fresh variables.
 We introduce universal quantifiers over $\tau$ and $cuts$
 variables before adding to $nCons$.
-Intuitively, the universal quantifiers say that all possible
-application patterns of the learned rules do not produce $m'$.
-Afterword, the loop goes to the next iteration.
+% Intuitively, the universal quantifiers say that all possible
+% application patterns of the learned rules do not produce $m'$.
+Next, the loop goes to the next iteration.
 Since the domain of all the variables is finite, eventually the loop must
 terminate.
 
@@ -317,25 +322,23 @@ terminate.
 \subsection{\textsc{EncodeProduce} in detail}
 
 
-Now let us look at the encoding generated by $\textsc{EncodeProduce}$
-in detail.
+Now let us look at the encoding generated by $\textsc{EncodeProduce}$.
 The process of production of molecules adds pieces of trees of nodes
 one after another.
 In order to show that a molecule is producible by a set of production rules,
 we need to find the nodes where the production rules are applied,
 the rules that are applied on the nodes, and
 the order of the application of the rules.
-The encoding is like encoding bounded executions of programs.
-
+% The encoding is like encoding bounded executions of programs.
 To model the production due to the application of the rules,
-we need to attach three maps to the nodes of the molecules.
+we attach three maps to the molecule nodes.
 \begin{itemize}
 \item Let $cuts$ map each node to a Boolean variable
-indicating the node is the point where a rule is applied and the
-molecule was expanded.
+indicating the node is the point where a rule is applied to
+expand the molecule.
 We say points of the applications of the production
 rules as {\em cuts} of the tree.
-All the nodes that are in between the cuts are added in a single step.
+% All the nodes that are in between the cuts are added in a single step.
 
 \item Let $rmatch$ map each node to a rule indicating
   the rule that is applied to expand at the node.
@@ -343,97 +346,93 @@ All the nodes that are in between the cuts are added in a single step.
   % If a node is cut point, we need to the rules that added the nodes  
 \item Let $\tau$ map each node to an integer variable
   indicating the time point when the node was added to the molecule.
-  The order of the addition is an important constraint since already
-  existing nodes in a molecule decide what can be added in the future.
-  If we do not capture the order in our encoding, we may wrongly declare
-  that a molecule is producible while it is not due to the matching
-  constraints.
+  Since already added nodes in a molecule decide what can be added later,
+  we need to record the order of the addition.
+  % If we do not capture the order in our encoding, we may wrongly declare
+  % that a molecule is producible while it is not due to the matching
+  % constraints.
 \end{itemize}
 
 Algorithm~\ref{alg:produce} presents function $\textsc{EncodeProduce}$
 that returns the encoding.
 It takes a molecule $m$ and a set of rules $T$.
 Both the inputs can be template or concrete.
-The function is tolerant of the variations, but our presentation
-assumes that the molecule is concrete and the rules are templates.
+% The function is tolerant of the variations, but
+Our presentation assumes that the molecule is concrete and
+the rules are templates.
 This will cover the case when the $\textsc{EncodeProduce}$ is called at
 line~\ref{line:molenc} in algorithm~\ref{alg:sugar-synth}.
 However, at line \ref{line:consNewR} the molecule is a template
-and the rules are concrete.
-We will discuss the handling of this situation at the end of this subsection.
-$\textsc{EncodeProduce}$ is implemented with the help of three other functions,
+and the rules are concrete, which we will discuss later.
+% We will discuss the handling of this situation at the end of this subsection.
+$\textsc{EncodeProduce}$ uses help of three other supporting functions,
 $\textsc{EncodeP}$, $\textsc{MatchTree}$, and $\textsc{MatchCut}$.
-All of them are presented in algorithm~\ref{alg:produce}.
+% All of them are presented in algorithm~\ref{alg:produce}.
 %
 
 $\textsc{EncodeProduce}$ returns constraints stating for each node $v$
-and rule template $t$ that
+and rule template $t$,
 if $v$ is at a cut and $t$ is applied at $v$, then $t$ must match
 at the node $v$.
 We require $rmatch(v)$ to be equal to some rule.
-Therefore, if $v$ is a cut node, some template must be applied. 
+% Therefore, if $v$ is a cut node, some template must be applied. 
 Since we are matching with template rule, we do not know the
-position of the head of expanding nodes.
+position of the root of expanding nodes.
 We enumerate to all possible depths from $1$ to $d-1$ for finding
-the head.
+the root.
 For each $\ell \in [1,d)$, we call $\textsc{EncodeP}( v, t, \ell)$
 to construct the constraints encoding that $t$ is applied at $v$
 and the depth of the root of the expanding nodes is at depth $\ell$.
 
-In $\textsc{EncodeP}$,
-we need to match rule template $t$ such that the root of the expanding
-nodes matches with $v$.
-Since we are given a guess $\ell$ for the depth of the
-node.
-We can traverse up from $v$ for $\ell$ steps to find the node to match
-the root of $t$.
-Naturally, the $\textsc{EncodeP}$ ignores returns $\lfalse$ if there
-is no $\ell$th ancestor of $v$, i.e., there is no possibility of a match.
-The variable $mark$ is assigned the timestamp for node $v$.
-During matching, we will add constraints stating that the matching part of the
-template should match to the nodes added before $mark$
-and expanding part of the template should match with nodes that
-are added at or after $mark$.
+In $\textsc{EncodeP}$, we can traverse up from $v$ for $\ell$ steps to
+find the node to match the root of $t$.
+Naturally, it returns $\lfalse$ if there
+is no $\ell$th ancestor of $v$. % i.e., there is no match.
+The variable $mark$ is the timestamp for node $v$.
+% During matching, we will add constraints stating that the matching part of the
+% template should match to the nodes added before $mark$
+% and expanding part of the template should match with nodes that
+% are added at or after $mark$.
 The local variable $c$ collects a conjunction of constraints as they are
-generated in the function and $c$ is initially $\ltrue$.
+generated. % and $c$ is initially $\ltrue$.
 The local variable $v_r$ is initially equal to the root $v_{0r}$ of $t$
 and traverses the nodes in $t$.
 The while loop at~\ref{line:encodep-while} in $\textsc{EncodeP}$ starts with
 the $\ell$th ancestor from $v$,
 matches all the ancestors up to the parent of $v$.
-As loop traverses down, it also traverses $t$ along the matching
+As the loop traverses down, it also traverses $t$ along the matching
 using variable $v_r$.
 In each iteration, $v_r$ is updated to the $j$th child due to lines
 \ref{line:encodep-next-vr} and \ref{line:encodep-update-vr}
-if the ancestors of $v$ also traverse along with the $j$th child
-(see if condition at line \ref{line:encodep-jth-child-cond}).
+if the ancestors of $v$ also traverse along with the $j$th child.
+% (see if condition at line \ref{line:encodep-jth-child-cond}).
 
-Let us consider the body of the loop in detail.
+% Let us consider the body of the loop.
 Let $v'$ be the $i$th ancestor at some iteration of the loop.
-At line~\ref{line:encodep-ans-match}, the loop adds constraints stating that the corresponding node $v_r$ in the template rule is
-declared $MatchAns$, sugar matches in $v_r$ and $v'$, and
+At line~\ref{line:encodep-ans-match}, the loop adds constraints stating that
+the corresponding node $v_r$ in the template rule is
+$MatchAns$, sugar matches in $v_r$ and $v'$, and
 node $v'$ is added before $mark$.
-The for loop at \ref{line:encodep-sub-for-loop}, iterates over
+The loop at line~\ref{line:encodep-sub-for-loop}, iterates over
 children of $v'$.
 If there is a child of $v'$ that is not along the path to
 $v$, it is matched at line~\ref{line:mtree} with the corresponding
 child of $v_r$ by calling $\textsc{MatchTree}$, which traverses
 rule template and molecule and generate constraints to encode that their
 nodes match.
-$\textsc{MatchTree}$ is also called with a third parameter
-$mark$ and a Boolean value as the fourth parameter.
-We will discuss the procedure shortly.
+We will discuss $\textsc{MatchTree}$ shortly.
+% $\textsc{MatchTree}$ is also called with a third parameter
+% $mark$ and a Boolean value as the fourth parameter.
+% We will discuss the procedure shortly.
 If the $j$th child of $v'$ is along the path to $v$,
-we get the node name $v'_r$ for updating
+we get node $v'_r$ for updating
 $v_r$ for the next iteration of the while loop.
-After the while loop in $\textsc{EncodeP}$, $v_r$ is the
-candidate node for the root of expanding nodes.
-At line \ref{line:encodep-vr-expand}, we declare that $v_r$
-is an $Expand$ node.
-Afterword, we match the node $v$
+% After the while loop in $\textsc{EncodeP}$, $v_r$ is the
+% candidate node for the root of expanding nodes.
+After the while loop in $\textsc{EncodeP}$ at line \ref{line:encodep-vr-expand}, we declare $v_r$
+is $Expand$,  match the node $v$
 with the corresponding node $v_r$ in the template rule by calling
-$\textsc{MatchTree}$ again at line~\ref{line:encodep-mtree-expand}.
-At line~\ref{line:mcut}, we also call to match the cut pattern at
+$\textsc{MatchTree}$, and also call to match the cut pattern at
 the subtree of $v$ with the template rule.
 
 $\textsc{MatchTree}$ is a recursive procedure and matches
@@ -441,28 +440,23 @@ sugar assignments between the molecule and the rule template.
 If the rule template node $v_r$ does not exist, then
 there is nothing to match and it returns $\ltrue$ at
 line~\ref{line:matchtree-vr-absent}.
-If the molecule node $v$ does not exist, then the rule node must also
-be flagged absent. Otherwise, the match will fail.
-The corresponding constraints $\kappa(v_r) = Absent$ is added
-at line~\ref{line:matchtree-v-absent}.
-If both the nodes are present, then we add constraints
-that if $v_r$ is not flagged to absent in the template, then
+At line~\ref{line:matchtree-v-absent}, we encode if the molecule node $v$ does not exist, then the rule node must also
+be flagged absent. %Otherwise, the match will fail.
+Otherwise, we add constraints
+that if $v_r$ is not absent in the template, then
 the labels of $v$ and $v_r$ must match at line~\ref{line:matchtree-cons}.
-At the same line, $\textsc{MatchTree}$ also adds constraints that
+At the same line, $\textsc{MatchTree}$ also adds constraints $tCons$ that
 nodes are added in the molecule in the correct order.
-The third input of the function is $mark$, which is the time when
-node $v$ was added. 
-The function also takes $isExpand$ bit as the fourth input if
-$isExpand$ is true then the subtree must be added after
-or with $v$, and is
-false then nodes must be added before $v$.
+The last two inputs of the function is timestamp $mark$ and a bit $isExpand$,
+which tells us that the matching nodes should be added before or after $mark$.
 The calls to $\textsc{MatchTree}$ from \textsc{EncodeP} use the
-$isExpand$ appropriately to indicate that nodes correspond to the
-matching part of the rule are added before and expanding part nodes
-are added later.
+$isExpand$ appropriately.
+% to indicate that nodes correspond to the
+% matching part of the rule are added before and expanding part nodes
+% are added later.
 Afterwords at line~\ref{line:matchtree-recurse},
-the procedure calls itself for the children of $v$ and $v_r$ to
-generate the same constraints for the subtree.
+the procedure calls itself for the children of $v$ and $v_r$.
+% to generate the same constraints for the subtree.
 
 Once a rule is applied to a molecule, all the
 nodes inside the expanding part are added together.
@@ -478,21 +472,21 @@ from present to absent.
 For helping to detect the transition,
 the third parameter is a constraint that encodes that the parent of $v_r$
 is absent or not.
-If $v$ does not exist, then there is no constraint to add therefore
-the procedure returns $\ltrue$ at line~\ref{line:mcut-no-v}.
-If $v_r$ does not exist, then it returns constraints encoding
-that if the parent of $v_r$ was not absent, then $v$ must be at a cut at line~\ref{line:mcut-no-vr}.
-If both $v$ and $v_r$ exist, then we add constraints
-that if the parent of $v_r$ is not absent, $v_r$ is
-flagged to be absent in the learned rule
-if and only if $v$ is the cut points at line~\ref{line:mcut-cons}.
-$\textsc{MatchCuts}$ recursively traverses the children of $v$ and $v_r$
-and generates the constraints for the cut pattern.
-The constraints added by the procedure are guarded by the presence of parents
-because we need to enable constraints only when there is a possibility of transition
-from presence to absence.
-However, the call to $\textsc{MatchCuts}$ in \textsc{EncodeP} passes $\lfalse$ as the third input.
-Even if the parent of $v_r$ at line \ref{line:mcut} in \textsc{EncodeP} is present,
+% If $v$ does not exist, then there is no constraint to add therefore
+% the procedure returns $\ltrue$ at line~\ref{line:mcut-no-v}.
+% If $v_r$ does not exist, then it returns constraints encoding
+% that if the parent of $v_r$ was not absent, then $v$ must be at a cut at line~\ref{line:mcut-no-vr}.
+% If both $v$ and $v_r$ exist, then we add constraints
+% that if the parent of $v_r$ is not absent, $v_r$ is
+% flagged to be absent in the learned rule
+% if and only if $v$ is the cut points at line~\ref{line:mcut-cons}.
+% $\textsc{MatchCuts}$ recursively traverses the children of $v$ and $v_r$
+% and generates the constraints for the cut pattern.
+% The constraints added by the procedure are guarded by the presence of parents
+% because we need to enable constraints only when there is a possibility of transition
+% from presence to absence.
+The call to $\textsc{MatchCuts}$ in \textsc{EncodeP} passes $\lfalse$ as the third input.
+Even if the parent of $v_r$ in \textsc{EncodeP} is present,
 $v_r$ is a cut point adding cut pattern constraints for the node will create inconsistency.
 Therefore, we are passing $\lfalse$.
 
