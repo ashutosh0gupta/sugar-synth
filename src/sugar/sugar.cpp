@@ -427,7 +427,10 @@ void synth_sugar( std::string input ) {
   //   std::cout << "\n";
   // }
   sugar_encoding s( ctx, sugars, seed_mols, mols, group_mols, num_rules,
-                    rule_depth, max_compartments);
+                    rule_depth, max_compartments,
+                    // solving configurations
+                    quantified_neg_cons
+                    );
 
   s.do_synth();
 

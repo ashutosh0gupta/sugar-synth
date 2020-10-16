@@ -73,7 +73,10 @@ public:
                   sugar_mol_vec& seed_ms_, sugar_mol_vec& ms_,
                   std::vector< std::vector<unsigned> > group_mols_,
                   unsigned num_rules, unsigned rule_depth,
-                  unsigned max_compartments_ );
+                  unsigned max_compartments_,
+                  // solving configurations
+                  bool quantified_neg_cons
+                  );
 
   // constraints making calls
   z3::expr distinct_rules();
@@ -105,7 +108,7 @@ private:
   unsigned m_depth_max = 0;
 
   // solving confiuration
-  bool is_quantified_neg_cons = true;
+  bool is_quantified_neg_cons;
 
   // a number to immidate a large number
   // all other numbers may be asked to be smaller than this

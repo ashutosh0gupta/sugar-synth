@@ -3,14 +3,16 @@
 # https://www.biorxiv.org/content/early/2018/10/13/440792.full.pdf
 # Fig 5
 
-# tool parameters
-(number-of-rules-to-learn 7)
-(max-rule-depth 2)
-(max-compartments 2)
+(quantified-neg-cons 0)
 
-# (number-of-rules-to-learn 6)
-# (max-rule-depth 3)
-# (max-compartments 1)
+# tool parameters
+# (number-of-rules-to-learn 7)
+# (max-rule-depth 2)
+# (max-compartments 2)
+
+(number-of-rules-to-learn 6)
+(max-rule-depth 3)
+(max-compartments 1)
 
 #
 # declare sugar monomers and their arity

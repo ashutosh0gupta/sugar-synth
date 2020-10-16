@@ -181,7 +181,10 @@ sugar_encoding( z3::context& ctx_, sugar_t_vec& sugars,
                 sugar_mol_vec& seed_ms_, sugar_mol_vec& ms_,
                 std::vector< std::vector<unsigned> > group_mols_,
                 unsigned num_rules, unsigned rule_depth_,
-                unsigned max_compartments_ )
+                unsigned max_compartments_,
+                // solving configurations
+                bool quantified_neg_cons_
+                )
   : ctx(ctx_)
   , sugars(sugars)
   , pos_ms(ms_)
@@ -190,6 +193,7 @@ sugar_encoding( z3::context& ctx_, sugar_t_vec& sugars,
   , rule_max_children(0)
   , max_compartments( max_compartments_ )
   , unknown_m(nullptr)
+  , is_quantified_neg_cons( quantified_neg_cons_ )
 {
   for( sugar_t_ptr s : sugars) {
     auto c =  s->get_children_num();
