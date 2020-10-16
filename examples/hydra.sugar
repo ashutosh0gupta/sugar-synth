@@ -1,6 +1,6 @@
 # all _ were given in the original input
-
-(number-of-rules-to-learn 7)
+(quantified-neg-cons 0)
+(number-of-rules-to-learn 5)
 (max-rule-depth 3)
 (max-compartments 2)
 
@@ -15,8 +15,8 @@
 (mol (GlcNAc _   (GlcNAc1 (Man Man  _                                            ) )) ) # 967.50
 (mol (GlcNAc _   (GlcNAc1 (Man Man  Man                                          ) )) ) # 1171.60
 (mol (GlcNAc _   (GlcNAc1 (Man Man                    (Man Man _ )               ) )) ) # 1357.70
-(mol (GlcNAc _   (GlcNAc1 (Man (Man GlcNAc _)          Man                       ) )) ) # 1416.73 
-(mol (GlcNAc _   (GlcNAc1 (Man (Man Man (Man Man _ ) ) _                         ) )) ) # 1579.79
+# (mol (GlcNAc _   (GlcNAc1 (Man (Man GlcNAc _)          Man                       ) )) ) # 1416.73 
+# (mol (GlcNAc _   (GlcNAc1 (Man (Man Man (Man Man _ ) ) _                         ) )) ) # 1579.79
 # (mol (GlcNAc _   (GlcNAc1 (Man (Man Man    _)         (Man Man Man )             ) )) ) # 1783.88
 # (mol (GlcNAc _   (GlcNAc1 (Man (Man GlcNAc _)         (Man Man Man )             ) )) ) # 1824.91
 
