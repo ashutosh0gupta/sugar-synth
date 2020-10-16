@@ -5,10 +5,10 @@ We have developed variations of the above method to support more realistic probl
 
 % \subsection{Compartments}
 
-{\em Compartments : } The production rules may live in different ordered compartments.
+{\em Compartments : } The production rules may live in different compartments.
 % The compartments are ordered.
 A molecule moves from one compartment to the next.
-The rules of the current compartment apply to the molecule.
+% The rules of the current compartment apply to the molecule.
 % We have presented the formal description of the compartments in
 % section~\ref{sec:model}.
 To support the compartments, we take an additional integer
@@ -168,7 +168,7 @@ $\textsc{Exact}(v,v',v_s) := (M(v) = M(v')) \land \Land_{i \in [1,w]} \textsc{Ex
 %   \vspace{1ex}
 % \end{algorithmic}
 % where \textsc{Repeat} adds the constraints described above due to which runaway reactions are allowed.
-We modify the third constraints of $ \textsc{MolTemplateCorrectness}(\hat{m},\mu)$, which encodes that negative molecules not in $\mu$. We change the definition of $Neq$ as follows.\\
+We modify constraints of $ \textsc{MolTemplateCorrectness}(\hat{m},\mu)$, which encodes that negative molecules are not in $\mu$. We replace the definition of $Neq$ as follows.\\
 $Neq(v, v') :=\; (\nu(v) \neq M(v') \land \lor_{r\in[1,r_0],d\in[1,d_0]}\textsc{Repeat}(\textsc{RepeatHeads}(v,r,d), v')) $\\
 \mbox{}\hspace{30mm}$\lor \Lor_{{i \in [1,w]}} Neq( C(v,i), C(v',i ) ),$\\
 where $d_0$ and $r_0$ are limits on the depth of the repeating subtrees and the number of repetitions respectively.
