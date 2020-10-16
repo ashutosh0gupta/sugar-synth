@@ -1,9 +1,10 @@
 \begin{table}[t]
   \centering
-  \scriptsize
+  \tiny
+  \begin{minipage}{0.48\linewidth}
   \begin{tabular}[t]{|c|c|c|c|c|c|c|}\hline
-    Data & \#mol- & \#Rules & Rule  & \#Comp- & success? & Run time \\
-         & ecules   &         & depth & artments &          & (in seconds) \\\hline
+     & \#mol- & \#Rules & Rule  & \#Comp- & success? & Time \\
+         & ecules   &         & depth & artments &          & (in secs.) \\\hline
     %%cf-mucin.sugar%%
          &   & 7  & 3 & 1 & Yes &  3.02 \\\cline{3-7}
     D1   & 6 & 7  & 4 & 2 & Yes & {\bf 1.60}  \\\cline{3-7}
@@ -24,6 +25,42 @@
     D4   & 3 & 6  & 3 & 1 & Yes & {\bf 0.85}  \\\cline{3-7}
          &   & 6  & 2 & 2 & No  &  1.17 \\\hline
          
+    % %%D4.sugar%     
+    %      &   & 6  & 2 & 1 & No &  0.64 \\\cline{3-7}
+    % D5   & 3 & 7  & 2 & 1 & Yes & {\bf 0.72}  \\\cline{3-7}
+    %      &   & 8  & 4 & 1 & Yes  &  2.39 \\\hline
+         
+    % %%D5.sugar%     
+    %      &   & 5  & 3 & 2 & Yes &  0.86 \\\cline{3-7}
+    % D6   & 2 & 5  & 3 & 1 & Yes & {\bf 0.73}  \\\cline{3-7}
+    %      &   & 4  & 2 & 1 & No  & 0.69  \\\hline
+  \end{tabular}    
+  \end{minipage}
+  \begin{minipage}{0.48\linewidth}
+
+  \begin{tabular}[t]{|c|c|c|c|c|c|c|}\hline
+     & \#mol- & \#Rules & Rule  & \#Comp- & success? & Time \\
+         & ecules   &         & depth & artments &          & (in secs.) \\\hline
+    % %%cf-mucin.sugar%%
+    %      &   & 7  & 3 & 1 & Yes &  3.02 \\\cline{3-7}
+    % D1   & 6 & 7  & 4 & 2 & Yes & {\bf 1.60}  \\\cline{3-7}
+    %      &   & 6  & 3 & 3 & Yes & 9.36  \\\hline
+         
+    % %%horse-cg.sugar%%
+    %      &   & 7  & 3 & 2 & Yes & 14.37  \\\cline{3-7}
+    % D2   & 3 & 5  & 3 & 2 & Yes & {\bf 7.97}  \\\cline{3-7}
+    %      &   & 5  & 3 & 3 & Yes  &  13.42 \\\hline
+         
+    % %%sars-cov2.sugar%%     
+    %      &   & 6  & 4  & 2  & Yes & 1.02  \\\cline{3-7}
+    % D3   & 6 & 5  & 2 & 1 & Yes & {\bf 0.57}  \\\cline{3-7}
+    %      &   & 5  & 4 & 1 & Yes  &  0.71 \\\hline
+         
+    % %%human-cg.sugar%%     
+    %      &   & 8  & 4  & 1  & Yes & 4.35  \\\cline{3-7}
+    % D4   & 3 & 6  & 3 & 1 & Yes & {\bf 0.85}  \\\cline{3-7}
+    %      &   & 6  & 2 & 2 & No  &  1.17 \\\hline
+         
     %%D4.sugar%     
          &   & 6  & 2 & 1 & No &  0.64 \\\cline{3-7}
     D5   & 3 & 7  & 2 & 1 & Yes & {\bf 0.72}  \\\cline{3-7}
@@ -33,11 +70,9 @@
          &   & 5  & 3 & 2 & Yes &  0.86 \\\cline{3-7}
     D6   & 2 & 5  & 3 & 1 & Yes & {\bf 0.73}  \\\cline{3-7}
          &   & 4  & 2 & 1 & No  & 0.69  \\\hline
-         
-    
-
-
   \end{tabular}
+    
+  \end{minipage}
   \caption{Results of applying \ourtool on data sets.
     %Bold faced numbers are the most optimal timings.
   }
