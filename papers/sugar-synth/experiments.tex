@@ -1,8 +1,11 @@
-In this section, we  present our implementation of the proposed method.
+In this section, we  present our implementation of the proposed method for the synthesis
+and discuss the interesting optimizations in the implementation.
+%
 We also apply our tool on several data sets and illustrate the usability of our method.
 
 {\em Implementation:} 
-We have implemented method \textsc{SugarSynth} in a prototype tool {\ourtool}.
+We have implemented method \textsc{SugarSynth} in a prototype tool {\ourtool} for
+analyzing the performance of the technique in practice.
 %
 The tool, written in {\tt C++}, uses {\zthree}\cite{z3} as the SMT solver
 to discharge the generated satisfiability queries.
@@ -15,9 +18,9 @@ to discharge the generated satisfiability queries.
 
 
 {\em Benchmark: }
-We have applied our tool on three sets of real data (D1,D2,D3) and two sets of synthetic data (D4,D5). The molecules have been obtained from
+We have applied our tool on three sets of real data (D1,D2,D3,D4) and two sets of synthetic data (D5,D6). The molecules have been obtained from
 respiratory mucins of a cystic fibrosis patient (D1),
-horse chorionic gonadotropin (D2), SARS-CoV-2 spike protein T323/S325 (D3)~\cite{Jaiman2018,10.1093/glycob/cwaa042}.
+horse chorionic gonadotropin (D2), SARS-CoV-2 spike protein T323/S325 (D3)~\cite{Jaiman2018,SarsCov2}.
 The availability of clean data, where we are clear about the source and the collection
 methodology used, limits our choices.
 
@@ -29,30 +32,30 @@ methodology used, limits our choices.
 
 \input{tbl-results}
 
-{\em Results:} We have applied \ourtool~on the data set. For each data set, we choose several
-parameter combinations to illustrate the relative performance of the tool.
-If we did not budget large enough parameters, then the tool fails to
-synthesize the rules.
-We present the rules learned after giving minimum resources.
+{\em Results:}
+% We have applied \ourtool~on the data set. For each data set, we choose several
+% parameter combinations to illustrate the relative performance of the tool.
+% If we did not budget large enough parameters, then the tool fails to
+% synthesize the rules.
+% We present the rules learned after giving minimum resources.
 % Our tool gave output that matched with the analysis of~\cite{Jaiman2018}
 % in reasonable time.
-
 For D1, we synthesize the rules in 1.60 seconds. Even by reducing the first two parameters, we were able to synthesize the rules but it took longer time.
 Giving an extra compartment in the third row did not impact the performance.  We also observe the trade-off between the number of compartments
 and the depth of the rules at the second and third row of D1 and how it impacts performance.
 We synthesize the rules for D2, involving runaway reactions,  in 7.97 seconds.
 For D2, we also learned large rules, i.e., they are adding many nodes at a single time.
-We synthesize the rules for D3 in 0.57 seconds. 
+We synthesize the rules for D3 in 0.57 seconds. We synthesize the rules for D4, which is also our motivating example, in 0.85 seconds.
 However, if we use too many resources or too little, the tool runs for a long time,
 which is typical. The search in combinatorial space is highly sensitive to the parameters.
 
-The synthesis for D4 takes 0.72 seconds. We can observe that by reducing the number of rules to learn, the tool fails to learn rules as it required minimum 7 rules.
-The results suggest that the tool is potentially applicable to larger data sets.
+The synthesis for D5 takes 0.72 seconds. We can observe that by reducing the number of rules to learn, the tool fails to learn rules as it required minimum 7 rules.
 
 
 % Currently, the tool does not have any objective function to optimize the synthesized rules.
 % We are hoping to see more data sets such that we can develop a clearer picture
 % for a reasonable objective function.
+% The results suggest that the tool is potentially applicable to larger data sets.
 
 
 % ==============================================================================
