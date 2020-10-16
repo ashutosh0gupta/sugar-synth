@@ -18,46 +18,47 @@ to discharge the generated satisfiability queries.
 
 
 {\em Benchmark: }
-We have applied our tool on four sets of molecules form
+We have applied our tool on three sets of real data (D1,D2,D3) and two sets of synthetic data (D4,D5). The molecules have been obtained from
 respiratory mucins of a cystic fibrosis patient (D1),
-horse chorionic gonadotropin (D2),
-SARS-COV-2 (D3),
-human chorionic gonadotropin from a cancer cell line (D4),
-and
-synthetic data (D5)~\cite{Jaiman2018,SarsCov2}.
+horse chorionic gonadotropin (D2), SARS-CoV-2 spike protein T323/S325 (D3)~\cite{Jaiman2018,SarsCov2}.
 The availability of clean data, where we are clear about the source and the collection
 methodology used, limits our choices.
 
+% horse chorionic gonadotropin (D2),
+% SARS-COV-2 (D3),
+% human chorionic gonadotropin from a cancer cell line (D4),
+% and
+% synthetic data (D5)~\cite{}.
+
 \input{tbl-results}
 
-{\em Results:} We have applied \ourtool~on the data set. For each data set, we choose several
-parameter combinations to illustrate the relative performance of the tool.
-If we did not budget large enough parameters, then the tool fails to
-synthesize the rules.
-We present the rules learned after giving minimum resources.
-Our tool gave output that matched with the analysis of~\cite{Jaiman2018}
-in reasonable time.
+{\em Results:} % We have applied \ourtool~on the data set. For each data set, we choose several
+% parameter combinations to illustrate the relative performance of the tool.
+% If we did not budget large enough parameters, then the tool fails to
+% synthesize the rules.
+% We present the rules learned after giving minimum resources.
+% Our tool gave output that matched with the analysis of~\cite{Jaiman2018}
+% in reasonable time.
 
-Currently, the tool does not have any objective function to optimize the synthesized rules.
-We are hoping to see more data sets such that we can develop a clearer picture
-for a reasonable objective function.
-The results suggest that the tool is potentially applicable to larger data sets.
+For D1, we synthesize the rules in 1.60 seconds. Even by reducing the first two parameters, we were able to synthesize the rules but it took longer time.
+Giving an extra compartment in the third row did not impact the performance.  We also observe the trade-off between the number of compartments
+and the depth of the rules at the second and third row of D1 and how it impacts performance.
+We synthesize the rules for D2, involving runaway reactions,  in 7.97 seconds.
+For D2, we also learned large rules, i.e., they are adding many nodes at a single time.
+We synthesize the rules for D3 in 0.57 seconds. 
+However, if we use too many resources or too little, the tool runs for a long time,
+which is typical. The search in combinatorial space is highly sensitive to the parameters.
+
+The synthesis for D4 takes 0.72 seconds. We can observe that by reducing the number of rules to learn, the tool fails to learn rules as it required minimum 7 rules.
 
 
-% For D1, we synthesize the rules in 1.2 seconds. If we reduced any of the first
-% two parameters, we failed.
-% Giving an extra compartment in the first row did not impact the performance.
-% We synthesize the rules for D2, which is also our motivating example, in 0.4 seconds.
-% The performance of the tool is also robust against variations of the parameters.
-% We synthesize the rules for D3 in 0.9 seconds if we use optimal values for the parameter.
-% However, if we use too many resources or too little, the tool runs for a long time,
-% which is typical. The search in combinatorial space is highly sensitive to the parameters.
+% Currently, the tool does not have any objective function to optimize the synthesized rules.
+% We are hoping to see more data sets such that we can develop a clearer picture
+% for a reasonable objective function.
+% The results suggest that the tool is potentially applicable to larger data sets.
 
-% The synthesis for D4 takes a long time. We also observe the trade-off between the number of compartments
-% and the depth of the rules at the first and second row of D4.
-% For D3, we also learned large rules, i.e., they are adding many nodes at a single time.
-% % 
 
+% ==============================================================================
 
 % Our synthesized production rules for the first three data sets
 % match with the reported rules in the literature.
