@@ -3,7 +3,7 @@
 # https://www.biorxiv.org/content/early/2018/10/13/440792.full.pdf
 # Fig 5
 
-(quantified-neg-cons 0)
+# (quantified-neg-cons 0)
 
 # tool parameters
 # (number-of-rules-to-learn 7)
