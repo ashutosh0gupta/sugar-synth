@@ -1,0 +1,32 @@
+Review 1
+-       How generic is the templating mechanism?
+-       How many iterations may be necessary in the worst case (or even in the experiments for that matter?)
+-       Will this algorithm always terminate?
+-       How large is the search space?
+-       Why is it sufficient to exclude a single solution in each step?
+-       viability / relevance of the synthesized solutions?
+
+Review 2
+Related work: Kappa calculus framework, citations on applications of formal methods to biological structures,
+some work done in theoretical chemistry might be relevant (e.g., the work of Christoph Flamm from University of Vienna)
+============
+Minor issues
+============
+pp2. "encoding that are there other molecules"... I am not able to get this sentence.
+pp5. Fig. 2 too small to see the details
+pp6. Fig 3 better organisation/typesetting would help, e.g., tikz
+pp7.  the formal part following the definition 1 should be more structured to become readable
+pp7. do not use text directly typeset in math mode ($\mathit{...}$ or similar solution would help
+pp8. the extended \cup symbol should be explained
+pp9. typesetting of the algorithm should be improved to easily see what is the output/requirements
+pp11. "creates the above constraints and store them..." -> ... _stores_ them
+pp11. definitions mixed with algorithms seems strange I think you should define all the formal stuff first and then present the algorithms
+pp12. ENOCDE -> ENCODE
+pp16. "If we did not budget large enough parameters..." -> what kind of parameters?
+pp16. "tool runs for a long time, which is typical" -> why?
+general -- the latex tricks narrowing the space between figures and the text should be definitely avoided!
+
+Review 3
+there are no attempts to connect the results to any sort of non-biological setting.
+As a result, the work sounds like an application of formal methods to biology
+and would more likely find a better home in a computational biology meeting such as CSBio.
