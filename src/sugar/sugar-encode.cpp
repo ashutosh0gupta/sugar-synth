@@ -1392,7 +1392,7 @@ void sugar_encoding::do_synth() {
     if ( check( find_neg_mol, guard ) == z3::sat) {
       z3::model m = find_neg_mol.get_model();
       //eval_diagnostic_cons( m );
-      assert(false);
+      // assert(false);
       expr_set q_vars;
       sugar_mol_ptr neg_mol = read_neg_mol( unknown_m, m, q_vars );
       if( verbose ) dump_neg_mol( neg_mol, m );
