@@ -19,8 +19,9 @@ $C : V \times \naturals \pmaps V$ maps the indexed children of nodes, and
 $v_0 \in V$ is the root of $m$.
 A molecule must respect the arity of monomers, i.e., if $M(v) = s$ and $C(v,n) = v'$ then $n \leq arity(s)$.
 \end{df}
-
-Let $m = (V,M,C,v_0)$ and $m' = (V',M',C',v_0')$ be molecules.
+\todo{Rewrite the following paragraph}
+\todo{definitions mixed with algorithms seems strange I think you should define all the formal stuff first and then present the algorithms}
+Let $\mathit{m = (V,M,C,v_0)}$ and $m' = (V',M',C',v_0')$ be molecules.
 With some abuse of notation, we write $v \in m$ to denote $v \in V$.
 For each $v \in m$, if $(v,n)$ is not in the domain of $C$, we write $C(v,n) = \bot$.
 We assume that $C(v,0) = \bot$.
@@ -129,7 +130,7 @@ The expanded molecule is
 $
 m' = (V \uplus V', M \uplus M', C \uplus C' \uplus \{(v,i) \mapsto v_0'\}, v_0)
 $ if
-$Match( r, v_{0r}, m', ancestor(m', v_0', d) )$.
+$Match( r, v_{0r}, m', ancestor(m', v_0', d) )$ where $\uplus$ is the disjoint union.
 The match condition states that after attaching the new nodes $V'$
 the rule tree must be embedded in $m'$ at the $d$th ancestor of $v'_0$. 
 We write $m' = Apply(m, v, r)$ to indicate the application of $r$
@@ -154,7 +155,8 @@ let us suppose we have a sequence $R_1,...,R_k$ of set of rules.
 Let $P(Q, R_1,..,R_k) = P(..P(P(Q,R_1),R_2),..,R_k)$ denoting the
 trees obtained after applying the rule sets one after another.
 
-
+Our algorithm terminates in every case. At each iteration, atleast one solution i.e set of rules is discarded. Since the set of all possible rules is finite, we can guarantee termination. In the worst case, the entire search space is explored. For a problem having 5 node types, 3 as maximum rule depth, 4 rules to be synthesized, 3 compartments and fast-slow reactions, the search space can only be as large as $\approx 10^{21}$ rules.
+Our templating mechanism can be applied to all aspects of biology. The viability of the synthesized rules can only be verified by conducting wet experiments.
 \subsection{Synthesis problem}
 We observe a set of glycan molecules $\mu$ present in a cell.
 %

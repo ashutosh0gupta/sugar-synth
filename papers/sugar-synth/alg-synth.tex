@@ -1,5 +1,8 @@
+
 \begin{algorithm}[t]
-  \caption{ \textsc{SugarSynth}( $\mu$ : molecules, $d$ : maximum rule depth, $n$ : number of rules)}
+  \caption{ \textsc{SugarSynth}($\mu$, $d$, $n$)}
+  \textbf{Input     :} $\mu$ : molecules, $d$ : maximum rule depth, $n$ : number of rules \\
+      \textbf{Output:}  $R$: synthesized rules
   \label{alg:sugar-synth}
   \begin{algorithmic}[1]
   \State $S$ := the set of monomers appear in $\mu$, $w$ := the maximum arity of a monomer in $S$
@@ -22,7 +25,7 @@
     \State $R$ := \textsc{readRules}($a$)
     \label{line:getR}
     \Else
-       \State \Return "Failed to synthesize the rules!"
+       \State \textbf{ throw} Failed to synthesize the rules!
     \EndIf
     \State $rCons$ := \textsc{EncodeProduce}($\hat{m}$,Rs)
     \label{line:consNewR}

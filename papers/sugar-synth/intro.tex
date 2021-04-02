@@ -67,8 +67,7 @@ that is not in the input set must not be producible by the synthesized rules.
 Therefore, the method looks for the producible molecules that are not in the input set.
 Again the search of the molecule is assisted by a template, which bounds the height
 of searched molecules.
-We generate another set of constraints using the templates for the unknown molecule encoding that
-are there other molecules that can be generated using the synthesized rules.
+We generate another set of constraints using the templates for the unknown molecule.
 We again solve the constraints using an SMT solver.
 We call the query to the solver {\em counterexample query}.
 If there is no such molecule, our method reports
@@ -96,6 +95,7 @@ the execution model.
 Furthermore, we may have variations in the type and quality of data available to us.
 We have added the support for the variations in our method.
 
+\todo{Related work}
 We have implemented the method in our tool~\ourtool. The tool takes input data in its own format.
 We have applied the tool on data sets from published sources (these are available in the database UniCarbKB \cite{Campbell2013}).
 % We have obtained the rules for the data sets.

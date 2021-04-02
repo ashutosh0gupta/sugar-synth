@@ -179,7 +179,7 @@ $
 
 The call to $\textsc{RuleTemplateCorrectness}$ at
 line~\ref{line:ruleCorr} creates the above constraints
-and store them in $tCons$.
+and stores them in $tCons$.
 Next, we will also be searching for the molecules that may be produced by the learned rules.
 Therefore, we need to define the search space for the molecules.
 We use templates for defining the search space.
@@ -265,7 +265,7 @@ valid assignments for molecule template $\hat{m} = (V, \nu, C, \hat{v_0})$.
 \end{enumerate}
 %
 In our method, the call to $\textsc{MolTemplateCorrectness}$ at
-line~\ref{line:molCorr} implements above constraints and store them in
+line~\ref{line:molCorr} implements above constraints and stores them in
 $mCons$. 
 
 We need to encode that the rules do generate the molecules
@@ -301,9 +301,9 @@ counterexample molecule $m'$.
 At line~\ref{line:negCons}, we add constraints to $nCons$ stating that
 all possible applications of template rules in $T$ must not produce $m'$.
 We use shorthand $F \landplus G$ for $ F := F \land G$.
-As we will see that $\textsc{EnocdeProduce}$ introduces fresh variable
+As we will see that $\textsc{EncodeProduce}$ introduces fresh variable
 maps $\tau$ and $cuts$ in the encoding.
-Since we negate the returned formula by $\textsc{EnocdeProduce}$ 
+Since we negate the returned formula by $\textsc{EncodeProduce}$ 
 and then we check the satisfiability.
 % the encoding will not be correct
 % due to the fresh variables.

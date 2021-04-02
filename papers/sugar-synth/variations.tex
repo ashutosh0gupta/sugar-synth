@@ -175,9 +175,9 @@ where $d_0$ and $r_0$ are limits on the depth of the repeating subtrees and the 
 The change will accept molecules with repeating patterns as positive samples.
 
 \paragraph{Non-monotonic rules :}
-Some production rules are not applicable if another node is present in a sibling.
-We call such a rule non-monotonic because it may get disabled as the molecule grows.
-This feature of rules helps in producing an exact set of desired molecules.
+Some production rules can not be applied if another node is present in a sibling.
+We call such rule non-monotonic because it may get disabled as the molecule grows.
+This feature of rules help in producing an exact set of desired molecules.
 We add an extra bit on each node of rule
 template called $\textsc{HardEnds}$.
 If the node is absent, its parent is present, and  $\textsc{HardEnds}$ bit is true, then
