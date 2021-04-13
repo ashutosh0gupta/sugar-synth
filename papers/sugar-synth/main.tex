@@ -278,7 +278,50 @@ of a finite set of molecules and the cases of unique production methods.
 %
 In our work, we are taking the computational approach of synthesis from formal methods
 instead of looking for the theoretical conditions.
+\section{Experiments with variations of the synthesis problem}
+\label{sec:appendix}
+We conducted separate experiments for the variations of the synthesis problem - non-monotonic rules and unbounded molecules using synthetic data.
+%
+\begin{table}
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|c|}\hline
+     & \#molecules& \#Rules & Rule depth & \#Compartments & success? & Time (in secs.) 
+          \\\hline
+    %%cf-mucin.sugar%%
+         &   & 6  & 2 & 1 & Yes &  2.85 \\\cline{3-7}
+    N1   & 6 & 6  & 2 & 5 & Yes & {\bf 1.07}  \\\cline{3-7}
+         &   & 5  & 3 & 1 & No & 0.81  \\\hline
+         
+    %%horse-cg.sugar%%
+         &   & 6  & 2 & 1 & Yes & 1.02  \\\cline{3-7}
+    N2   & 6 & 6  & 2 & 5 & Yes & {\bf 0.76}  \\\cline{3-7}
+         &   & 6  & 4 & 1 & Yes & 0.82 \\\hline
+         
+    %%sars-cov2.sugar%%     
+         &   & 9  & 2  & 1  & Yes & 3.18  \\\cline{3-7}
+    N3   & 9 & 8  & 2 & 1 & Yes & {\bf 2.39}  \\\cline{3-7}
+         &   & 8  & 3 & 2 & Yes  &  16.69 \\\hline
+         
+    %%human-cg.sugar%%     
+         &   & 6  & 3  & 1  & Yes & 73.61  \\\cline{3-7}
+    R1   & 5 & 5  & 3 & 2 & Yes & {\bf 47.72}  \\\cline{3-7}
+         &   & 4  & 4 & 1 & No  &  16.99 \\\hline
+         
+    % %%D4.sugar%     
+         &   & 6  & 3 & 3 & Yes &  5.25 \\\cline{3-7}
+    R2   & 8 & 4  & 3 & 2 & Yes & {\bf 3.44}  \\\cline{3-7}
+         &   & 4  & 3 & 5 & Yes  &  4.70 \\\hline
+         
+    % %%D5.sugar%     
+         &   & 7  & 3 & 2 & Yes &  6.85 \\\cline{3-7}
+    R3   & 8 & 7  & 3 & 4 & Yes & {\bf 2.09}  \\\cline{3-7}
+         &   & 6  & 3 & 1 & No  & 0.77  \\\hline
+  \end{tabular}   
+  \end{table}
+ We applied our tool on the synthetic datasets N1, N2 and N3 which required some rules to have $\textsc{HardEnds}$. There is a clear trend of increasing time as the size of our dataset increases. Between N1 and N2 which have same number of molecules in the dataset, N1 has bulkier molecules and hence the time taken is higher. Reducing the number of compartments increases the time slightly however is successful in both N1 and N2. By Reducing the number of rules to be learnt, the tool fails in N1 as it required minimum 6 rules. Rules produced in these datasets have $\textsc{HardEnds}$ in the appropriate places to ensure that the exact set of molecules can be made.
+ %
 
+  To demonstrate the working of our tool in case of runaway reactions or datasets with unbounded molecules, we applied our tool on the synthetic datasets R1, R2 and R3. The molecules in these datasets have repeating patterns and we observe the synthesized rules to capture this pattern. The constraints added as part of unbounded molecues take care not to declare the molecules created by the repeated application of these rules to be negative. The time taken for synthesizing the rules is particularly high for R1 as the molecules in the dataset are relatively bulky. Increasing the number of compartments or Increasing the number of rules to learn increases the time in R2. The search in the combinatorial space is expensive, hence the time taken is more. 
 % 
 % To resolve this paradox we borrow from the field of
 % al-gorithmic self-assembly, which explores how small buildingblocks
