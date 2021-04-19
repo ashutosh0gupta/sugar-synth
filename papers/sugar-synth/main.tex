@@ -82,85 +82,6 @@
 
 \appendix
 
-\section{Implementation optimizations}
-
-% \subsection{Optimizations}
-We have incorporated several optimizations to gain efficiency or reduce
-the number of iterations in the method. Let us discuss some of the remarkable
-optimizations.
-
-\paragraph{Ordered templates}
-Our method constructs a list of templates.
-Since the templates are symmetric, there is a potential of unnecessary
-iterations.
-Let us suppose the method rejects a set of learned rules.
-In the subsequent queries include the constraints that reject the set of rules,
-the solvers may choose the same set of rules again by permuting the mapping
-from the templates to the learned rule.
-To avoid these iterations, we define an arbitrary total order over the rules.
-We add ordering constraints stating that any assignments to the list of templates should produce
-ordered rules with respect to the total order.
-
-\paragraph{Quantifier instantiations}
-The constraints for rejecting the counterexample molecule is universally quantified at line~\ref{line:negCons} in algorithm~\ref{alg:sugar-synth}.
-For any assignment, the solver needs to try sufficiently many instantiations of the quantifiers
-to ensure that the query is not unsatisfiable.
-The instantiations sufficiently slow down the solving process.
-We assist the solver by also adding an instantiation of the quantifiers that is equal
-to the values of the corresponding variables in the assignment $a$ at line~\ref{line:negModel}.
-We observe that for some inputs only adding the instantiations and not the universally quantified
-formula is more effective.
-
-\paragraph{Constraints for counterexample molecules}
-In the presentation of \textsc{SugarSynth}, we construct constraints of counterexample molecules
-at line~\ref{line:consNewR} in each iteration.
-The repeated work is impractical because the formula management system of Z3 will be overwhelmed by
-the construction of many terms repeatedly. In our implementation, we construct the constraints
-once outside the while loop.
-We pass the templates as the second parameter instead of concrete rules to~\textsc{EncodeProduce}.
-Later at the solving time in line~\ref{line:negModel}, constraints are added to assign values
-of the template variables that were returned by the solver at line~\ref{line:posModel}.
-Due to the assignments, the templates become concrete rules in the context of solving.
-
-\section{Features to support in future}
-
-\subsection{Full organism data vs single cell data}
-
-The experiments that observe the set of glycan molecules are of two kinds. In one kind, we isolate a single cell type of an organism and identify all the glycans present in the cells. In our presentation, we have assumed this kind of source of data. However, the experiments are difficult to conduct.
-In another and more convenient way, we smash the whole organism and identify all the glycans present in all the cells.
-So the information that which glycans are coming from which
-cells is unknown.
-In this situation, the synthesis has another task to map the molecules
-in $\mu$ to several cell types.
-A glycan may be present in multiple cell types.
-
-Our method is easily adapted to consider this kind of data.
-We search for a small covering set of subsets of
-$\powerset{\mu}$ such that each set in the cover allows a small
-set of production rules.
-The cover sets indicate the different types of cells in terms of
-the presence of glycans.
-This variation makes the problem particularly hard.
-There can be a potentially large number of covering subsets.
-So far, we have not encountered a large enough data set such that
-we apply the variation effectively. 
-
-
-\subsection{Incomplete data}
-
-The experiments are imperfect. They may not detect all possible glycans
-in a cell.
-We may need to leave the possibility of allowing a few more molecules to be
-producible beyond $\mu$.
-We replace the no extra molecule constraint by a constraint that allow molecules
-that are `similar' to molecules in $\mu$.
-However, we could not imagine any measure of similarity that naturally stems from
-biological intuition.
-For now, our tool supports the count of the number of monomer differences
-as a measure of similarity.
-
-
-
 \section{Extended related work}
 
 \todo{Related work: Kappa calculus framework, citations on applications of formal methods to biological structures,
@@ -326,6 +247,87 @@ We conducted separate experiments for the variations of the synthesis problem - 
  %
 
   To demonstrate the working of our tool in case of runaway reactions or datasets with unbounded molecules, we applied our tool on the synthetic datasets R1, R2 and R3. The molecules in these datasets have repeating patterns and we observe the synthesized rules to capture this pattern. The constraints added as part of unbounded molecues take care not to declare the molecules created by the repeated application of these rules to be negative. The time taken for synthesizing the rules is particularly high for R1 as the molecules in the dataset are relatively bulky. Increasing the number of compartments or Increasing the number of rules to learn increases the time in R2. The search in the combinatorial space is expensive, hence the time taken is more. 
+  
+\section{Implementation optimizations}
+
+% \subsection{Optimizations}
+We have incorporated several optimizations to gain efficiency or reduce
+the number of iterations in the method. Let us discuss some of the remarkable
+optimizations.
+
+\paragraph{Ordered templates}
+Our method constructs a list of templates.
+Since the templates are symmetric, there is a potential of unnecessary
+iterations.
+Let us suppose the method rejects a set of learned rules.
+In the subsequent queries include the constraints that reject the set of rules,
+the solvers may choose the same set of rules again by permuting the mapping
+from the templates to the learned rule.
+To avoid these iterations, we define an arbitrary total order over the rules.
+We add ordering constraints stating that any assignments to the list of templates should produce
+ordered rules with respect to the total order.
+
+\paragraph{Quantifier instantiations}
+The constraints for rejecting the counterexample molecule is universally quantified at line~\ref{line:negCons} in algorithm~\ref{alg:sugar-synth}.
+For any assignment, the solver needs to try sufficiently many instantiations of the quantifiers
+to ensure that the query is not unsatisfiable.
+The instantiations sufficiently slow down the solving process.
+We assist the solver by also adding an instantiation of the quantifiers that is equal
+to the values of the corresponding variables in the assignment $a$ at line~\ref{line:negModel}.
+We observe that for some inputs only adding the instantiations and not the universally quantified
+formula is more effective.
+
+\paragraph{Constraints for counterexample molecules}
+In the presentation of \textsc{SugarSynth}, we construct constraints of counterexample molecules
+at line~\ref{line:consNewR} in each iteration.
+The repeated work is impractical because the formula management system of Z3 will be overwhelmed by
+the construction of many terms repeatedly. In our implementation, we construct the constraints
+once outside the while loop.
+We pass the templates as the second parameter instead of concrete rules to~\textsc{EncodeProduce}.
+Later at the solving time in line~\ref{line:negModel}, constraints are added to assign values
+of the template variables that were returned by the solver at line~\ref{line:posModel}.
+Due to the assignments, the templates become concrete rules in the context of solving.
+
+\section{Features to support in future}
+
+\subsection{Full organism data vs single cell data}
+
+The experiments that observe the set of glycan molecules are of two kinds. In one kind, we isolate a single cell type of an organism and identify all the glycans present in the cells. In our presentation, we have assumed this kind of source of data. However, the experiments are difficult to conduct.
+In another and more convenient way, we smash the whole organism and identify all the glycans present in all the cells.
+So the information that which glycans are coming from which
+cells is unknown.
+In this situation, the synthesis has another task to map the molecules
+in $\mu$ to several cell types.
+A glycan may be present in multiple cell types.
+
+Our method is easily adapted to consider this kind of data.
+We search for a small covering set of subsets of
+$\powerset{\mu}$ such that each set in the cover allows a small
+set of production rules.
+The cover sets indicate the different types of cells in terms of
+the presence of glycans.
+This variation makes the problem particularly hard.
+There can be a potentially large number of covering subsets.
+So far, we have not encountered a large enough data set such that
+we apply the variation effectively. 
+
+
+\subsection{Incomplete data}
+
+The experiments are imperfect. They may not detect all possible glycans
+in a cell.
+We may need to leave the possibility of allowing a few more molecules to be
+producible beyond $\mu$.
+We replace the no extra molecule constraint by a constraint that allow molecules
+that are `similar' to molecules in $\mu$.
+However, we could not imagine any measure of similarity that naturally stems from
+biological intuition.
+For now, our tool supports the count of the number of monomer differences
+as a measure of similarity.
+
+
+
+
 % 
 % To resolve this paradox we borrow from the field of
 % al-gorithmic self-assembly, which explores how small buildingblocks
