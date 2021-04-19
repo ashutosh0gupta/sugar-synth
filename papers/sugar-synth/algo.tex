@@ -1,8 +1,8 @@
 In this section, we present a method to solve the synthesis problem of finding
 a set of production rules that produce a given set $\mu$ of molecules.
+Our synthesis method \textsc{SugarSynth} is presented in algorithm~\ref{alg:sugar-synth}.
 Here, we are considering only single compartment case.
 The generalizations are discussed in appendix~\ref{sec:variations}.
-Our synthesis method \textsc{SugarSynth} is presented in algorithm~\ref{alg:sugar-synth}.
 
 % At a high level, our method is iterative.
 % The method first synthesizes a set of rules $R$ that can produce the molecules in input set $\mu$, i.e., $\mu \subseteq P(S,R)$.
@@ -58,7 +58,7 @@ Let $SVars$ be the unbounded set of variables with the domain.
 We will use the pool of $SVars$ to add variables to the templates.
 
 \begin{wrapfigure}{r}{0.37\textwidth}
-    \vspace{-3mm}
+    \vspace{-10mm}
         \center
   \begin{tikzpicture}[shorten >=1pt,thick,node distance=1cm,on grid,scale=0.5]
     \node[loc] (v0) {$v_0$};
@@ -395,7 +395,7 @@ The variable $mark$ is the timestamp for node $v$.
 % template should match to the nodes added before $mark$
 % and expanding part of the template should match with nodes that
 % are added at or after $mark$.
-The local variable $c$ collects a conjunction of constraints as they are
+The local variable $c$ collects the conjunction of constraints as they are
 generated. % and $c$ is initially $\ltrue$.
 The local variable $v_r$ is initially equal to the root $v_{0r}$ of $t$
 and traverses the nodes in $t$.
@@ -462,7 +462,7 @@ the procedure calls itself for the children of $v$ and $v_r$.
 
 Once a rule is applied to a molecule, all the
 nodes inside the expanding part are added together.
-Therefore, there should be no cuts with in the set of added nodes.
+Therefore, there should be no cuts within the set of added nodes.
 Furthermore, if there are children nodes below the added nodes,
 they must be added due to the application of some other rule.
 Therefore, the children are at the cut points.
@@ -502,9 +502,14 @@ the rule.
 In the functions, the variable is to be replaced by the
 evaluated value of $\kappa(v_r)$.
 
-
-Our algorithm terminates in every case. At each iteration, atleast one solution i.e set of rules is discarded. Since the set of all possible rules is finite, we can guarantee termination. In the worst case, the entire search space is explored. For a problem having 5 node types, 3 as maximum rule depth, 4 rules to be synthesized, 3 compartments and fast-slow reactions, the search space can only be as large as $\approx 10^{21}$ rules.
-Our templating mechanism can be applied to all aspects of biology. The viability of the synthesized rules can only be verified by conducting wet experiments.
+Our algorithm always terminates. At each iteration, at least one solution, i.e, set of
+rules is discarded.
+In fact, we discard many because in each iteration we reject production of a counterexample molecule, but this may discard whole range of rule sets. 
+Since the set of all possible rules is finite, we
+guarantee termination. In the worst case, the entire search space is explored. For a problem having 10 node types, 3 as maximum rule depth, 10 rules to be synthesized, 3 compartments
+and fast-slow reactions, the search space can only be as large as $\approx 10^{70}$ rules.
+Our templating mechanism can be applied to all aspects of biology.
+The viability of the synthesized rules can only be verified by conducting wet experiments.
 
 % On the other hand,
 % if $v_r$ is also present, then $v$ must not be any cut point.

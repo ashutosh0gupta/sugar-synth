@@ -1,6 +1,6 @@
 In this section, we  present our implementation of the proposed method.
-%
-We also apply our tool on several data sets and illustrate the usability of our method.
+% %
+% We also apply our tool on several data sets and illustrate the usability of our method.
 
 {\em Implementation:} 
 We have implemented method \textsc{SugarSynth} in a prototype tool {\ourtool}.
@@ -48,7 +48,11 @@ We synthesize the rules for D2, involving runaway reactions,  in 7.97 seconds.
 For D2, we also learned large rules, i.e., they are adding many nodes at a single time.
 We synthesize the rules for D3 in 0.57 seconds. We synthesize the rules for D4, which is also our motivating example, in 0.85 seconds.
 However, if we use too many resources or too little, the tool runs for a long time as the search in combinatorial space is highly sensitive to the parameters.
-The synthesis for D5 takes 0.72 seconds. We can observe that by reducing the number of rules to learn, the tool fails to learn rules as it required minimum 7 rules. More experiments on the variations - non-monotonic rules and unbounded molecules are included in the \hyperref[sec:appendix]{appendix}.
+The synthesis for D5 takes 0.72 seconds. We can observe that by reducing the number of rules to learn, the tool fails to learn rules as it required minimum 7 rules.
+Our synthesized production are in line with the reported rules
+in the literature~\cite{Jaiman2018}.
+More experiments on the variations of the problem
+are included in the appendix~\ref{sec:ex-variants}. %\hyperref[sec:appendix]{}.
 
 % The results suggest that the tool is potentially applicable to larger data sets.
 

@@ -33,7 +33,7 @@
 \maketitle
 
 \begin{abstract}
-  Glycans are tree-like polymers made up of sugar monomer building blocks. They are found on the surface of all living cells, and distinct glycan trees act as identity markers for distinct cell types. Proteins called GTase enzymes assemble glycans via the successive addition of monomer building blocks. The rules by which the enzymes operate are not fully understood. In this paper, we present a novel SMT-solver-based iterative method that infers the assembly process of the glycans by analyzing the set of glycans from a cell. We have built a tool based on the method and applied it to infer rules based on published glycan data.
+  Glycans are tree-like polymers made up of sugar monomer building blocks. They are found on the surface of all living cells, and distinct glycan trees act as identity markers for distinct cell types. Proteins called GTase enzymes assemble glycans via the successive addition of monomer building blocks. The rules by which the enzymes operate are not fully understood. In this paper, we present the first SMT-solver-based iterative method that infers the assembly process of the glycans by analyzing the set of glycans from a cell. We have built a tool based on the method and applied it to infer rules based on published glycan data.
 \end{abstract}
 
 
@@ -70,7 +70,7 @@
 % \label{sec:related}
 % \input{related.tex}
 
-\section{Conclusion}
+\section{Conclusion and future work}
 % ##limitations in the model because of limited information,
 % a)the boundary between two compartments is fuzzy, 
 % b) the growths of two branches are correlated/ not correlated..and some more points like these, for which wealth of data is not available, hence the model was unable to incorporate the specifics
@@ -281,7 +281,7 @@ instead of looking for the theoretical conditions.
 \input{variations.tex}
 
 \section{Experiments with variations of the synthesis problem}
-\label{sec:appendix}
+\label{sec:ex-variants}
 We conducted separate experiments for the variations of the synthesis problem - non-monotonic rules and unbounded molecules using synthetic data.
 %
 \begin{table}

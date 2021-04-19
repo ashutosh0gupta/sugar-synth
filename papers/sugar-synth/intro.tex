@@ -17,7 +17,7 @@ possible rule sets if we consider all biological variations.
 This is an error-prone process since the production rules must generate
 exactly the set of molecules in the cells and nothing else; and moreover, the data sets about which glycans are present in which cells are often incomplete. Manually comprehending all possible tree generation rules is difficult and ad-hoc. It would be useful to automate the process of learning which rules are operating in a given cell, based on incomplete data.
 
-In this paper, we are presenting a {\em novel} automated synthesis
+In this paper, we are presenting the {\em first} automated synthesis
 method for the production rules.
 Our method takes the observed glycan molecules in a cell as input and synthesizes
 the possible production rules that may explain the observation.
@@ -28,7 +28,7 @@ Several methods for solving problems of searching in a complex combinatorial
 space use templates to define and limit their search space,
 such as learning invariants of programs~\cite{InvGenTACAS09},
 and synthesizing missing components in programs~\cite{sygus,Solar-Lezama2005}.
-We also use templates to model the space of the production rules.
+We also use templates to model the production rules.
 % The templates usually have parameters that limit the search space.
 % In our case, the size and number of templates are the parameters that
 % limit sizes of pieces of trees that are added in one step,
