@@ -27,17 +27,19 @@ The goal of this paper is to infer the rules.
 
 Now we consider the synthesis problem. In Figure~\ref{fig:ex-gly}(a), we present a set of
 glycan molecules present in a cell consists of three molecules, which are structurally similar to the three glycan molecules in Figure~\ref{fig:dataset-gly}.
-To keep illustration simple, we dropped the third glycan molecule.
+To keep illustration simple, we have dropped the
+third glycan molecule from the earlier set.
 The molecules contain four types of monomers.
 As we are considering the abstract case, we have named them $A$, $B$, $C$, $D$.
-Each monomer is associated with an arity, i.e., the maximum number of potential children.
+Each monomer is associated with an arity, i.e.,
+the maximum number of potential children.
 The arities of the monomers are $2$, $1$, $1$, and $0$, respectively.
 
 % Before considering the synthesis problem that produces exactly
 % the three molecules,
 Let us first consider six rules in Figure~\ref{fig:ex-gly}(b)
 that produce the molecules.
-All the rules are in the same compartment.
+All the rules are in the same compartment, i.e., they can be applied in arbitrary order.
 The rules have two kinds of nodes.
 If the circular nodes are present around a node,
 the rule is enabled and may append the molecule at the

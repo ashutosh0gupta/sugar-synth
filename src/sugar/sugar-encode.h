@@ -74,6 +74,7 @@ public:
                   std::vector< std::vector<unsigned> > group_mols_,
                   unsigned num_rules, unsigned rule_depth,
                   unsigned max_compartments_,
+                  bool is_fast_reactions,
                   // solving configurations
                   bool quantified_neg_cons
                   );
@@ -106,6 +107,7 @@ private:
   sugar_mol_ptr unknown_m;
   VecExpr unknown_m_ls_exist;
   unsigned m_depth_max = 0;
+  bool is_fast_reactions;
 
   // solving confiuration
   bool is_quantified_neg_cons;

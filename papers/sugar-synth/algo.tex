@@ -1,7 +1,7 @@
 In this section, we present a method to solve the synthesis problem of finding
 a set of production rules that produce a given set $\mu$ of molecules.
 Here, we are considering only single compartment case.
-The generalizations are discussed in section~\ref{sec:variations}.
+The generalizations are discussed in appendix~\ref{sec:variations}.
 Our synthesis method \textsc{SugarSynth} is presented in algorithm~\ref{alg:sugar-synth}.
 
 % At a high level, our method is iterative.
@@ -23,9 +23,10 @@ Our synthesis method \textsc{SugarSynth} is presented in algorithm~\ref{alg:suga
 \subsection{\textsc{SugarSynth} in detail}
 
 The method assumes that the input set $\mu$ is finite.
-Even if a set of rules can produce
-an unbounded number of molecules.
-No biology will exhibit such a set in a cell.
+This is a reasonable assumption because
+even if a set of rules can produce
+an unbounded number of molecules,
+no biology will exhibit an infinite set in a cell.
 Our method
 bounds the search space of production rules.
 The method also takes two numbers as input:
@@ -35,7 +36,7 @@ $n$ is the maximum number of them.
 % The parameters eliminate potential
 % unbounded search space.
 If the method fails to find production rules,
-the user can always call the method with larger parameters.
+the user may call the method with larger parameters.
 % However, we do not expect to find a large number of or sized rules
 % because chemical reactions do not usually have many conditional
 % on the precursors and do not apply large changes in a single step.
@@ -53,7 +54,7 @@ the `situation' of the node.
 % The first variable at the node encodes choices of
 % sugar monomers or their absence.
 The domain of the first variables is $S \union \{\bot\}$.
-Let $SVars$ be the set of unbounded variables with the domain.
+Let $SVars$ be the unbounded set of variables with the domain.
 We will use the pool of $SVars$ to add variables to the templates.
 
 \begin{wrapfigure}{r}{0.37\textwidth}
@@ -100,11 +101,9 @@ in the matching part, which is the light gray area.
 A variable is mapped to a node to encode the four situations.
 Let $K =\{Expand,Absent,MatchAns,Match\}$ be the set of symbols to
 indicate the set of four situations.
-Let $KVars$ be the set of unbounded variables with domain $K$. 
+Let $KVars$ be the unbounded set of variables with domain $K$. 
 % We will use the pool of $KVars$ to add variables to the templates.
 The templates are defined as follows.
-
-
 
 \begin{df}
 For given integers $d$ and $w$,
@@ -117,6 +116,25 @@ $C : V \times \naturals \pmaps V$ maps the indexed children of nodes,
 and
 $v_{0r} \in V$ is the root of the tree.
 \end{df}
+
+For a node $v$ in a template if we assign $\kappa(v) = Absent$,
+we call the node {\em absent}. Otherwise, we call the node {\em present}.
+We will also be searching for the molecules that may be produced by the learned rules.
+Therefore, we need to define the search space for the molecules.
+We use templates for defining the search space.
+We limit the template size using a parameter,
+namely the height of the template.
+\begin{df}
+For given integers $h$ and $w$,
+a {molecule template} $\hat{m} = (V, \nu, C, v_{0m})$ is a labeled full tree with height $h$ and 
+each internal node has $w$ children, where 
+$V$ is a set of nodes, $\nu : V \maps SVars$ maps nodes to sugar choice variables,
+$C : V \times \naturals \pmaps V$ maps the indexed children of nodes,
+and
+$v_{0m} \in V$ is the root.
+\end{df}
+
+
 In the algorithm at line~\ref{line:createRtemp}, we call \textsc{MakeTemplatesRule}( $S$, $d$, $w$, $n$) to create $n$ templates for
 height $d$ and children width $w$.
 % We get $d$ and $n$ as input, and
@@ -126,8 +144,6 @@ Since $w$ is the maximum arity of any sugar, we can map any node to any sugar.
 % returned by $\textsc{MakeTemplatesRule}$ do not share variables.
 % We obtain a production rule from a template by assigning values
 % to the variables of the template.
-For a node $v$ in a template if we assign $\kappa(v) = Absent$,
-we call the node {\em absent}. Otherwise, we call the node {\em present}.
 % Not all the assignments may result in a valid rule.
 Next at line~\ref{line:ruleCorr}, we will construct constraints
 that encode the set of valid rules. 
@@ -180,22 +196,9 @@ $
 The call to $\textsc{RuleTemplateCorrectness}$ at
 line~\ref{line:ruleCorr} creates the above constraints
 and stores them in $tCons$.
-Next, we will also be searching for the molecules that may be produced by the learned rules.
-Therefore, we need to define the search space for the molecules.
-We use templates for defining the search space.
-We limit the template size using a parameter,
-namely the height of the template.
-\begin{df}
-For given integers $h$ and $w$,
-a {molecule template} $\hat{m} = (V, \nu, C, v_{0m})$ is a labeled full tree with height $h$ and 
-each internal node has $w$ children, where 
-$V$ is a set of nodes, $\nu : V \maps SVars$ maps nodes to sugar choice variables,
-$C : V \times \naturals \pmaps V$ maps the indexed children of nodes,
-and
-$v_{0m} \in V$ is the root.
-\end{df}
+% Next, 
 At line~\ref{line:createMtemp}, we use the call to \textsc{MakeTemplateMol}($S$, $h$, $w$) to
-create a template of height $h$ and children width $w$.
+create a molecule template of height $h$ and children width $w$.
 %
 Our method searches for unwanted producible molecules up to the height of $h$,
 which we set to the maximum of the heights of molecules in $\mu$.
@@ -211,7 +214,6 @@ The choice of $h$ is arbitrary.
 % there may be large producible molecules, but we did not observe them.
 % However, this point is debatable and $h$ may be viewed as
 % a parameter of the whole method.
-
 %
 Similar to the rule templates, not all assignments to molecule template variables
 are valid.
@@ -265,7 +267,7 @@ valid assignments for molecule template $\hat{m} = (V, \nu, C, \hat{v_0})$.
 \end{enumerate}
 %
 In our method, the call to $\textsc{MolTemplateCorrectness}$ at
-line~\ref{line:molCorr} implements above constraints and stores them in
+line~\ref{line:molCorr} generates the above constraints and stores them in
 $mCons$. 
 
 We need to encode that the rules do generate the molecules
@@ -307,13 +309,13 @@ Since we negate the returned formula by $\textsc{EncodeProduce}$
 and then we check the satisfiability.
 % the encoding will not be correct
 % due to the fresh variables.
-Therefore, we need to introduce universal quantifiers to the
+Therefore, we need to introduce universal quantifiers for the
 fresh variables.
 We introduce universal quantifiers over $\tau$ and $cuts$
 variables before adding to $nCons$.
 % Intuitively, the universal quantifiers say that all possible
 % application patterns of the learned rules do not produce $m'$.
-Next, the loop goes to the next iteration.
+Afterwords, the loop goes to the next iteration.
 Since the domain of all the variables is finite, eventually the loop must
 terminate.
 
@@ -323,7 +325,7 @@ terminate.
 
 
 Now let us look at the encoding generated by $\textsc{EncodeProduce}$.
-The process of production of molecules adds pieces of trees of nodes
+The process of production of molecules adds pieces of trees
 one after another.
 In order to show that a molecule is producible by a set of production rules,
 we need to find the nodes where the production rules are applied,
@@ -397,7 +399,7 @@ The local variable $c$ collects a conjunction of constraints as they are
 generated. % and $c$ is initially $\ltrue$.
 The local variable $v_r$ is initially equal to the root $v_{0r}$ of $t$
 and traverses the nodes in $t$.
-The while loop at~\ref{line:encodep-while} in $\textsc{EncodeP}$ starts with
+The while loop at line~\ref{line:encodep-while} in $\textsc{EncodeP}$ starts with
 the $\ell$th ancestor from $v$,
 matches all the ancestors up to the parent of $v$.
 As the loop traverses down, it also traverses $t$ along the matching
@@ -500,6 +502,9 @@ the rule.
 In the functions, the variable is to be replaced by the
 evaluated value of $\kappa(v_r)$.
 
+
+Our algorithm terminates in every case. At each iteration, atleast one solution i.e set of rules is discarded. Since the set of all possible rules is finite, we can guarantee termination. In the worst case, the entire search space is explored. For a problem having 5 node types, 3 as maximum rule depth, 4 rules to be synthesized, 3 compartments and fast-slow reactions, the search space can only be as large as $\approx 10^{21}$ rules.
+Our templating mechanism can be applied to all aspects of biology. The viability of the synthesized rules can only be verified by conducting wet experiments.
 
 % On the other hand,
 % if $v_r$ is also present, then $v$ must not be any cut point.

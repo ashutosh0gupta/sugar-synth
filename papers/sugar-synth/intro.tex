@@ -7,13 +7,15 @@ the assembly process must be programmable: the assembly process includes a set o
 at the leaves or internal nodes of the current tree.
 Not all the rules are applicable at all the leaves. The monomer at a leaf and current surroundings of the leaf controls
 the applicability of a rule on the leaf.
-Identifying the exact mechanism of the production by extensive
+Identifying the exact set of the production rules by extensive
 biochemical experiments are costly and often needs an initial
 hypothesis for the rules to test. Biologists must identify the production rules and their control
 conditions by manually analyzing the set of observed glycans in a cell
 and using prior knowledge of biochemistry.
+We estimate that there are approximately $10^{70}$
+possible rule sets if we consider all biological variations.
 This is an error-prone process since the production rules must generate
-exactly the set of molecules in the cells and nothing else; and moreover, the data sets about which glycans are present in which cells are often incomplete. Manually comprehending all possible tree generation rules is difficult and ad-hoc. It would be useful to automate the process of learning which rules are operating in a given cell, based on incomplete data. 
+exactly the set of molecules in the cells and nothing else; and moreover, the data sets about which glycans are present in which cells are often incomplete. Manually comprehending all possible tree generation rules is difficult and ad-hoc. It would be useful to automate the process of learning which rules are operating in a given cell, based on incomplete data.
 
 In this paper, we are presenting a {\em novel} automated synthesis
 method for the production rules.
@@ -52,7 +54,7 @@ We also use templates to model the space of the production rules.
 
 Our method is iterative.
 %as illustrated in Figure~\ref{fig:illus-method}.
-Our tool first constructs constraints encoding that a set of unknown rules
+We first construct constraints encoding that a set of unknown rules
 defined by templates can assemble the input set of molecules.
 The generated constraints involve Boolean variable, finite range variables, and integer ordering
 constraints.
@@ -78,7 +80,7 @@ We append our synthesis constraints with additional constraints stating that
 no matter how we apply the synthesized rules, they will not produce the extra molecule.
 Since there is a requirement that {\em all} possible applications of rules must satisfy
 a condition, we have quantifiers in the constraints.
-Now onward we use a solver that handles quantifiers over finite range variable in
+We use a solver that handles quantifiers over finite range variable in
 the synthesis query.
 We go to the next iteration of the method.
 The method always terminates because the search space of rules is finite.

@@ -21,8 +21,9 @@ A molecule must respect the arity of monomers, i.e., if $M(v) = s$ and $C(v,n) =
 \end{df}
 \todo{Rewrite the following paragraph}
 \todo{definitions mixed with algorithms seems strange I think you should define all the formal stuff first and then present the algorithms}
+Let us define notations related to the tree structure.
 Let $\mathit{m = (V,M,C,v_0)}$ and $m' = (V',M',C',v_0')$ be molecules.
-With some abuse of notation, we write $v \in m$ to denote $v \in V$.
+With an abuse of notation, we write $v \in m$ to denote $v \in V$.
 For each $v \in m$, if $(v,n)$ is not in the domain of $C$, we write $C(v,n) = \bot$.
 We assume that $C(v,0) = \bot$.
 %and if $n > n' > 0$ and $C(v,n) \neq \bot$, then $C(v,n') \neq \bot$.
@@ -33,6 +34,9 @@ A {\em branch} of $m$ is a path from $v_0$ to some leaf of $m$.
 Let $height(m)$ be the length of the longest branch in $m$.
 We define ancestor relation recursively as follows. Let $ancestor(m,v,0) = v$.
 For for $d > 0$, let $ancestor(m,v,d) = ancestor(m,v', d-1)$ if $C(v',i) = v$ for some $i$.
+
+Since we will be matching the parts of the trees and applying rules to expand them,
+let us introduce notations for matching.
 Let recursively-defined predicate $Match(m,v,m',v')$ state that 
 $v \in m$, $v' \in m'$, $s = M(v) = M(v')$, and $Match( m, C(v,n), m', C(v',n) )$ for each $n \leq arity(s)$ such that $C(v,n) \neq \bot$.
 In other words, the subtree in $m$ rooted at $v$ is embedded in $m'$ at node $v'$.
@@ -100,7 +104,7 @@ and all the other nodes as {\em matching nodes}.
   % \end{minipage}
   \caption{(a) A rule. (b) An application of the rule.}
   \label{fig:exrule}
-  \vspace{-8mm}
+  \vspace{-6mm}
 \end{wrapfigure}
 \paragraph{Example:} In Figure~\ref{fig:exrule}(a), we present a rule. It has
   two kinds of nodes.
@@ -155,12 +159,10 @@ let us suppose we have a sequence $R_1,...,R_k$ of set of rules.
 Let $P(Q, R_1,..,R_k) = P(..P(P(Q,R_1),R_2),..,R_k)$ denoting the
 trees obtained after applying the rule sets one after another.
 
-Our algorithm terminates in every case. At each iteration, atleast one solution i.e set of rules is discarded. Since the set of all possible rules is finite, we can guarantee termination. In the worst case, the entire search space is explored. For a problem having 5 node types, 3 as maximum rule depth, 4 rules to be synthesized, 3 compartments and fast-slow reactions, the search space can only be as large as $\approx 10^{21}$ rules.
-Our templating mechanism can be applied to all aspects of biology. The viability of the synthesized rules can only be verified by conducting wet experiments.
 \subsection{Synthesis problem}
-We observe a set of glycan molecules $\mu$ present in a cell.
+In nature, we observe a set of glycan molecules $\mu$ present in a cell.
 %
-However, we do not know the production rules to produce the molecules.
+However, we do not necessarily know the production rules to produce the molecules.
 %
 We will be developing a method to find the production rules.
 %

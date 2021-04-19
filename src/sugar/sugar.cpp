@@ -339,7 +339,8 @@ void read_file( std::istream& in, sugar_t_map& sugar_map,
                 std::vector< std::vector<unsigned> > group_mols,
                 unsigned& num_rules, unsigned& rule_depth,
                 unsigned& max_compartments,
-                bool& quantified_neg_cons ) {
+                bool& quantified_neg_cons,
+                bool& fast_reactions ) {
   std::vector<unsigned> local_group;
   bool group_active = false;
   unsigned sugar_idx = 0;
@@ -380,6 +381,8 @@ void read_file( std::istream& in, sugar_t_map& sugar_map,
       max_compartments = read_unsigned( in );
     }else if( cmd == "quantified-neg-cons" ){
       quantified_neg_cons = (read_unsigned( in ) > 0);
+    }else if( cmd == "allow-fast-reactions" ){
+      fast_reactions = (read_unsigned( in ) > 0);
     }else{
       bio_synth_error( "sugar_parse", "unknown command " << cmd << " !");
     }
@@ -403,6 +406,7 @@ void synth_sugar( std::string input ) {
   unsigned rule_depth = 0;
   unsigned max_compartments = 1;
   bool quantified_neg_cons = true;
+  bool fast_reactions = true;
 
   std::ifstream in;
   in.open( input );
@@ -411,7 +415,7 @@ void synth_sugar( std::string input ) {
     //File does not exist code here
   }
   read_file( in, sugar_map, seed_mols, mols, group_mols, num_rules, rule_depth,
-             max_compartments, quantified_neg_cons );
+             max_compartments, quantified_neg_cons, fast_reactions );
   if( seed_mols.size() == 0 ) {
     bio_synth_error( "sugar_parse", "no seed mols declared!" );
   }
@@ -429,7 +433,8 @@ void synth_sugar( std::string input ) {
   sugar_encoding s( ctx, sugars, seed_mols, mols, group_mols, num_rules,
                     rule_depth, max_compartments,
                     // solving configurations
-                    quantified_neg_cons
+                    quantified_neg_cons,
+                    fast_reactions,
                     );
 
   s.do_synth();

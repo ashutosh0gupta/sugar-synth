@@ -1,9 +1,9 @@
 Review 1
 -       How generic is the templating mechanism?
 -       How many iterations may be necessary in the worst case (or even in the experiments for that matter?)
--       Will this algorithm always terminate?
--       How large is the search space?
+-       How large is the search space? // done
 -       Why is it sufficient to exclude a single solution in each step?
+-       Will this algorithm always terminate?
 -       viability / relevance of the synthesized solutions?
 
 Review 2
