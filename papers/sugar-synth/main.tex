@@ -112,7 +112,7 @@ has gained momentum.
 The approach encodes the search of a program that exhibits a certain
 behavior into a satisfiability problem.
 %
-The solvers attempt to find a solution of the satisfiability problem.
+The solvers attempt to find a solution to the satisfiability problem.
 %
 The solution is the synthesized program.
 %
@@ -157,7 +157,7 @@ The transient behaviors of GRNs are also crucial for various aspects
 of biology.
 % For example, the decision making in some cells is based on
 % response timing to stimulus~\cite{response-timing-paper}.
-In~\cite{delayedCTMC}, a methods based on
+In~\cite{delayedCTMC}, a method based on
 model-checking is used to estimate the time evolution of the probability
 distributions over states of GRNs.
 
@@ -170,7 +170,7 @@ Recently, the methods for formal synthesis are finding their applications in bio
 %
 In~\cite{koksal2013synthesis},
 GRNs with unknown interactions are modeled using
-a automata-like model with missing components
+an automata-like model with missing components
 and the specification is the variations of the behavior of the system under mutations.
 Their approach uses a counterexample-guided inductive synthesis (CEGIS) based algorithm~\cite{cegis}.
 CEGIS is a framework for synthesis. It first finds a program that may satisfy `samples' from
@@ -243,10 +243,10 @@ We conducted separate experiments for the variations of the synthesis problem - 
          &   & 6  & 3 & 1 & No  & 0.77  \\\hline
   \end{tabular}   
   \end{table}
- We applied our tool on the synthetic datasets N1, N2 and N3 which required some rules to have $\textsc{HardEnds}$. There is a clear trend of increasing time as the size of our dataset increases. Between N1 and N2 which have same number of molecules in the dataset, N1 has bulkier molecules and hence the time taken is higher. Reducing the number of compartments increases the time slightly however is successful in both N1 and N2. By Reducing the number of rules to be learnt, the tool fails in N1 as it required minimum 6 rules. Rules produced in these datasets have $\textsc{HardEnds}$ in the appropriate places to ensure that the exact set of molecules can be made.
+ We applied our tool on the synthetic datasets N1, N2 and N3 which required some rules to have $\textsc{HardEnds}$. There is a clear trend of increasing time as the size of our dataset increases. Between N1 and N2 which have the same number of molecules in the dataset, N1 has bulkier molecules and hence the time taken is higher. Reducing the number of compartments increases the time slightly however is successful in both N1 and N2. By Reducing the number of rules to be learnt, the tool fails in N1 as it required a minimum of 6 rules. Rules produced in these datasets have $\textsc{HardEnds}$ in the appropriate places to ensure that the exact set of molecules can be made.
  %
 
-  To demonstrate the working of our tool in case of runaway reactions or datasets with unbounded molecules, we applied our tool on the synthetic datasets R1, R2 and R3. The molecules in these datasets have repeating patterns and we observe the synthesized rules to capture this pattern. The constraints added as part of unbounded molecues take care not to declare the molecules created by the repeated application of these rules to be negative. The time taken for synthesizing the rules is particularly high for R1 as the molecules in the dataset are relatively bulky. Increasing the number of compartments or Increasing the number of rules to learn increases the time in R2. The search in the combinatorial space is expensive, hence the time taken is more. 
+  To demonstrate the working of our tool in case of runaway reactions or datasets with unbounded molecules, we applied our tool on the synthetic datasets R1, R2 and R3. The molecules in these datasets have repeating patterns and we observe the synthesized rules to capture this pattern. The constraints added as part of unbounded molecules take care not to declare the molecules created by the repeated application of these rules to be negative. The time taken for synthesizing the rules is particularly high for R1 as the molecules in the dataset are relatively bulky. Increasing the number of compartments or Increasing the number of rules to learn increases the time in R2. The search in the combinatorial space is expensive, hence the time taken is more. 
   
 \section{Implementation optimizations}
 
@@ -257,7 +257,7 @@ optimizations.
 
 \paragraph{Ordered templates}
 Our method constructs a list of templates.
-Since the templates are symmetric, there is a potential of unnecessary
+Since the templates are symmetric, there is a potential for unnecessary
 iterations.
 Let us suppose the method rejects a set of learned rules.
 In the subsequent queries include the constraints that reject the set of rules,
@@ -292,7 +292,7 @@ Due to the assignments, the templates become concrete rules in the context of so
 
 \subsection{Full organism data vs single cell data}
 
-The experiments that observe the set of glycan molecules are of two kinds. In one kind, we isolate a single cell type of an organism and identify all the glycans present in the cells. In our presentation, we have assumed this kind of source of data. However, the experiments are difficult to conduct.
+The experiments that observe the set of glycan molecules are of two kinds. In one kind, we isolate a single cell type organism and identify all the glycans present in the cells. In our presentation, we have assumed this kind of source of data. However, the experiments are difficult to conduct.
 In another and more convenient way, we smash the whole organism and identify all the glycans present in all the cells.
 So the information that which glycans are coming from which
 cells is unknown.
@@ -318,7 +318,7 @@ The experiments are imperfect. They may not detect all possible glycans
 in a cell.
 We may need to leave the possibility of allowing a few more molecules to be
 producible beyond $\mu$.
-We replace the no extra molecule constraint by a constraint that allow molecules
+We replace the no extra molecule constraint by a constraint that allows molecules
 that are `similar' to molecules in $\mu$.
 However, we could not imagine any measure of similarity that naturally stems from
 biological intuition.

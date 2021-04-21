@@ -95,7 +95,7 @@ The third situation is when a node position is in the matching part
 and has expanding descendants.
 The nodes on the solid path from $v_0$ to the root $v_e$ of the expanding part are in the third situation.
 % the nodes that are ancestors of expanding part among the matching nodes.
-Finally, the fourth situation is the rest of node positions
+Finally, the fourth situation is the rest of the node positions
 in the matching part, which is the light gray area.
 % The nodes in the rest of the light gray area are in the fourth situation.
 A variable is mapped to a node to encode the four situations.
@@ -315,7 +315,7 @@ We introduce universal quantifiers over $\tau$ and $cuts$
 variables before adding to $nCons$.
 % Intuitively, the universal quantifiers say that all possible
 % application patterns of the learned rules do not produce $m'$.
-Afterwords, the loop goes to the next iteration.
+Afterwards, the loop goes to the next iteration.
 Since the domain of all the variables is finite, eventually the loop must
 terminate.
 
@@ -367,7 +367,7 @@ line~\ref{line:molenc} in algorithm~\ref{alg:sugar-synth}.
 However, at line \ref{line:consNewR} the molecule is a template
 and the rules are concrete, which we will discuss later.
 % We will discuss the handling of this situation at the end of this subsection.
-$\textsc{EncodeProduce}$ uses help of three other supporting functions,
+$\textsc{EncodeProduce}$ uses the help of three other supporting functions,
 $\textsc{EncodeP}$, $\textsc{MatchTree}$, and $\textsc{MatchCut}$.
 % All of them are presented in algorithm~\ref{alg:produce}.
 %
@@ -378,7 +378,7 @@ if $v$ is at a cut and $t$ is applied at $v$, then $t$ must match
 at the node $v$.
 We require $rmatch(v)$ to be equal to some rule.
 % Therefore, if $v$ is a cut node, some template must be applied. 
-Since we are matching with template rule, we do not know the
+Since we are matching with a template rule, we do not know the
 position of the root of expanding nodes.
 We enumerate to all possible depths from $1$ to $d-1$ for finding
 the root.
@@ -449,7 +449,7 @@ that if $v_r$ is not absent in the template, then
 the labels of $v$ and $v_r$ must match at line~\ref{line:matchtree-cons}.
 At the same line, $\textsc{MatchTree}$ also adds constraints $tCons$ that
 nodes are added in the molecule in the correct order.
-The last two inputs of the function is timestamp $mark$ and a bit $isExpand$,
+The last two inputs of the function are timestamp $mark$ and a bit $isExpand$,
 which tells us that the matching nodes should be added before or after $mark$.
 The calls to $\textsc{MatchTree}$ from \textsc{EncodeP} use the
 $isExpand$ appropriately.
@@ -503,7 +503,7 @@ In the functions, the variable is to be replaced by the
 evaluated value of $\kappa(v_r)$.
 
 Our algorithm always terminates. At each iteration, at least one solution, i.e, set of
-rules is discarded.
+rules are discarded.
 In fact, we discard many because in each iteration we reject production of a counterexample molecule, but this may discard whole range of rule sets. 
 Since the set of all possible rules is finite, we
 guarantee termination. In the worst case, the entire search space is explored. For a problem having 10 node types, 3 as maximum rule depth, 10 rules to be synthesized, 3 compartments

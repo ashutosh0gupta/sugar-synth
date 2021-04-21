@@ -1,4 +1,4 @@
-In this section, we  present our implementation of the proposed method.
+In this section, we present our implementation of the proposed method.
 % %
 % We also apply our tool on several data sets and illustrate the usability of our method.
 
@@ -16,7 +16,7 @@ to discharge the generated satisfiability queries.
 
 
 {\em Benchmark: }
-We have applied our tool on three sets of real data (D1,D2,D3,D4) and two sets of synthetic data (D5,D6). The molecules have been obtained from
+We have applied our tool to three sets of real data (D1, D2, D3, D4) and two sets of synthetic data (D5, D6). The molecules have been obtained from
 respiratory mucins of a cystic fibrosis patient (D1),
 horse chorionic gonadotropin (D2), SARS-CoV-2 spike protein T323/S325 (D3), and human chorionic gonadotropin from a cancer cell line (D4)~\cite{Jaiman2018,10.1093/glycob/cwaa042}.
 The availability of clean data, where we are clear about the source
@@ -35,7 +35,7 @@ The availability of clean data, where we are clear about the source
 {\em Results:}
 We have applied \ourtool~on the data set. For each data set, we choose several
 parameter combinations to illustrate the relative performance of the tool.
-If we did not budget large enough parameters such as size of unknown molecules, number of rules etc, then the tool fails to
+If we did not budget large enough parameters such as the size of unknown molecules, number of rules etc, then the tool fails to
 synthesize the rules.
 We present the rules learned after giving minimum resources.
 % Our tool gave output that matched with the analysis of~\cite{Jaiman2018}
@@ -49,7 +49,7 @@ For D2, we also learned large rules, i.e., they are adding many nodes at a singl
 We synthesize the rules for D3 in 0.57 seconds. We synthesize the rules for D4, which is also our motivating example, in 0.85 seconds.
 However, if we use too many resources or too little, the tool runs for a long time as the search in combinatorial space is highly sensitive to the parameters.
 The synthesis for D5 takes 0.72 seconds. We can observe that by reducing the number of rules to learn, the tool fails to learn rules as it required minimum 7 rules.
-Our synthesized production are in line with the reported rules
+Our synthesized production is in line with the reported rules
 in the literature~\cite{Jaiman2018}.
 More experiments on the variations of the problem
 are included in the appendix~\ref{sec:ex-variants}. %\hyperref[sec:appendix]{}.
