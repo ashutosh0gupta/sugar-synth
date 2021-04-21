@@ -1,8 +1,8 @@
-The ability to control the assembly of small building blocks into large structures is of fundamental importance in biology and engineering. Familiar examples of this process from biology include the synthesis of linear DNA from nucleotide building blocks and the synthesis of linear proteins from amino-acid building blocks. In both these examples the synthesis is templated: the new DNA or protein molecule is essentially copied from an existing molecule. However, most biological assembly proceeds without a template. For example, when an adult animal is grown from a fertilized egg, the genome within the egg contains a dynamical recipe encoding the animal rather than a template. The genome restricts and controls the set of events that can take place subsequent to fertilization.
+The ability to control the assembly of small building blocks into large structures is of fundamental importance in biology and engineering. Familiar examples of this process from biology include the synthesis of linear DNA from nucleotide building blocks and the synthesis of linear proteins from amino-acid building blocks. In both these examples, the synthesis is templated: the new DNA or protein molecule is essentially copied from an existing molecule. However, most biological assembly proceeds without a template. For example, when an adult animal is grown from a fertilized egg, the genome within the egg contains a dynamical recipe encoding the animal rather than a template. The genome restricts and controls the set of events that can take place subsequent to fertilization.
 
 While the process of animal development is too complex to study comprehensively, the same themes arise in the synthesis of complex tree-like sugar polymers known as glycans \cite{Varki2017} that are covalently attached to proteins. Unlike linear proteins and DNA, glycans are tree-like structures: their nodes are sugar monomers, and their edges are covalent carbon-carbon bonds. The tree-like structure of a glycan is a direct consequence of the fact that a sugar monomer can directly bond to at least three neighboring sugar monomers (in contrast to nucleotides or amino acids, which can only bind to two neighbors and are constrained to make a chain).
 
-A given cell produces a specific set of glycan molecules that are present in the cell. Since different cells produce different sets of the molecules,
+A given cell produces a specific set of glycan molecules that are present in the cell. Since different cells produce different sets of molecules,
 the assembly process must be programmable: the assembly process includes a set of production rules. The reactions that underlie glycan production are carried out by enzymes known as GTases \cite{Varki2017}. There are hundreds of enzymes present in a given cell: each enzyme is a protein encoded by a distinct gene, which carries out a distinct biochemical reaction. The enzymes thus execute the production rules. A glycan tree is assembled piece by piece in successive steps. At each step, a production rule adds a small piece of a tree %(a monomer)
 at the leaves or internal nodes of the current tree.
 Not all the rules are applicable at all the leaves. The monomer at a leaf and current surroundings of the leaf controls
@@ -22,7 +22,7 @@ method for the production rules.
 Our method takes the observed glycan molecules in a cell as input and synthesizes
 the possible production rules that may explain the observation.
 Our work is the {\em first} to consider the computational problem.
-Our method of the synthesis is similar to counterexample guided
+Our method of synthesis is similar to counterexample guided
 inductive synthesis(CEGIS)~\cite{cegis}.
 Several methods for solving problems of searching in a complex combinatorial
 space use templates to define and limit their search space,
@@ -58,7 +58,7 @@ We first construct constraints encoding that a set of unknown rules
 defined by templates can assemble the input set of molecules.
 The generated constraints involve Boolean variable, finite range variables, and integer ordering
 constraints.
-We solve the constraints using off-the-shelf SMT solver.
+We solve the constraints using an off-the-shelf SMT solver.
 We call the query to the solver {\em synthesis query}.
 If the constraints are unsatisfiable, there are no production rules with the search space
 defined by the templates.
@@ -91,11 +91,11 @@ and definite model, and do the synthesis.
 We have also explored the variations of the models. For example, all rules
 may apply simultaneously. They apply in batches because they
 stay in different compartments.
-The molecule under-assembly may flow through the compartments.
-The distribution of stay of the molecules in a compartment also affects
+The molecule under assembly may flow through the compartments.
+The distribution of the stay of the molecules in a compartment also affects
 the execution model.
 Furthermore, we may have variations in the type and quality of data available to us.
-We have added the support for the variations in our method.
+We have added support for the variations in our method.
 
 % \todo{Related work}
 We have implemented the method in our tool~\ourtool. The tool takes input data in its own format.
@@ -117,7 +117,7 @@ In section~\ref{sec:bio}, we introduce the biological background.
 %of the synthesis problem and present the basis of the formal model.
 % If the reader wants to avoid getting into the biological details, she may skip the section.
 In section~\ref{sec:motivation}, we present a motivating example to illustrate our method.
-In section~\ref{sec:model}, we present the formal model of the glycans,
+In section~\ref{sec:model}, we present the formal model of the glycans
 and their production rules.
 In section~\ref{sec:algo}, we present our method for the synthesis problem.
 In section~\ref{sec:variations}, we present the variations of the problem.

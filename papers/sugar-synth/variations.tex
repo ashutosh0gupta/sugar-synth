@@ -96,7 +96,7 @@ $\textsc{EncodeP}$ by inserting the following line after~\ref{line:encodep-ans-m
 % the interpretation of the stay model.
 
 \paragraph{Fast and slow reactions:}
-There is rate associated with chemical reactions. We abstract this by defining slow and fast rules.
+There is a rate associated with chemical reactions. We abstract this by defining slow and fast rules.
 The fast rules dominate the slow rule.
 A slow rule can occur only when no other fast rule is able to extend the molecule in that compartment.
 Let us define function $\textsc{EncodeP}^-$, which generates constraints as $\textsc{EncodeP}$ expect
@@ -130,7 +130,7 @@ A negative molecule which is a proper subtree of an input molecule will cease to
 {\em Unbounded molecules: }
 We only observe a finite set of molecules in cells.
 However, a set of production rules may be capable of producing an unboundedly large number of molecules.
-In such cases, rules produce molecules the have repeating patterns of a subtree while rest of the tree being exactly same as one of the input molecules. The rules may be acceptable in some biological settings. We modify constraints to not declare such molecules as negative.
+In such cases, rules produce molecules that have repeating patterns of a subtree while rest of the tree being exactly same as one of the input molecules. The rules may be acceptable in some biological settings. We modify constraints to not declare such molecules as negative.
 Let us suppose we have a repeat pattern of depth $d$ with $r$ repetitions.
 Let $v$ be the node in template molecule where repetition has begin.
 We define $\textsc{RepeatHeads}(v,r,d)$ that returns nodes $v_0,.... v_r$ such that
@@ -176,8 +176,8 @@ The change will accept molecules with repeating patterns as positive samples.
 
 \paragraph{Non-monotonic rules :}
 Some production rules can not be applied if another node is present in a sibling.
-We call such rule non-monotonic because it may get disabled as the molecule grows.
-This feature of rules help in producing an exact set of desired molecules.
+We call such rules non-monotonic because it may get disabled as the molecule grows.
+This feature of rules helps in producing an exact set of desired molecules.
 We add an extra bit on each node of rule
 template called $\textsc{HardEnds}$.
 If the node is absent, its parent is present, and  $\textsc{HardEnds}$ bit is true, then
