@@ -32,7 +32,10 @@ There is a layout problem:  the figure captions are hardly separated from the ac
 It is not clear to me whether a set of rules is unique or whether the algorithm reports alternative sets of rules if they exist or the set of all possible generating rules even if redundant.
 The frequency of rule realizations could also be reported for the given set of glycans.
 While the pseudo-code is given, there is no link to the tool itself. If the authors wish the tool to be used, they should provide a link to a tool page with documentation, tutorial, and installation help.
+
+==========
 Suggestions
+==========
 In the future, authors may also consider allowing a set of enzymes as input and checking whether these can generate the observed glycans, or to allow users to specify additional rules that are known to play a role.
  
 
