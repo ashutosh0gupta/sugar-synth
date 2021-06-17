@@ -74,3 +74,193 @@ Review 3
 there are no attempts to connect the results to any sort of non-biological setting.
 As a result, the work sounds like an application of formal methods to biology
 and would more likely find a better home in a computational biology meeting such as CSBio.
+
+
+CMSB 2021
+
+----------------------- REVIEW 1 ---------------------
+SUBMISSION: 4
+TITLE: Automated inference of production rules for glycans
+AUTHORS: Ashutosh Gupta, Ansuman Biswas, Mukund Thattai and Missula Meghana
+
+----------- Overall evaluation -----------
+SCORE: 1 (weak accept)
+----- TEXT:
+The authors developed a tool, GLYSYNTH, which deduces the set of production rules that can generate a given set of glycan molecules. This is a neat solution to a well-defined problem, but I have a couple of comments.
+
+First, the application is not clear. In which circumstances would we need to know the generating rules for glycans? If rules could be linked to enzymes, then the tool could propose a generating set of enzymes for a given glycan set, but the authors do not discuss exactly how enzymes and rules are linked. Are generating rules constrained to only those known to be realized by an enzyme? 
+
+The main shortcoming is that the method assumes that an absence of a glycan molecule means that it cannot be produced, while it could just mean that its production is less frequent. This is discussed in E.2 but should be mentioned in the introduction. 
+
+It is not clear to me whether a set of rules is unique or whether the algorithm reports alternative sets of rules if they exist or the set of all possible generating rules even if redundant.
+
+The frequency of rule realizations could also be reported for the given set of glycans.
+
+A more in-depth analysis of the results for the biological data would have been interesting. Do the rules differ across data sets or are some the same? How does a typical rule look like (so a concrete example, in addition to the abstract example)?
+
+While the pseudo-code is given, there is no link to the tool itself. If the authors wish the tool to be used, they should provide a link to a tool page with documentation, tutorial, and installation help.
+
+"We identified a new area of application for formal methods in biology."
+This cannot really be claimed since the last author has already papers on the topic (8, 11).
+
+A more thorough future evaluation on biological data could consist of running GLYSYNTH on glycans from samples where generating enzymes are known and checking if the rules uncovered are consistent with these enzymes (assuming rules can be linked to enzymes).
+
+In the future, authors may also consider allowing a set of enzymes as input and checking whether these can generate the observed glycans, or to allow users to specify additional rules that are known to play a role.
+
+
+
+----------------------- REVIEW 2 ---------------------
+SUBMISSION: 4
+TITLE: Automated inference of production rules for glycans
+AUTHORS: Ashutosh Gupta, Ansuman Biswas, Mukund Thattai and Missula Meghana
+
+----------- Overall evaluation -----------
+SCORE: 0 (borderline paper)
+----- TEXT:
+The paper studies the problem of inferring assembly rules that are constraint to produce a given set of reachable labelled trees. This study is motivated by a biological application (labelled trees are glycans that are being produced in living cells. The internal structure of glycans yields combinatorial outputs).
+
+The authors introduce an algorithm to synthesize a production rule set that has to be sound and complete w.r.t accessible trees. Important parameters of the algorithm are the max rule depth (i.e the depth of the rule height) and the number of rules the algorithm is allowed to synthesize. This raises a few concerns:
+- the total rule depth actually captures two distinct properties: (D1) the depth of the match and (D2) the depth of the modification. Trying to minimize D1 is natural as deep matches are *biologically* implausible (as molecules would need to « sense » a non local property), but allowing D2>1 is *physically* implausible (which is worst) because 3 bodies collision are very unlikely. Minimizing the number of rules seems sound however.
+-  I skimmed through the presented pseudo code (which seem reasonable) but two lemmas are missing. They would state that the generated rules are sound (only reachable trees can be synthesized) and complete (all reachable trees can be assembled). If the algorithm does not satisfy these properties it should be stated clearly.
+- Also one is left wondering whether the generated rules are optimal w.r.t to depth: for instance it seems that one can generate a rule set for the example of Fig. 3 with rules with a lower depth.
+
+Overall I think the paper is interesting but somewhat a bit premature.
+
+
+
+----------------------- REVIEW 3 ---------------------
+SUBMISSION: 4
+TITLE: Automated inference of production rules for glycans
+AUTHORS: Ashutosh Gupta, Ansuman Biswas, Mukund Thattai and Missula Meghana
+
+----------- Overall evaluation -----------
+SCORE: 2 (accept)
+----- TEXT:
+The paper presents a new technique to synthesise production rules for glycans, forming try-like structures. The initial ideas have been implemented in a tool, which in turn has been applied to a few real-world data sets.
+
+I very much like this paper; it’s well written both in terms of language as well as in terms of organisation of the material presented. 
+
+The (new) problem area is introduced in a way which makes the subject easily approachable also for the uninitiated reader.
+
+However, with respect to the formal part, the paper is very densely written and interesting definitions are squashed into text paragraphs rather than being given their own space. After a while, the reader may be overwhelmed by the density and what they were trying to cover. To put it differently, it looks a bit like a journal paper squashed into a conference;  would definitely benefit by being cut down and unpacked.
+
+
+a few questions/suggestions:
+
+You write “there are approximately 10^70 possible rule sets” :
+Out of how many rules? any rough estimate would do;
+
+“Otherwise, a solution of the constraints gives a set of rules.” :
+The solution is probably not unique; would it be possible to enumerate all possible solutions, or would this be infeasible?
+Does your tool generate a minimal set of rules (in terms of cardinality of the rule set)? Would be nice to squeeze a few related words in.
+
+“the height of searched molecules.” :
+Some readers might find it helpful if you explain what you mean with this phrase;
+
+“The process of glycosylation is stochastic” :
+Do you really mean ‘stochastic’ or actually ‘non-deterministic’? 
+
+re your pseudocode notation style:
+I would appreciate explicit closing brackets, such as ‘end if’, ‘end while’, or something similar;
+
+Algorithm1: I suggest to add a brief in-line comment for ‘ while tt do’;
+
+Some information about hardware & software platform for computational experiments is completely absent.
+
+some minors (not exhaustive):
+
+“The generated constraints involve Boolean variable,” 
+-> Boolean variables ?
+
+“If we assume that all these oligomers are built by starting from a root GalNAc (yellow square) by adding one monomer at a time (lines between glycans represent monomer addition reactions).”
+-> here seems to be something missing;
+
+“ In the lower part of the figure, we illustrate if the enzymes are split …”
+->  In the lower part of the figure, we illustrate that if the enzymes are split … ? The entire sentence is a bit lengthy; might be a good idea to split it somehow,
+
+“Here, we are considering only single compartment case.”
+->Here, we are considering only the single compartment case.
+
+referencing specific sections, algorithms, appendices should be capitalised; e.g., see Section 2, Algorithm 1, Appendix B;
+
+There is a layout problem:  the figure captions are hardly separated from the actual text.
+
+Disclaimer: I didn’t check all formal notations in detail.
+
+
+TACAS 2021
+
+----------------------- REVIEW 1 ---------------------
+SUBMISSION: 130
+TITLE: Automated inference of production rules for glycans
+AUTHORS: Ashutosh Gupta, Mukund Thattai, Meghana Missula and Ansuman Biswas
+
+----------- Overall evaluation -----------
+SCORE: -2 (reject)
+----- TEXT:
+The paper presents a synthesis algorithm for sets of production rules of glycans. The authors formalize the biological system as a synthesis problem, i.e., producing certain trees
+through iterated rule-based replacement of subtrees by different subtrees, using a fix set of rules. The authors then go on to present an algorithm for finding sets of rules with certain criteria that can produce a number of desired molecules (trees) while not producing a number of undesired molecules. The algorithm is based on an SMT encoding of the problem and uses a template (assumptions) for the structure of individual rules. The search proceeds in two steps: first, rules are generated by solving the SMT problem for the desired molecules.
+Then, it is checked if any undesired molecule can be generated with the found rules. If this is the case, the search continuous with the first step, excluding the current model from the search space. The authors evaluate their approach in a small set of experiments.
+
+While the paper is written well and presents an interesting application of constraint solving, I do not think it meets the bar a regular paper at TACAS in its current state. Citing from the CFP: [regular papers should present] a principled advance to the theoretical foundations for the construction and analysis of systems. 
+To make this statement more concrete, the paper does not answer any questions about properties of the designed algorithms:
+
+-	How generic is the templating mechanism?
+-	How many iterations may be necessary in the worst case (or even in the experiments for that matter?)
+-	Will this algorithm always terminate?
+-	How large is the search space?
+-	Why is it sufficient to exclude a single solution in each step?
+
+The paper in its current form could maybe qualify as a case study. But even then questions about the viability / relevance of the synthesized solutions remain unanswered.
+
+
+
+----------------------- REVIEW 2 ---------------------
+SUBMISSION: 130
+TITLE: Automated inference of production rules for glycans
+AUTHORS: Ashutosh Gupta, Mukund Thattai, Meghana Missula and Ansuman Biswas
+
+----------- Overall evaluation -----------
+SCORE: -1 (weak reject)
+----- TEXT:
+The paper describes an interesting application of counterexample-guided inductive synthesis (CEGIS) employing SMT to a biochemical problem of discovering rules driving synthesis of glycol molecules. The motivation comes from the chemoinformatics-based need to understand how organic structures are developed. Having an algorithmic procedure allowing to learn structure formation patterns from observations is an important topic. On that side, the paper targets a relevant and up-to-date problem.
+
+The paper is presented in a way that the biological problem is explained first, followed by formulation of the particular instance of the synthesis problem together with necessary formalisation supported by the algorithmics. Consequently, several variants adapting the basic solution to more practical scenarios are discussed. Finally, an evaluation based on experiments performed on three real data sets is given.
+
+The result itself is an interesting application. Technically the results are stated clearly and I have found them sound. What makes me wondering about the paper quality is the presentation. I think for the TACAS audience, biology should be put more into background and the particular instance of the discussed synthesis problem should be clearly emphasised in a sufficiently abstract way. The biology behind is not that important as the way how the structures are organised and developed. That can be done without necessary diving into biological problems. What I am questioning is what is the main non-trivial step in the proposed application. It seems to me more as a quite straightforward application of SMT-based reasoning. The result would fit perfectly an interdisciplinary conference like CMSB but I am not sure the way how it is presented meets the focus of TACAS. 
+
+I see as a potential related work the Kappa calculus framework. I think it would be good to discuss whether such kinds of rule-based frameworks cannot be also used for the particular problem (this is not clear to me). I think related work stated in the paper correctly targets CEGIS-based results but I do not see any related citations on applications of formal methods to biological structures. In my view, some work done in theoretical chemistry might be relevant (e.g., the work of Christoph Flamm from University of Vienna). The problem there is generating atom mapping patterns but I think there should be (at an abstract level) some joint motivations and probably similar technology can be applied, to some extent. That would be great to think of and mention in the paper to give more relevant work also on the application side. Especially in the case when references are not counted to the allowed page range.
+
+In general, I think the paper gives some interesting information but as such it more fits a shape of a workshop paper than a paper for a top conference.
+
+MInor issues
+==========
+pp2. "encoding that are there other molecules"... I am not able to get this sentence.
+pp5. Fig. 2 too small to see the details
+pp6. Fig 3 better organisation/typesetting would help, e.g., tikz
+pp7.  the formal part following the definition 1 should be more structured to become readable
+pp7. do not use text directly typeset in math mode ($\mathit{...}$ or similar solution would help
+pp8. the extended \cup symbol should be explained
+pp9. typesetting of the algorithm should be improved to easily see what is the output/requirements
+pp11. "creates the above constraints and store them..." -> ... _stores_ them
+pp11. definitions mixed with algorithms seems strange I think you should define all the formal stuff first and then present the algorithms
+pp12. ENOCDE -> ENCODE
+pp16. "If we did not budget large enough parameters..." -> what kind of parameters?
+pp16. "tool runs for a long time, which is typical" -> why?
+
+general -- the latex tricks narrowing the space between figures and the text should be definitely avoided!
+
+
+
+----------------------- REVIEW 3 ---------------------
+SUBMISSION: 130
+TITLE: Automated inference of production rules for glycans
+AUTHORS: Ashutosh Gupta, Mukund Thattai, Meghana Missula and Ansuman Biswas
+
+----------- Overall evaluation -----------
+SCORE: -3 (strong reject)
+----- TEXT:
+This paper discusses a technique for using SMT solving to automatically synthesize so-called production rules for certain types of biologically-important molecules (glycans).  The methodology used is analogous to certain types of program synthesis.
+
+The paper is reasonably well written, but I think TACAS is not the right venue for this paper; there are no attempts to connect the results to any sort of non-biological setting.  As a result, the work sounds like an application of formal methods to biology, and would more likely find a better home in a computational biology meeting such as CSBio.
+
