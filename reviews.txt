@@ -12,6 +12,7 @@ A more in-depth analysis of the results for the biological data would have been 
 "We identified a new area of application for formal methods in biology." This cannot really be claimed since the last author has already published papers on the topic (8,11).
 A more thorough future evaluation on biological data could consist of running GLYSYNTH on glycans from samples where generating enzymes are known and checking if the rules uncovered are consistent with these enzymes (assuming rules can be linked to enzymes).
 
+
 ===========
 Minor issues 
 ===========
@@ -20,7 +21,6 @@ You write “there are approximately 10^70 possible rule sets” : Out of how ma
 Otherwise, a solution of the constraints gives a set of rules.” :The solution is probably not unique; would it be possible to enumerate all possible solutions, or would this be infeasible?
 Does your tool generate a minimal set of rules (in terms of cardinality of the rule set)? Would be nice to squeeze a few related words in.
 “the height of searched molecules.” : Some readers might find it helpful if you explain what you mean with this phrase;
-“The process of glycosylation is stochastic” :Do you really mean ‘stochastic’ or actually ‘non-deterministic’?
 re your pseudocode notation style:I would appreciate explicit closing brackets, such as ‘end if’, ‘end while’, or something similar;
 Algorithm1: I suggest to add a brief in-line comment for ‘ while tt do’;
 Some information about hardware & software platform for computational experiments is completely absent.
@@ -34,8 +34,11 @@ It is not clear to me whether a set of rules is unique or whether the algorithm 
 The frequency of rule realizations could also be reported for the given set of glycans.
 While the pseudo-code is given, there is no link to the tool itself. If the authors wish the tool to be used, they should provide a link to a tool page with documentation, tutorial, and installation help.
 Suggestions
-In the future, authors may also consider allowing a set of enzymes as input and checking whether these can generate the observed glycans, or to allow users to specify additional rules that are known to play a role.
  
+Bio questions
+
+- “The process of glycosylation is stochastic” :Do you really mean ‘stochastic’ or actually ‘non-deterministic’?
+- In the future, authors may also consider allowing a set of enzymes as input and checking whether these can generate the observed glycans, or to allow users to specify additional rules that are known to play a role.
 
  
 TACAS
