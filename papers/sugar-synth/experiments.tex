@@ -6,7 +6,7 @@ In this section, we present our implementation of the proposed method.
 We have implemented method \textsc{SugarSynth} in a prototype tool {\ourtool}.
 %
 The tool, written in {\tt C++}, uses {\zthree}\cite{z3} as the SMT solver
-to discharge the generated satisfiability queries.
+to discharge the generated satisfiability queries. All the experiments have been conducted on a laptop with 8GB (1x8GB) DDR4 at 2400MHz.
 %
 % We have developed a specialized file format for giving input to~\ourtool.
 % %
@@ -37,7 +37,7 @@ We have applied \ourtool~on the data set. For each data set, we choose several
 parameter combinations to illustrate the relative performance of the tool.
 If we did not budget large enough parameters such as the size of unknown molecules, number of rules etc, then the tool fails to
 synthesize the rules.
-We present the rules learned after giving minimum resources.
+We present the rules learned after giving minimum resources. However, the set of rules reported need not be either unique or minimal.
 % Our tool gave output that matched with the analysis of~\cite{Jaiman2018}
 % in reasonable time.
 
@@ -52,7 +52,7 @@ The synthesis for D5 takes 0.72 seconds. We can observe that by reducing the num
 Our synthesized production is in line with the reported rules
 in the literature~\cite{Jaiman2018}.
 More experiments on the variations of the problem
-are included in the appendix~\ref{sec:ex-variants}. %\hyperref[sec:appendix]{}.
+are included in the Appendix~\ref{sec:ex-variants}. %\hyperref[sec:appendix]{}.
 
 % The results suggest that the tool is potentially applicable to larger data sets.
 

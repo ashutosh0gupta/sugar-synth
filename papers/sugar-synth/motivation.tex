@@ -2,7 +2,9 @@
 \centering
 \includegraphics[width=1\linewidth]{gfig2.png}
 \caption{A glycan data set. Figure credit: Anjali Jaiman, PhD thesis.}
+
 \label{fig:dataset-gly}
+\vspace{7.5mm}
 % \vspace{-6mm}
 \end{figure}
 
@@ -12,18 +14,17 @@ In this section, we first present a motivating example to illustrate our method.
 In Figure~\ref{fig:dataset-gly},
 we consider the glycan oligomers associated with human chorionic
 gonadotropin~\cite{Harrd1992}.
-The data set has four glycan oligomers (shown in boxes and numbered). If we assume that all these oligomers
+The data set has four glycan oligomers (shown in boxes and numbered). We assume that all these oligomers
 are built by starting from a root GalNAc (yellow square) by adding one monomer at a
 time (lines between glycans represent monomer addition reactions). At the top of the figure, we illustrate
 if all enzymes (rules) operate in a
 single compartment, a large number of glycans can potentially be made in addition to the measured ones.
 In the lower part of the figure, we illustrate if the enzymes are split into three compartments
-(separated by dotted lines), then certain reactions are prevented from occurring, so the set of structures
-made is reduced.
+(separated by dotted lines), then certain reactions are prevented from occurring. Thus, reducing the set of structures.
 In this case, we assume that only the terminal (bottom-most) structures will be produced as outputs.
 Here we have assumed certain rules of operation that are most consistent with the observed glycan data set.
 The goal of this paper is to infer the rules.
-
+% \vspace{-2.5mm}
 
 Now we consider the synthesis problem. In Figure~\ref{fig:ex-gly}(a), we present a set of
 glycan molecules present in a cell consists of three molecules, which are structurally similar to the three glycan molecules in Figure~\ref{fig:dataset-gly}.
@@ -37,6 +38,7 @@ The arities of the monomers are $2$, $1$, $1$, and $0$, respectively.
 
 % Before considering the synthesis problem that produces exactly
 % the three molecules,
+
 Let us first consider six rules in Figure~\ref{fig:ex-gly}(b)
 that produce the molecules.
 All the rules are in the same compartment, i.e., they can be applied in arbitrary order.

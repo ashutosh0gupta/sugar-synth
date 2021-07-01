@@ -56,7 +56,7 @@ Our method is iterative.
 %as illustrated in Figure~\ref{fig:illus-method}.
 We first construct constraints encoding that a set of unknown rules
 defined by templates can assemble the input set of molecules.
-The generated constraints involve Boolean variable, finite range variables, and integer ordering
+The generated constraints involve Boolean variables, finite range variables, and integer ordering
 constraints.
 We solve the constraints using an off-the-shelf SMT solver.
 We call the query to the solver {\em synthesis query}.
@@ -83,7 +83,7 @@ a condition, we have quantifiers in the constraints.
 We use a solver that handles quantifiers over finite range variable in
 the synthesis query.
 We go to the next iteration of the method.
-The method always terminates because the search space of rules is finite.
+The method always terminates because the search space of rules is finite. The set of rules synthesized need not minimal. They also need not be unique. The solver reports the first set which satisfies the constraints.
 
 Our encoding to constraints depends on the model of execution of the rules.
 The current biological information is not sufficient to make a precise
@@ -113,17 +113,17 @@ The key contributions of this paper are the following.
 
 
 We organize the paper as follows.
-In section~\ref{sec:bio}, we introduce the biological background.
+In Section~\ref{sec:bio}, we introduce the biological background.
 %of the synthesis problem and present the basis of the formal model.
 % If the reader wants to avoid getting into the biological details, she may skip the section.
-In section~\ref{sec:motivation}, we present a motivating example to illustrate our method.
-In section~\ref{sec:model}, we present the formal model of the glycans
+In Section~\ref{sec:motivation}, we present a motivating example to illustrate our method.
+In Section~\ref{sec:model}, we present the formal model of the glycans
 and their production rules.
-In section~\ref{sec:algo}, we present our method for the synthesis problem.
+In Section~\ref{sec:algo}, we present our method for the synthesis problem.
 %and the modifications in our methods to support the variations.
-In section~\ref{sec:experiments}, we present our implementation  and experiments. %on some glycan data.
-In section~\ref{sec:conclusion}, we conclude the paper.
-We present the extended related work in appendix~\ref{sec:related}.
+In Section~\ref{sec:experiments}, we present our implementation  and experiments. %on some glycan data.
+In Section~\ref{sec:conclusion}, we conclude the paper.
+We present the extended related work in Appendix~\ref{sec:related}.
 
 % We have added several appendix sections.
 % In appendix~\ref{sec:variations}, we present the variations of the problem.

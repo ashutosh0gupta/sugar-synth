@@ -76,7 +76,7 @@
 % b) the growths of two branches are correlated/ not correlated..and some more points like these, for which wealth of data is not available, hence the model was unable to incorporate the specifics
 \label{sec:conclusion}
 \input{conclusion.tex}
-
+\nocite{Charles2013}
 \bibliographystyle{unsrt}
 \bibliography{biblio}
 
@@ -84,9 +84,6 @@
 
 \section{Extended related work}
 \label{sec:related}
-
-\todo{Related work: Kappa calculus framework, citations on applications of formal methods to biological structures,
-some work done in theoretical chemistry might be relevant (e.g., the work of Christoph Flamm from University of Vienna), cite extended related in main text}
 
 % Success of formal methods
 Formal methods have successful in applications to a vast range of
@@ -269,7 +266,7 @@ We add ordering constraints stating that any assignments to the list of template
 ordered rules with respect to the total order.
 
 \paragraph{Quantifier instantiations}
-The constraints for rejecting the counterexample molecule is universally quantified at line~\ref{line:negCons} in algorithm~\ref{alg:sugar-synth}.
+The constraints for rejecting the counterexample molecule is universally quantified at line~\ref{line:negCons} in Algorithm~\ref{alg:sugar-synth}.
 For any assignment, the solver needs to try sufficiently many instantiations of the quantifiers
 to ensure that the query is not unsatisfiable.
 The instantiations sufficiently slow down the solving process.

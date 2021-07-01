@@ -19,7 +19,7 @@
     \label{line:molenc}
   \State $nCons := \ltrue$
   %\State $negMol$ be set of molecules := $\emptyset$
-  \While{$\ltrue$}
+  \While{$\ltrue$} \algorithmiccomment{while True}
     \If{ $a$ = getModel( $tCons \land pCons \land nCons$ )}
     \label{line:posModel}
     \State $R$ := \textsc{readRules}($a$)

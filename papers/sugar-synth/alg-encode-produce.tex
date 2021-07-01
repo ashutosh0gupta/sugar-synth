@@ -1,5 +1,7 @@
+\algnewcommand{\IIf}[1]{\State\algorithmicif\ #1\ \algorithmicthen}
+\algnewcommand{\EndIIf}{\unskip\ \algorithmicend\ \algorithmicif}
 \setlength{\textfloatsep}{0pt}%
-\begin{algorithm}[t]
+\begin{algorithm}[H]
   \caption{\textsc{EncodeProduce}( $m$ : molecule (template), $T$ : rule (template) )}
   \label{alg:produce}
   \begin{algorithmic}[1]
@@ -18,8 +20,7 @@
   \textsc{EncodeP}( $v$, $t = (\_,\nu,\kappa,v_{0r})$, $\ell$)\hfill\mbox{}
   \vspace{2pt}\hrule
   \begin{algorithmic}[1]
-    \If{$ancestor(v,\ell) = \bot$} \quad \Return $\lfalse$
-    \EndIf
+    \IIf{$ancestor(v,\ell) = \bot$} \Return $\lfalse$ \EndIIf
     \State $mark := \tau(v)$,\; $c := \ltrue$, \; $v_r := v_{0r}$, \; $i = \ell$
     \While{$i > 0$}
     \label{line:encodep-while}
@@ -55,9 +56,9 @@
   \textsc{MatchTree}( $v$, $v_r$, $mark$, $isExpand$ )\hfill\mbox{}
   \vspace{2pt}\hrule
   \begin{algorithmic}[1]
-    \If{$v_r = \bot$} \Return $\ltrue$ \EndIf
+    \IIf{$v_r = \bot$} \Return $\ltrue$ \EndIIf
     \label{line:matchtree-vr-absent}
-    \If{$v = \bot$} \Return $\kappa(v_r) = Absent$ \EndIf
+    \IIf{$v = \bot$} \Return $\kappa(v_r) = Absent$ \EndIIf
     \label{line:matchtree-v-absent}
     \State $tCons := isExpand$ \;? $( mark \leq \tau(v) ): ( \tau(v) < mark )$
     % \If{$isExpand$}
@@ -80,9 +81,9 @@
   \textsc{MatchCut}( $v$, $v_r$, $ruleParentIsNotAbsent$ )\hfill\mbox{}
   \vspace{2pt}\hrule
   \begin{algorithmic}[1]
-    \If{$v = \bot$} \Return $\ltrue$ \EndIf
+    \IIf{$v = \bot$} \Return $\ltrue$ \EndIIf
     \label{line:mcut-no-v}
-    \If{$v_r = \bot$} \Return $parentIsNotAbsent \limplies cuts(v)$ \EndIf
+    \IIf{$v_r = \bot$} \Return $parentIsNotAbsent \limplies cuts(v)$ \EndIIf
     \label{line:mcut-no-vr}
     \State $c := ruleParentIsNotAbsent \limplies ( \kappa(v_r) = Absent) = cuts(v)$
     \label{line:mcut-cons}
