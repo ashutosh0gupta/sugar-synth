@@ -2,7 +2,8 @@ In this section, we present a method to solve the synthesis problem of finding
 a set of production rules that produce a given set $\mu$ of molecules.
 Our synthesis method \textsc{SugarSynth} is presented in Algorithm~\ref{alg:sugar-synth}.
 Here, we are considering only the single compartment case.
-The generalizations are discussed in Appendix~\ref{sec:variations}.
+The generalizations are discussed in
+\choosefinal{extended version~\cite{arxiv-this}.}{ Appendix~\ref{sec:variations}.}
 
 % At a high level, our method is iterative.
 % The method first synthesizes a set of rules $R$ that can produce the molecules in input set $\mu$, i.e., $\mu \subseteq P(S,R)$.
@@ -103,6 +104,7 @@ Let $K =\{Expand,Absent,MatchAns,Match\}$ be the set of symbols to
 indicate the set of four situations.
 Let $KVars$ be the unbounded set of variables with domain $K$. 
 % We will use the pool of $KVars$ to add variables to the templates.
+Our templates are sufficiently expressive to cover all aspects of biology.
 The templates are defined as follows.
 
 \begin{df}
@@ -357,8 +359,6 @@ rules as {\em cuts} of the tree.
 
 
 
-\input{alg-encode-produce.tex} 
-\vspace{-3mm}
 Algorithm~\ref{alg:produce} presents function $\textsc{EncodeProduce}$
 that returns the encoding.
 It takes a molecule $m$ and a set of rules $T$.
@@ -411,6 +411,9 @@ In each iteration, $v_r$ is updated to the $j$th child due to lines
 \ref{line:encodep-next-vr} and \ref{line:encodep-update-vr}
 if the ancestors of $v$ also traverse along with the $j$th child.
 % (see if condition at line \ref{line:encodep-jth-child-cond}).
+
+\vspace{-3mm}
+\input{alg-encode-produce.tex} 
 
 % Let us consider the body of the loop.
 Let $v'$ be the $i$th ancestor at some iteration of the loop.
@@ -505,14 +508,20 @@ the rule.
 In the functions, the variable is to be replaced by the
 evaluated value of $\kappa(v_r)$.
 
+\begin{theorem}
+  If \textsc{SugarSynth}($\mu$, $d$, $n$) returns a set of rules $R$, then if $R$ produces a molecule that has depth less than $h$, the it is in $\mu$ (soundness).
+  If it fails to synthesize rules, there are no rule set from the budget of depth $d$ and number $n$ (completeness).
+\end{theorem}
+
+The soundness is true due to the construction of constraints.
 Our algorithm always terminates. At each iteration, at least one solution, i.e,
 a set of rules is discarded.
 In fact, we discard many because in each iteration we reject production of a counterexample molecule, but this may discard whole range of rule sets. 
 Since the set of all possible rules is finite, we
-guarantee termination. In the worst case, the entire search space is explored. For a problem having 10 node types, 3 as maximum rule depth, 10 rules to be synthesized, 3 compartments
-and fast-slow reactions, the search space can only be as large as $\approx 10^{74}$ rules $(2^{10}*{(10+3-1) \choose (3-1)}*10^{(2^3 - 1)*10})$.
-Our templates are sufficiently expressive to cover all aspects of biology.
-The viability of the synthesized rules can only be verified by conducting wet experiments.
+guarantee termination.
+Therefore, the completeness holds.
+In the worst case, the entire search space is explored.
+
 
 % On the other hand,
 % if $v_r$ is also present, then $v$ must not be any cut point.

@@ -12,8 +12,10 @@ biochemical experiments are costly and often needs an initial
 hypothesis for the rules to test. Biologists must identify the production rules and their control
 conditions by manually analyzing the set of observed glycans in a cell
 and using prior knowledge of biochemistry.
-We estimate that there are approximately $10^{70}$
+We estimate that there may be more then $10^{70}$
 possible rule sets if we consider all biological variations.
+\footnote{For a problem having 10 monomers, 10 rules, 3 as rule size, 3 compartments
+and fast-slow reactions, the search space is $\approx 10^{74}$ rules $(2^{10}*{(10+3-1) \choose (3-1)}*10^{(2^3 - 1)*10})$.}
 This is an error-prone process since the production rules must generate
 exactly the set of molecules in the cells and nothing else; and moreover, the data sets about which glycans are present in which cells are often incomplete. Manually comprehending all possible tree generation rules is difficult and ad-hoc. It would be useful to automate the process of learning which rules are operating in a given cell, based on incomplete data.
 
@@ -95,21 +97,22 @@ The molecule under assembly may flow through the compartments.
 The distribution of the stay of the molecules in a compartment also affects
 the execution model.
 Furthermore, we may have variations in the type and quality of data available to us.
-We have added support for the variations in our method.
+\choosefinal{We support the variations, which is presented in 
+  the extended version of this paper is available at~\cite{arxiv-this}.}{We support the variations.}
 
 % \todo{Related work}
-We have implemented the method in our tool~\ourtool. The tool takes input data in its own format.
-We have applied the tool on data sets from published sources (these are available in the database UniCarbKB \cite{Campbell2013}).
+We have implemented the method in our tool~\ourtool. %The tool takes input data in its own format.
+We have applied the tool on data sets from published sources (available in the database UniCarbKB \cite{Campbell2013}).
 % We have obtained the rules for the data sets.
 The output rules are within the expectations of biological
 intuition.
 
-The key contributions of this paper are the following.
-\begin{itemize}
-\item We identified {\em a new area} of application for formal methods in biology.
-\item We have developed a {\em novel} synthesis method for discovering the production rules of glycan molecules from the output of the rules.
-\item We have implemented the method in a tool and applied it to data sets.
-\end{itemize}
+% The key contributions of this paper are the following.
+% \begin{itemize}
+% \item We identified {\em a new area} of application for formal methods in biology.
+% \item We have developed a {\em novel} synthesis method for discovering the production rules of glycan molecules from the output of the rules.
+% \item We have implemented the method in a tool and applied it to data sets.
+% \end{itemize}
 
 
 We organize the paper as follows.
@@ -123,7 +126,7 @@ In Section~\ref{sec:algo}, we present our method for the synthesis problem.
 %and the modifications in our methods to support the variations.
 In Section~\ref{sec:experiments}, we present our implementation  and experiments. %on some glycan data.
 In Section~\ref{sec:conclusion}, we conclude the paper.
-We present the extended related work in Appendix~\ref{sec:related}.
+\choosefinal{}{We present the extended related work in Appendix~\ref{sec:related}.}
 
 % We have added several appendix sections.
 % In appendix~\ref{sec:variations}, we present the variations of the problem.
