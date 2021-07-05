@@ -3,7 +3,7 @@ a set of production rules that produce a given set $\mu$ of molecules.
 Our synthesis method \textsc{SugarSynth} is presented in Algorithm~\ref{alg:sugar-synth}.
 Here, we are considering only the single compartment case.
 The generalizations are discussed in
-\choosefinal{extended version~\cite{arxiv-this}.}{ Appendix~\ref{sec:variations}.}
+\choosefinal{the extended version~\cite{arxiv-this}.}{ Appendix~\ref{sec:variations}.}
 
 % At a high level, our method is iterative.
 % The method first synthesizes a set of rules $R$ that can produce the molecules in input set $\mu$, i.e., $\mu \subseteq P(S,R)$.
@@ -509,7 +509,7 @@ In the functions, the variable is to be replaced by the
 evaluated value of $\kappa(v_r)$.
 
 \begin{theorem}
-  If \textsc{SugarSynth}($\mu$, $d$, $n$) returns a set of rules $R$, then if $R$ produces a molecule that has depth less than $h$, the it is in $\mu$ (soundness).
+  If \textsc{SugarSynth}($\mu$, $d$, $n$) returns a set of rules $R$, then if $R$ produces a molecule that has depth less than $h+1$, the it is in $\mu$ (soundness).
   If it fails to synthesize rules, there are no rule set from the budget of depth $d$ and number $n$ (completeness).
 \end{theorem}
 

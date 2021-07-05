@@ -23,7 +23,8 @@ In this paper, we are presenting the {\em first} automated synthesis
 method for the production rules.
 Our method takes the observed glycan molecules in a cell as input and synthesizes
 the possible production rules that may explain the observation.
-Our work is the {\em first} to consider the computational problem.
+To our knowledge,
+our work is the {\em first} to consider the computational problem.
 Our method of synthesis is similar to counterexample guided
 inductive synthesis(CEGIS)~\cite{cegis}.
 Several methods for solving problems of searching in a complex combinatorial
@@ -85,7 +86,12 @@ a condition, we have quantifiers in the constraints.
 We use a solver that handles quantifiers over finite range variable in
 the synthesis query.
 We go to the next iteration of the method.
-The method always terminates because the search space of rules is finite. The set of rules synthesized need not minimal. They also need not be unique. The solver reports the first set which satisfies the constraints.
+The method always terminates because the search space of rules is finite.
+The set of rules synthesized need not be minimal or unique. The solver reports
+the first set which satisfies the constraints.
+However, our method is adoptable. We can add various optimization criteria to
+find optimal rules for the given objectives, e.g., smallest rule sizes,
+number of rules, etc.
 
 Our encoding to constraints depends on the model of execution of the rules.
 The current biological information is not sufficient to make a precise
@@ -96,9 +102,9 @@ stay in different compartments.
 The molecule under assembly may flow through the compartments.
 The distribution of the stay of the molecules in a compartment also affects
 the execution model.
-Furthermore, we may have variations in the type and quality of data available to us.
+Furthermore, we may have variations in the type and quality of data available to us. For example, we may have missed a produced molecule in experiments.
 \choosefinal{We support the variations, which is presented in 
-  the extended version of this paper is available at~\cite{arxiv-this}.}{We support the variations.}
+  the extended version of this paper~\cite{arxiv-this}.}{We support the variations.}
 
 % \todo{Related work}
 We have implemented the method in our tool~\ourtool. %The tool takes input data in its own format.
@@ -124,8 +130,8 @@ In Section~\ref{sec:model}, we present the formal model of the glycans
 and their production rules.
 In Section~\ref{sec:algo}, we present our method for the synthesis problem.
 %and the modifications in our methods to support the variations.
-In Section~\ref{sec:experiments}, we present our implementation  and experiments. %on some glycan data.
-In Section~\ref{sec:conclusion}, we conclude the paper.
+In Section~\ref{sec:experiments}-~\ref{sec:conclusion}, we present our experiments and conclude the paper. %on some glycan data.
+% In Section~\ref{sec:conclusion}, we conclude the paper.
 \choosefinal{}{We present the extended related work in Appendix~\ref{sec:related}.}
 
 % We have added several appendix sections.

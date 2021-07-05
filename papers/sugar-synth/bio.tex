@@ -8,6 +8,87 @@ This variability is evident in the glycans observed to be produced by living cel
 In \cite{Jaiman440792}, the authors had reported a method to infer the production rules when a single glycan is produced. However, the biologically interesting case is when the data set contains many glycan trees. This raises the following question: given a set of glycan trees produced by a cell,
 can we infer the set of enzymes that produce the glycans? This is the problem we tackle here.
 
+
+In Figure~\ref{fig:glycan-rule}, we present details of glycan production. A glycan is a tree-like sugar tree (nodes linked by edges) attached to a substrate protein at the root (labeled `R'). Distinct edge orientations correspond to covalent bonds of distinct carbons on the sugar monomer. Curved boxes represent reaction compartments within cells, which are the site of glycan production. Each step of glycan growth (black arrows) represents the addition of a single new monomer to a specific attachment point on the tree. Each such step is catalyzed by an enzyme, labeled $E_i$. At any stage of growth, the tree can exit the reaction compartment as an output. Alternatively, it can be passed to a subsequent reaction compartment for further growth driven by different enzymes. Note that the enzymatic rule is sensitive to the two monomers being linked by a bond, as well as any branches. For example, enzyme $E_2$ will add a Galactose to a GalNAc only if the GlcNAc branch is present; otherwise, the reaction will not proceed (`X'). The structures, reactions, and enzymes shown here are illustrative, and they do not correspond to any measured data set; see the following section for a real example. In biological experiments, the combined outputs of every compartment are measured; the underlying reactions must be inferred.
+%The inference problem is the subject of this paper.
+
+% 3 body collision
+%
+% It’s not clear why the reviewer sees these reactions as implausible. The
+% monomer addition reaction proceeds in three steps. First, the monomer
+% itself binds to the relevant enzyme. Second, this monomer-enzyme complex
+% interacts with the glycan, and through a process of stochastic binding and
+% unbinding it identifies a particular region of the glycan, i.e. a motif,
+% which can be several nodes deep. The enzyme makes contacts with several
+% nodes of the glycan, and the actual depth of the recognised motif can vary
+% from one to several. Finally, the monomer is transferred from the enzyme to
+% the relevant node of the glycan, a reaction catalysed at the reaction
+% centre of the enzyme. At no step are there 3-body collisions, all these
+% reactions occur as a series of 2-body collisions. These reactions have been
+% understood in molecular detail. See Biswas & Thattai, Biochem Soc Trans
+% 48:891 (2020) for several examples of motifs of varying depths, and for a
+% graphical representation of the monomer and glycan in complex with the
+% enzyme.
+
+% Stochastic.
+%
+%Glycosylation occurs as an enzyme-catalysed reaction whose
+% deterministic kinetics are described by Michaelis-Menten or similar rate
+% equations. However, these are only valid in the large number limit. In the
+% cell, the number of molecules is small and the process is dominated by
+% stochastic chemical kinetics. Individual reactions occur as Poisson
+% processes whose parameters can be associated with the deterministic
+% equations. The steady state distributions (or time-dependent distributions
+% in case of a non-stationary process) of such stochastic chemical kinetic
+% systems can be derived using the standard application of stochastic process
+% tools and these match very well with the known data in many cellular
+% processes.
+
+% rule size and optimally
+%
+% The actual depth associated with different enzymes varies, and at least up
+% to depths of 4 or 5 there is no real physical restriction. So one may
+% consider a maximum depth criterion. See Biswas & Thattai, 2020. If there is
+% an optimisation question, it can be framed as “what is the minimal number
+% of compartments required for enzymes that only read to a certain maximum
+% depth”. Or more useful perhaps, what is the minimum depth required upto a
+% certain maximum number of compartments (typically mammalian Golgi have only
+% 3 compositionally distinct compartments). The answer to this question then
+% allows a more rigorous biochemical analysis of which enzyme is responsible
+% for which addition reaction. Overall, therefore, it’s not that we’re making
+% a claim about optimality, but we are making claims about limits on enzyme
+% depths or required compartments, both of which are experimentally
+% measurable features.
+
+% application of synthesis
+%
+% See above answer to start with. The problem is that, although the
+% donor/acceptor monomers are well known for most enzymes, the actual motifs
+% are not known except for some well-studied enzymes. So at this point in
+% time, it’s not immediate possible to associate our enzyme/depth predictions
+% with real enzymes. However, what is known is the number of distinct
+% compartments. If we can show for example that at some maximum depth, it
+% takes 5 compartments to generate some glycan set, we know something is
+% wrong either in the dataset (incomplete?) or the enzyme depth assumption,
+% since the number of compartments is 3. The reviewer is correct that there
+% are likely to be many *more* constraints than simply depth constraints on
+% real enzymes, this means that real enzymes would need even more
+% compartments than we predict. I.e. we lower-bound the required number of
+% compartments. It is possible that this approach will also help identify
+% glycans that exit the Golgi at an intermediate compartment. This is, for
+% e.g., known to happen with the SARS-CoV-2 virus, which exits after the
+% first cisterna. Such predictions will have cell-biological implications.
+
+% existing available solution
+%
+% See Biswas & Thattai for several examples of concrete rules. The reason we
+% did not focus on concrete rules is that, in fact, such rules are only known
+% for a handful of well-studied enzymes. At this stage, it is more relevant
+% to try to place broad constraints on the space of rules that are suggested
+% by the data. See Jaiman & Thattai for concrete examples of entire reaction
+% sets.
+
+
 \begin{figure}[t]
   \centering
   \begin{minipage}{0.54\linewidth}
@@ -20,9 +101,6 @@ can we infer the set of enzymes that produce the glycans? This is the problem we
   \end{minipage}
 % \vspace{-9mm}
 \end{figure}
-
-In Figure~\ref{fig:glycan-rule}, we present details of glycan production. A glycan is a tree-like sugar tree (nodes linked by edges) attached to a substrate protein at the root (labeled `R'). Distinct edge orientations correspond to covalent bonds of distinct carbons on the sugar monomer. Curved boxes represent reaction compartments within cells, which are the site of glycan production. Each step of glycan growth (black arrows) represents the addition of a single new monomer to a specific attachment point on the tree. Each such step is catalyzed by an enzyme, labeled $E_i$. At any stage of growth, the tree can exit the reaction compartment as an output. Alternatively, it can be passed to a subsequent reaction compartment for further growth driven by different enzymes. Note that the enzymatic rule is sensitive to the two monomers being linked by a bond, as well as any branches. For example, enzyme $E_2$ will add a Galactose to a GalNAc only if the GlcNAc branch is present; otherwise, the reaction will not proceed (`X'). The structures, reactions, and enzymes shown here are illustrative, and they do not correspond to any measured data set; see the following section for a real example. In biological experiments, the combined outputs of every compartment are measured; the underlying reactions must be inferred.
-%The inference problem is the subject of this paper.
 
 %--------------------- DO NOT ERASE BELOW THIS LINE --------------------------
 
