@@ -357,7 +357,8 @@ rules as {\em cuts} of the tree.
   % constraints.
 \end{itemize}
 
-
+\vspace{-3mm}
+\input{alg-encode-produce.tex}
 
 Algorithm~\ref{alg:produce} presents function $\textsc{EncodeProduce}$
 that returns the encoding.
@@ -412,8 +413,7 @@ In each iteration, $v_r$ is updated to the $j$th child due to lines
 if the ancestors of $v$ also traverse along with the $j$th child.
 % (see if condition at line \ref{line:encodep-jth-child-cond}).
 
-\vspace{-3mm}
-\input{alg-encode-produce.tex} 
+ 
 
 % Let us consider the body of the loop.
 Let $v'$ be the $i$th ancestor at some iteration of the loop.
