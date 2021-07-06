@@ -108,13 +108,10 @@ line~\ref{line:encodep-vr-expand} is missing, i.e., we do not analyze expand par
 We now modify $\textsc{EncodeP}$ after~\ref{line:encodep-vr-expand} to support fast reactions:\\
 \begin{minipage}{1.0\linewidth}
 \begin{algorithmic}[1]
-  % \vspace{1ex}
   \setcounterref{ALG@line}{line:encodep-vr-expand}
   \State $c \landplus \lnot \textsc{Fast}(v_r) \implies 
   \Land_{t \in T} (\textsc{Fast}(t) \implies \lnot\lor_{ {\ell \in [1,d)}} \textsc{EncodeP}^-( v, t, \ell))$
-  % \vspace{1ex}
 \end{algorithmic}
-  % \vspace{-1mm}
 \end{minipage}
 Here, \textsc{Fast} sets the constraint on the rule to be fast.
 A negative molecule which is a proper subtree of an input molecule will cease to be negative if there is any fast reaction that is able to extend it as fast reactions happen aggressively and can make partial molecules complete. Due to limited space, we will not present the exact constraints.
@@ -185,7 +182,6 @@ no node must be present in the matching pattern at the time of the application o
 We modify the function $\textsc{MatchTree}$ by inserting the following constraints after~\ref{line:matchtree-cons}:
 \begin{minipage}{1.0\linewidth}
 \begin{algorithmic}[1]
-  \vspace{1ex}
   \setcounterref{ALG@line}{line:matchtree-cons}
   \State $c \landplus \textsc{HardEnds}(v_r) \implies (mark \leq \tau(v))$
 \end{algorithmic}  

@@ -1,6 +1,6 @@
 In this section, we present a method to solve the synthesis problem of finding
 a set of production rules that produce a given set $\mu$ of molecules.
-Our synthesis method \textsc{SugarSynth} is presented in Algorithm~\ref{alg:sugar-synth}.
+Our method \textsc{SugarSynth} is Algorithm~\ref{alg:sugar-synth}.
 Here, we are considering only the single compartment case.
 The generalizations are discussed in
 \choosefinal{the extended version~\cite{arxiv-this}.}{ Appendix~\ref{sec:variations}.}
@@ -48,9 +48,9 @@ and sets $w$ to be the maximum arity of any monomer in $S$.
 
 
 We use templates to model the search space of rules.
-A template is also a tree that has a depth and
+A template is a tree that has a depth and
 the internal nodes of the tree have the same number of children.
-Two variables label each node of the template.
+Two variables label each node. %of the template.
 One variable is for choosing the sugar at the node and the other is for describing
 the `situation' of the node.
 % The first variable at the node encodes choices of
@@ -59,8 +59,17 @@ The domain of the first variables is $S \union \{\bot\}$.
 Let $SVars$ be the unbounded set of variables with the domain.
 We will use the pool of $SVars$ to add variables to the templates.
 
+
+
+A node in a production rule can be in four situations.
+In Figure~\ref{fig:rule-parts}, we illustrate the situations.
+The first situation is when a node is in the expanding part, which are shown in 
+dark gray. % nodes are the expanding nodes.
+The second situation is when a node is not in the rule.
+The dashed area are the absent nodes.
+Among the matching nodes, we have two cases.
 \begin{wrapfigure}{r}{0.35\textwidth}
-    
+  % \vspace{-12mm}
         \center
   \begin{tikzpicture}[shorten >=1pt,thick,node distance=1cm,on grid,scale=0.5]
     \node[loc] (v0) {$v_0$};
@@ -84,28 +93,19 @@ We will use the pool of $SVars$ to add variables to the templates.
   \label{fig:rule-parts}
   \vspace{-8mm}
 \end{wrapfigure}
-
-
-A node in a production rule can be in four situations.
-In Figure~\ref{fig:rule-parts}, we illustrate the situations.
-The first situation is when a node position is in the expanding part.
-The dark gray nodes are the expanding nodes.
-The second situation is when a node position is not in the rule.
-The dashed area are the absent nodes. Among the matching nodes, we have two cases.
-The third situation is when a node position is in the matching part
+The third situation is when a node is in the matching part
 and has expanding descendants.
 The nodes on the solid path from $v_0$ to the root $v_e$ of the expanding part are in the third situation.
 % the nodes that are ancestors of expanding part among the matching nodes.
-Finally, the fourth situation is the rest of the node positions
-in the matching part, which is the light gray area.
+Finally, the fourth situation is the rest of the nodes
+in the matching part, which is in light gray.
 % The nodes in the rest of the light gray area are in the fourth situation.
 A variable is mapped to a node to encode the four situations.
 Let $K =\{Expand,Absent,MatchAns,Match\}$ be the set of symbols to
-indicate the set of four situations.
-Let $KVars$ be the unbounded set of variables with domain $K$. 
+indicate the situations.
+Let $KVars$ be an unbounded set of variables with domain $K$. 
 % We will use the pool of $KVars$ to add variables to the templates.
-Our templates are sufficiently expressive to cover all aspects of biology.
-The templates are defined as follows.
+Our templates are sufficiently expressive to cover all aspects of biology, which are defined as follows.
 
 \begin{df}
 For given integers $d$ and $w$,
@@ -308,18 +308,16 @@ We use shorthand $F \landplus G$ for $ F := F \land G$.
 As we will see that $\textsc{EncodeProduce}$ introduces fresh variable
 maps $\tau$ and $cuts$ in the encoding.
 Since we negate the returned formula by $\textsc{EncodeProduce}$ 
-and then we check the satisfiability.
+and then we check the satisfiability,
 % the encoding will not be correct
 % due to the fresh variables.
-Therefore, we need to introduce universal quantifiers for the
-fresh variables.
-We introduce universal quantifiers over $\tau$ and $cuts$
-variables before adding to $nCons$.
+we need to introduce universal quantifiers over the
+fresh variables. %before adding to $nCons$.
 % Intuitively, the universal quantifiers say that all possible
 % application patterns of the learned rules do not produce $m'$.
 Afterwards, the loop goes to the next iteration.
-Since the domain of all the variables is finite, eventually the loop must
-terminate.
+% Since the domain of all the variables is finite, eventually the loop must
+% terminate.
 
 
 
@@ -357,8 +355,6 @@ rules as {\em cuts} of the tree.
   % constraints.
 \end{itemize}
 
-\vspace{-3mm}
-\input{alg-encode-produce.tex}
 
 Algorithm~\ref{alg:produce} presents function $\textsc{EncodeProduce}$
 that returns the encoding.
@@ -376,6 +372,7 @@ $\textsc{EncodeProduce}$ uses the help of three other supporting functions,
 $\textsc{EncodeP}$, $\textsc{MatchTree}$, and $\textsc{MatchCut}$.
 % All of them are presented in algorithm~\ref{alg:produce}.
 
+
 $\textsc{EncodeProduce}$ returns constraints stating for each node $v$
 and rule template $t$,
 if $v$ is at a cut and $t$ is applied at $v$, then $t$ must match
@@ -390,45 +387,50 @@ For each $\ell \in [1,d)$, we call $\textsc{EncodeP}( v, t, \ell)$
 to construct the constraints encoding that $t$ is applied at $v$
 and the depth of the root of the expanding nodes is at depth $\ell$.
 
+
 In $\textsc{EncodeP}$, we can traverse up from $v$ for $\ell$ steps to
 find the node to match the root of $t$.
-Naturally, it returns $\lfalse$ if there
+% Naturally,
+It returns $\lfalse$ if there
 is no $\ell$th ancestor of $v$. % i.e., there is no match.
-The variable $mark$ is the timestamp for node $v$.
+The variable $mark$ is the timestamp for $v$.
 % During matching, we will add constraints stating that the matching part of the
 % template should match to the nodes added before $mark$
 % and expanding part of the template should match with nodes that
 % are added at or after $mark$.
-The local variable $c$ collects the conjunction of constraints as they are
+The variable $c$ collects the  constraints as they are
 generated. % and $c$ is initially $\ltrue$.
-The local variable $v_r$ is initially equal to the root $v_{0r}$ of $t$
+The variable $v_r$ is initially equal to the root $v_{0r}$ of $t$
 and traverses the nodes in $t$.
-The while loop at line~\ref{line:encodep-while} in $\textsc{EncodeP}$ starts with
+The while loop at line~\ref{line:encodep-while} starts with
 the $\ell$th ancestor from $v$,
 matches all the ancestors up to the parent of $v$.
-As the loop traverses down, it also traverses $t$ along the matching
+As the loop traverses down, it also traverses $t$ 
 using variable $v_r$.
 In each iteration, $v_r$ is updated to the $j$th child due to lines
 \ref{line:encodep-next-vr} and \ref{line:encodep-update-vr}
-if the ancestors of $v$ also traverse along with the $j$th child.
+if the ancestors of $v$ also traverse along the $j$th child.
 % (see if condition at line \ref{line:encodep-jth-child-cond}).
 
+\vspace{-10mm}
+\input{alg-encode-produce.tex}
  
-
 % Let us consider the body of the loop.
 Let $v'$ be the $i$th ancestor at some iteration of the loop.
 At line~\ref{line:encodep-ans-match}, the loop adds constraints stating that
-the corresponding node $v_r$ in the template rule is
+the corresponding node $v_r$ in $t$ is
 $MatchAns$, sugar matches in $v_r$ and $v'$, and
-node $v'$ is added before $mark$.
+node $v'$ was added before $mark$.
 The loop at line~\ref{line:encodep-sub-for-loop}, iterates over
 children of $v'$.
 If there is a child of $v'$ that is not along the path to
 $v$, it is matched at line~\ref{line:mtree} with the corresponding
-child of $v_r$ by calling $\textsc{MatchTree}$, which traverses
-rule template and molecule and generate constraints to encode that their
-nodes match.
-We will discuss $\textsc{MatchTree}$ shortly.
+child of $v_r$ by calling $\textsc{MatchTree}$, which
+will be discussed shortly.
+% traverses
+% rule template and molecule and generate constraints to encode that their
+% nodes match.
+% We will discuss $\textsc{MatchTree}$ shortly.
 % $\textsc{MatchTree}$ is also called with a third parameter
 % $mark$ and a Boolean value as the fourth parameter.
 % We will discuss the procedure shortly.
@@ -442,6 +444,8 @@ is $Expand$,  match the node $v$
 with the corresponding node $v_r$ in the template rule by calling
 $\textsc{MatchTree}$, and also call to match the cut pattern at
 the subtree of $v$ with the template rule.
+
+
 
 $\textsc{MatchTree}$ is a recursive procedure and matches
 sugar assignments between the molecule and the rule template.
@@ -500,27 +504,27 @@ Therefore, we are passing $\lfalse$.
 
 In the case when we call \textsc{EncodeProduce} with template molecule and
 concrete rules.
-We need to swap the roles of $\nu$ and $M$ at their occurrences
+We swap the roles of $\nu$ and $M$ at their occurrences
 at line \ref{line:encodep-ans-match} in \textsc{EncodeP} and
 line \ref{line:matchtree-cons} in \textsc{MatchTree}.
-Furthermore, $\kappa(v_r)$ is a concrete value depending on the situation of $v_r$ in
-the rule.
+Furthermore, $\kappa(v_r)$ is a concrete value.
+% depending on the situation of $v_r$ in the rule.
 In the functions, the variable is to be replaced by the
 evaluated value of $\kappa(v_r)$.
 
 \begin{theorem}
-  If \textsc{SugarSynth}($\mu$, $d$, $n$) returns a set of rules $R$, then if $R$ produces a molecule that has depth less than $h+1$, the it is in $\mu$ (soundness).
-  If it fails to synthesize rules, there are no rule set from the budget of depth $d$ and number $n$ (completeness).
+  If \textsc{SugarSynth}($\mu$, $d$, $n$) returns  rules $R$, then if $R$ produces a molecule that has depth less than $h+1$, the it is in $\mu$ (soundness).
+  If it fails to find rules, there are no rule sets within the budget of $d$ and  $n$ (completeness).
 \end{theorem}
 
-The soundness is true due to the construction of constraints.
-Our algorithm always terminates. At each iteration, at least one solution, i.e,
+The soundness is true by construction.
+% Our algorithm always terminates.
+At each iteration, at least one solution, i.e,
 a set of rules is discarded.
-In fact, we discard many because in each iteration we reject production of a counterexample molecule, but this may discard whole range of rule sets. 
-Since the set of all possible rules is finite, we
-guarantee termination.
+In fact, we discard many because in each iteration we reject all rule sets that may produce a counterexample molecule. 
+Since the set of all possible rules is finite, we terminate.
 Therefore, the completeness holds.
-In the worst case, the entire search space is explored.
+% In the worst case, the entire search space is explored.
 
 
 % On the other hand,
